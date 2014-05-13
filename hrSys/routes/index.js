@@ -8,8 +8,9 @@ router.get('/', function(req, res) {
 
 /* login page. */
 router.get('/login', function(req, res) {
-    res.render('index', { title: 'login' });
+    res.render('login', { title: 'login' });
 });
+
 /* login page. */
 router.post('/login', function(req, res) {
     res.render('index', { title: 'login' });
@@ -17,7 +18,7 @@ router.post('/login', function(req, res) {
 
 /* administration page. */
 router.get('/admin', function(req, res) {
-    res.render('index', { title: 'administration' });
+    res.render('admin', { title: 'administration' });
 });
 
 /* administration page. */
@@ -27,7 +28,7 @@ router.post('/admin', function(req, res) {
 
 /* add/modify item page. */
 router.get('/item', function(req, res) {
-    res.render('index', { title: 'add/modify item' });
+    res.render('item', { title: 'add/modify item' });
 });
 
 /* add/modify page. */
@@ -37,7 +38,7 @@ router.post('/item', function(req, res) {
 
 /* statistics page. */
 router.get('/statistics', function(req, res) {
-    res.render('index', { title: 'statistics' });
+    res.render('statistics', { title: 'statistics' });
 });
 
 /* statistics page. */
@@ -47,7 +48,7 @@ router.post('/statistics', function(req, res) {
 
 /* search page. */
 router.get('/search', function(req, res) {
-    res.render('index', { title: 'search' });
+    res.render('search', { title: 'search' });
 });
 
 /* search page. */
