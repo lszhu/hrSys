@@ -2,8 +2,10 @@ extends layout
 
 block content
     link(rel="stylesheet" href="/stylesheets/signin.css")
+    link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
     //h1= title
-    div.container
+    include nav.jade
+    .container
         form.form-signin(role="form", action="/login", method="POST")
             h2.form-signin-heading 请登录
             label 账号：
