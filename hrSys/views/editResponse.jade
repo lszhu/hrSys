@@ -1,0 +1,31 @@
+extends layout
+block content
+  h3 basic info
+  ul
+    each val, index in userMessage
+      li= index + ' = ' + val
+  h3 insurance
+  ul
+    each val, index in insurance
+      if val
+        li= index + ' = ' + val
+  h3 work place
+  ul
+    each val, index in workPlace
+      if val
+        li= index + ' = ' + val
+  h3 job type
+  ul
+    each val, index in jobType
+      if val
+        li= index + ' = ' + val
+  h3 industry
+  ul
+    each val, index in industry
+      if val
+        li= index + ' = ' + val
+  h3 preferredTraining
+  ul
+    each val, index in preferredTraining
+      if val
+        li= index + ' = ' + val

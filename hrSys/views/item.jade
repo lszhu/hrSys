@@ -15,14 +15,14 @@ block content
             span.input-group-addon 姓名
             input.form-control(type="text", name="username", placeholder="输入姓名")
             span.input-group-addon 身份证号
-            input.form-control(type="text", name="IdNumber", placeholder="输入身份证号")
+            input.form-control(type="text", name="idNumber", placeholder="输入身份证号")
           .input-group
             span.input-group-addon 民族
             input.form-control(type="text", name="nation", placeholder="输入民族")
             span.input-group-addon 年龄
-            input.form-control(type="text", readonly="readonly")
+            input.form-control(type="text", disabled="disabled")
             span.input-group-addon 性别
-            input.form-control(type="text", readonly="readonly")
+            input.form-control(type="text", disabled="disabled")
           .input-group
             span.input-group-addon 户籍地址
             input.form-control(type="text", name="address", placeholder="输入户籍所在地址")
@@ -82,35 +82,35 @@ block content
               .col-sm-12
                 .input-group
                   span.input-group-addon 现有技术等级
-                  select.form-control
-                    option 无
-                    option 初级技工
-                    option 中级技工
-                    option 高级技工
-                    option 技师
-                    option 高级技师
+                  select.form-control(name="technicalGrade")
+                    option(value="0") 无
+                    option(value="1") 初级技工
+                    option(value="2") 中级技工
+                    option(value="3") 高级技工
+                    option(value="4") 技师
+                    option(value="5") 高级技师
                   span.input-group-addon 是否参加过培训
-                  select.form-control
-                    option 未参加过任何培训
-                    option 农村劳动力技能培训
-                    option 其他培训
+                  select.form-control(name="trainingStatus")
+                    option(value="0") 未参加过任何培训
+                    option(value="1") 农村劳动力技能培训
+                    option(value="2") 其他培训
                   span.input-group-addon 参加过的培训
-                  input.form-control(type="text", list="course", placeholder="输入培训名称")
+                  input.form-control(type="text", name="postTraining", list="course", placeholder="输入培训名称")
                   datalist#course
-                    option 服装缝纫
-                    option 制鞋
-                    option 电子技术
-                    option 电脑
-                    option 家电维修
-                    option 电工
-                    option 焊工
-                    option 数控车床
-                    option 家政服务
-                    option 保安
-                    option 烹饪
-                    option 服务员
-                    option 美容美发
-                    option 商业营销
+                    option(value="0") 服装缝纫
+                    option(value="1") 制鞋
+                    option(value="2") 电子技术
+                    option(value="3") 电脑
+                    option(value="4") 家电维修
+                    option(value="5") 电工
+                    option(value="6") 焊工
+                    option(value="7") 数控车床
+                    option(value="8") 家政服务
+                    option(value="9") 保安
+                    option(value="10") 烹饪
+                    option(value="11") 服务员
+                    option(value="12") 美容美发
+                    option(value="13") 商业营销
               .col-sm-12
                 br
               .col-sm-12
@@ -120,64 +120,64 @@ block content
                   .panel-body
                     .col-sm-3
                       label.checkbox-inline 服装缝纫
-                        input(type="checkbox", name="insurance0")
+                        input(type="checkbox", name="preferredTraining0")
                     .col-sm-3
                       label.checkbox-inline 制鞋
-                        input(type="checkbox", name="insurance1")
+                        input(type="checkbox", name="preferredTraining1")
                     .col-sm-3
                       label.checkbox-inline 电子技术
-                        input(type="checkbox", name="insurance2")
+                        input(type="checkbox", name="preferredTraining2")
                     .col-sm-3
                       label.checkbox-inline 电脑
-                        input(type="checkbox", name="insurance3")
+                        input(type="checkbox", name="preferredTraining3")
                     .col-sm-3
                       label.checkbox-inline 家电维修
-                        input(type="checkbox", name="insurance4")
+                        input(type="checkbox", name="preferredTraining4")
                     .col-sm-3
                       label.checkbox-inline 电工
-                        input(type="checkbox", name="insurance5")
+                        input(type="checkbox", name="preferredTraining5")
                     .col-sm-3
                       label.checkbox-inline 焊工
-                        input(type="checkbox", name="insurance6")
+                        input(type="checkbox", name="preferredTraining6")
                     .col-sm-3
                       label.checkbox-inline 数控车床
-                        input(type="checkbox", name="insurance2")
+                        input(type="checkbox", name="preferredTraining7")
                     .col-sm-3
                       label.checkbox-inline 家政服务
-                        input(type="checkbox", name="insurance0")
+                        input(type="checkbox", name="preferredTraining8")
                     .col-sm-3
                       label.checkbox-inline 保安
-                        input(type="checkbox", name="insurance1")
+                        input(type="checkbox", name="preferredTraining9")
                     .col-sm-3
                       label.checkbox-inline 烹饪
-                        input(type="checkbox", name="insurance2")
+                        input(type="checkbox", name="preferredTraining10")
                     .col-sm-3
                       label.checkbox-inline 服务员
-                        input(type="checkbox", name="insurance3")
+                        input(type="checkbox", name="preferredTraining11")
                     .col-sm-3
                       label.checkbox-inline 美容美发
-                        input(type="checkbox", name="insurance4")
+                        input(type="checkbox", name="preferredTraining12")
                     .col-sm-3
                       label.checkbox-inline 商业营销
-                        input(type="checkbox", name="insurance5")
+                        input(type="checkbox", name="preferredTraining13")
                     .col-sm-3
                       label.checkbox-inline 其他
-                        input(type="checkbox", name="insurance6")
+                        input(type="checkbox", name="preferredTraining14")
 
       .panel-footer
         .container
           .col-sm-3
             .input-group
               span.input-group-addon 填报人
-              input.form-control(type="text", placeholder="输入姓名")
+              input.form-control(type="text", name="editor", placeholder="输入姓名")
           .col-sm-3
             .input-group
               span.input-group-addon 审核人
-              input.form-control(type="text", placeholder="输入姓名")
+              input.form-control(type="text", name="auditor", placeholder="输入姓名")
           .col-sm-5
             .input-group
               span.input-group-addon 填报日期
-              input.form-control(type="text", placeholder="填报日期")
+              input.form-control(type="text", disabled="disabled", placeholder="填报日期")
           .col-sm-10
             br
           .col-sm-7.col-sm-offset-2
