@@ -5,39 +5,39 @@ block content
   //h1= title
   include nav.jade
   .container
-    form.panel.panel-info
+    form.panel.panel-info(action="/item", method="POST")
       .panel-heading
-        .container
+        //.container
         h1.text-center 劳动力资源调查登记表
       .panel-body
         .col-sm-9
           .input-group
             span.input-group-addon 姓名
-            input.form-control(type="text", placeholder="输入姓名")
+            input.form-control(type="text", name="username", placeholder="输入姓名")
             span.input-group-addon 身份证号
-            input.form-control(type="text", placeholder="输入身份证号")
+            input.form-control(type="text", name="IdNumber", placeholder="输入身份证号")
           .input-group
             span.input-group-addon 民族
-            input.form-control(type="text", placeholder="输入民族")
+            input.form-control(type="text", name="nation", placeholder="输入民族")
             span.input-group-addon 年龄
-            input.form-control(type="text", disabled="disabled")
+            input.form-control(type="text", readonly="readonly")
             span.input-group-addon 性别
-            input.form-control(type="text", disabled="disabled")
+            input.form-control(type="text", readonly="readonly")
           .input-group
             span.input-group-addon 户籍地址
-            input.form-control(type="text", placeholder="输入户籍所在地址")
+            input.form-control(type="text", name="address", placeholder="输入户籍所在地址")
           .input-group
             span.input-group-addon 联系电话
-            input.form-control(type="text", placeholder="输入联系电话")
+            input.form-control(type="text", name="phone", placeholder="输入联系电话")
             span.input-group-addon 文化程度
-            select.form-control">
-              option 初中及以下
-              option 高中
-              option 职业高中
-              option 技工学校
-              option 中专
-              option 大专
-              option 大学以上
+            select.form-control(name="education")
+              option(value="0") 初中及以下
+              option(value="1") 高中
+              option(value="2") 职业高中
+              option(value="3") 技工学校
+              option(value="4") 中专
+              option(value="5") 大专
+              option(value="6") 大学以上
         .col-sm-3
           img.img-thumbnail(src="/images/test.jpg", alt="- - 正面免冠照片 - -", style="height:135px;")
         .col-sm-12
@@ -70,45 +70,100 @@ block content
                   input(type="checkbox", name="insurance6")
         .col-sm-12
           .panel.panel-default
-            .panel-heading
-              .container
-                .col-sm-11.text-center
-                  strong 就业情况
-                .col-sm-2
-                  label 在家务农
-                    input(type="radio", name="job", value="0", checked="checked")
-                .col-sm-2
-                  label 在外务工
-                    input(type="radio", name="job", value="1")
-                .col-sm-2
-                  label 自主创业
-                    input(type="radio", name="job", value="2")
+            .panel-heading.text-center
+              strong 就业情况
             .panel-body
-              .text-center
-                .col-sm-2
-                  .radio
-                    label 在家务农
-                      input(type="radio", name="job", value="0", checked="checked")
-                  .radio
-                    label 在外务工
-                      input(type="radio", name="job", value="1")
-                  .radio
-                    label 自主创业
-                      input(type="radio", name="job", value="2")
-                .col-sm-2
-
+              include jobSpec.jade
         .col-sm-12
           .panel.panel-default
             .panel-heading.text-center
               strong 培训情况
             .panel-body
-              .text-center
-                label.radio-inline 在家务农
-                  input(type="radio", name="job", value="0", checked="checked")
-                label.radio-inline 在外务工
-                  input(type="radio", name="job", value="1")
-                label.radio-inline 自主创业
-                  input(type="radio", name="job", value="2")
+              .col-sm-12
+                .input-group
+                  span.input-group-addon 现有技术等级
+                  select.form-control
+                    option 无
+                    option 初级技工
+                    option 中级技工
+                    option 高级技工
+                    option 技师
+                    option 高级技师
+                  span.input-group-addon 是否参加过培训
+                  select.form-control
+                    option 未参加过任何培训
+                    option 农村劳动力技能培训
+                    option 其他培训
+                  span.input-group-addon 参加过的培训
+                  input.form-control(type="text", list="course", placeholder="输入培训名称")
+                  datalist#course
+                    option 服装缝纫
+                    option 制鞋
+                    option 电子技术
+                    option 电脑
+                    option 家电维修
+                    option 电工
+                    option 焊工
+                    option 数控车床
+                    option 家政服务
+                    option 保安
+                    option 烹饪
+                    option 服务员
+                    option 美容美发
+                    option 商业营销
+              .col-sm-12
+                br
+              .col-sm-12
+                .panel.panel-default
+                  .panel-heading.text-center
+                    strong 参加农村劳动力技能培训意向（多选）
+                  .panel-body
+                    .col-sm-3
+                      label.checkbox-inline 服装缝纫
+                        input(type="checkbox", name="insurance0")
+                    .col-sm-3
+                      label.checkbox-inline 制鞋
+                        input(type="checkbox", name="insurance1")
+                    .col-sm-3
+                      label.checkbox-inline 电子技术
+                        input(type="checkbox", name="insurance2")
+                    .col-sm-3
+                      label.checkbox-inline 电脑
+                        input(type="checkbox", name="insurance3")
+                    .col-sm-3
+                      label.checkbox-inline 家电维修
+                        input(type="checkbox", name="insurance4")
+                    .col-sm-3
+                      label.checkbox-inline 电工
+                        input(type="checkbox", name="insurance5")
+                    .col-sm-3
+                      label.checkbox-inline 焊工
+                        input(type="checkbox", name="insurance6")
+                    .col-sm-3
+                      label.checkbox-inline 数控车床
+                        input(type="checkbox", name="insurance2")
+                    .col-sm-3
+                      label.checkbox-inline 家政服务
+                        input(type="checkbox", name="insurance0")
+                    .col-sm-3
+                      label.checkbox-inline 保安
+                        input(type="checkbox", name="insurance1")
+                    .col-sm-3
+                      label.checkbox-inline 烹饪
+                        input(type="checkbox", name="insurance2")
+                    .col-sm-3
+                      label.checkbox-inline 服务员
+                        input(type="checkbox", name="insurance3")
+                    .col-sm-3
+                      label.checkbox-inline 美容美发
+                        input(type="checkbox", name="insurance4")
+                    .col-sm-3
+                      label.checkbox-inline 商业营销
+                        input(type="checkbox", name="insurance5")
+                    .col-sm-3
+                      label.checkbox-inline 其他
+                        input(type="checkbox", name="insurance6")
+
       .panel-footer
         .container
           .col-sm-3
@@ -126,4 +181,4 @@ block content
           .col-sm-10
             br
           .col-sm-7.col-sm-offset-2
-              button.btn.btn-lg.btn-block.btn-success(role="button") 保存登记表
+              button.btn.btn-lg.btn-block.btn-success(type="submit", role="button") 保存登记表
