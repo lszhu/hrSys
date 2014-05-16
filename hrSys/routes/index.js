@@ -1,9 +1,14 @@
 var express = require('express');
 var router = express.Router();
+var util = require('util');
+
+// temp accounts
+var auth = require('./auth').auth;
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.render('index', { title: 'Express' });
+    console.log("session: " + util.inspect(req.session));
+    res.render('index', { title: 'Express' });
 });
 
 /* login page. */
@@ -13,7 +18,20 @@ router.get('/login', function(req, res) {
 
 /* login page. */
 router.post('/login', function(req, res) {
-    res.render('index', { title: 'login' });
+    //res.render('index', { title: 'login' });
+    acc = {
+        username: req.body.username,
+        password: req.body.password
+    };
+    console.log(acc);
+    console.log("session: " + util.inspect(req.session));
+    if (auth(acc)) {
+        req.session.user = acc.username;
+        res.redirect('/');
+    } else {
+        res.render('login', {error: '用户名或密码错误！'})
+    }
+    //res.end('auth ok');
 });
 
 /* administration page. */
