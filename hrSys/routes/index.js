@@ -57,6 +57,7 @@ router.post('/item', function(req, res) {
         username: req.body.username,
         idNumber: req.body.idNumber,
         nation: req.body.nation,
+        marriage: req.body.marriage,
         address: req.body.address,
         phone: req.body.phone,
         education: req.body.education,

@@ -12,23 +12,22 @@ block content
       .panel-body
         .col-sm-9
           .input-group
-            span.input-group-addon 姓名
+            span.input-group-addon 姓 名
             input.form-control(type="text", name="username", placeholder="输入姓名")
             span.input-group-addon 身份证号
             input.form-control(type="text", name="idNumber", placeholder="输入身份证号")
           .input-group
-            span.input-group-addon 民族
+            span.input-group-addon 民 族
             input.form-control(type="text", name="nation", placeholder="输入民族")
-            span.input-group-addon 年龄
+            span.input-group-addon 年 龄
             input.form-control(type="text", disabled="disabled")
-            span.input-group-addon 性别
+            span.input-group-addon 性 别
             input.form-control(type="text", disabled="disabled")
           .input-group
-            span.input-group-addon 户籍地址
-            input.form-control(type="text", name="address", placeholder="输入户籍所在地址")
-          .input-group
-            span.input-group-addon 联系电话
-            input.form-control(type="text", name="phone", placeholder="输入联系电话")
+            span.input-group-addon 婚姻状况
+            select.form-control(name="marriage", placeholder="是否结婚")
+              option(value="0") 未婚
+              option(value="1") 已婚
             span.input-group-addon 文化程度
             select.form-control(name="education")
               option(value="0") 初中及以下
@@ -38,8 +37,14 @@ block content
               option(value="4") 中专
               option(value="5") 大专
               option(value="6") 大学以上
+          .input-group
+            span.input-group-addon 联系电话
+            input.form-control(type="text", name="phone", placeholder="输入联系电话（可输入多个）")
+          .input-group
+            span.input-group-addon 户籍地址
+            input.form-control(type="text", name="address", placeholder="输入户籍所在地址")
         .col-sm-3
-          img.img-thumbnail(src="/images/test.jpg", alt="- - 正面免冠照片 - -", style="height:135px;")
+          img.img-thumbnail(src="/images/test.jpg", alt="- - 正面免冠照片 - -", style="height:170px;")
         .col-sm-12
           br
         .col-sm-12
