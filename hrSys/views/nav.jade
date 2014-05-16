@@ -12,33 +12,55 @@ nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
     .collapse.navbar-collapse#bs-example-navbar-collapse-1
       ul.nav.navbar-nav
         li.active
-          a(href="#") Home
-        li
-          a(href="#") About
-        li
-          a(href="#") Contact
+          a(href="#") 首页
         li.dropdown
-          a.dropdown-toggle(href="#", data-toggle="dropdown") Dropdown
+          a.dropdown-toggle(href="#", data-toggle="dropdown") 信息维护
             b.caret
           ul.dropdown-menu
             li
-              a(href="#") Action
+              a(href="#") 新增人员信息
             li
-              a(href="#") Another action
+              a(href="#") 修改人员信息
             li
-              a(href="#") Something else here
+              a(href="#") 删除人员信息
+
+        li.dropdown
+          a.dropdown-toggle(href="#", data-toggle="dropdown") 台账
+            b.caret
+          ul.dropdown-menu
+            li
+              a(href="#") <strong>农村劳动力转移就业人员（县内）</strong>
+            li
+              a(href="#") 农村劳动力转移就业人员（县外）
+            li
+              a(href="#") 城镇劳动力（居民）就业人员
+            li
+              a(href="#") 大、中专毕业生就业
             li.divider
             li
-              a(href="#") Separated link
-            li.divider
+              a(href="#") 劳动力资源登记台帐
             li
-              a(href="#") One more separated link
+              a(href="#") 劳动力资源统计汇总表
+        li
+          a(href="#") 检索
       form.navbar-form.navbar-left(role="search").hidden
         .form-group
           input.form-control(type="text", name="search", placeholder="Search")
         button.btn.btn-default(type="submit") Submit
+
       ul.nav.navbar-nav.navbar-right
+        li.dropdown
+          a.dropdown-toggle(href="#", data-toggle="dropdown") 系统管理
+            b.caret
+          ul.dropdown-menu
+            li
+              a(href="#") 管辖区域：
+            li.divider
+            li
+              a(href="#") 账号管理
+            li
+              a(href="#") 系统数据维护
         li
           a(href="#") 帮助
-        li.active
-          button.btn.btn-default.navbar-btn.btn-primary(type="button") 退出系统
+        li
+          button.btn.navbar-btn.btn-primary(type="button") 退出系统
