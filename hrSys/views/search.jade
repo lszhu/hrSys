@@ -1,16 +1,16 @@
 extends layout
-
 block content
-    link(rel="stylesheet" href="/stylesheets/signin.css")
-    //h1= title
-    div.container
-        form.form-signin(role="form", action="/login", method="POST")
-            h2.form-signin-heading 请登录
-            label 账号：
-            input.form-control(type="text", placeholder="在此输入账号名称", required="required")
-            label 密码：
-            input.form-control(type="password", placeholder="在此输入登录密码", required="required")
-            label.checkbox
-                input(type="checkbox", value="rememberMe")
-                span 记住我的账号
-            button.btn.btn-lg.btn-primary.btn-block(type="submit") 登录
+  link(rel="stylesheet" href="/stylesheets/signin.css")
+  //h1= title
+  include nav.jade
+  div.container
+    form.form-signin(role="form", action="/login", method="POST")
+      h2.form-signin-heading 搜索条件
+      label 姓名：
+      input.form-control(type="text", placeholder="在此输入姓名", required="required")
+      label 身份证号：
+      input.form-control(type="password", placeholder="在此输入身份证号", required="required")
+      label.checkbox
+        input(type="checkbox", value="rememberMe")
+        span 大中专毕业生
+      button.btn.btn-lg.btn-primary.btn-block(type="submit") 搜索

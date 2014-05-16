@@ -12,15 +12,15 @@ nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
     .collapse.navbar-collapse#bs-example-navbar-collapse-1
       ul.nav.navbar-nav
         li.active
-          a(href="#") 首页
+          a(href="/") 首页
         li.dropdown
           a.dropdown-toggle(href="#", data-toggle="dropdown") 信息维护
             b.caret
           ul.dropdown-menu
             li
-              a(href="#") 新增人员信息
+              a(href="/item") 新增人员信息
             li
-              a(href="#") 修改人员信息
+              a(href="/item") 修改人员信息
             li
               a(href="#") 删除人员信息
 
@@ -42,7 +42,7 @@ nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
             li
               a(href="#") 劳动力资源统计汇总表
         li
-          a(href="#") 检索
+          a(href="/search") 检索
       form.navbar-form.navbar-left(role="search").hidden
         .form-group
           input.form-control(type="text", name="search", placeholder="Search")
@@ -61,6 +61,7 @@ nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
             li
               a(href="#") 系统数据维护
         li
-          a(href="#") 帮助
+          a(href="/help") 帮助
         li
-          button.btn.navbar-btn.btn-primary(type="button") 退出系统
+          a(href="/logout") <strong>退出系统</strong>
+          //button#logout.btn.navbar-btn.btn-primary(type="button") 退出系统

@@ -34,6 +34,7 @@ app.use('/', function(req, res, next) {
         req.session.error = 'NoLogin';
         return res.redirect('/login');
     }
+    console.log('req.session: ' + req.session);
     next();
 });
 

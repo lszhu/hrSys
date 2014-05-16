@@ -27,6 +27,7 @@ router.post('/login', function(req, res) {
     console.log("session: " + util.inspect(req.session));
     if (auth(acc)) {
         req.session.user = acc.username;
+        req.session.error = undefined;
         res.redirect('/');
     } else {
         res.render('login', {error: '用户名或密码错误！'})
@@ -178,9 +179,18 @@ router.post('/search', function(req, res) {
     res.render('index', { title: 'search' });
 });
 
+/* help page. */
+router.get('/help', function(req, res) {
+    res.render('help', { title: 'search' });
+});
+
 /* logout page. */
-router.post('/logout', function(req, res) {
-    res.render('index', { title: 'logout' });
+router.all('/logout', function(req, res) {
+    req.session.user = undefined;
+    //req.session.error = "NoLogin";
+    //console.log(req.session);
+    res.redirect('/login');
+    //res.render('index', { title: 'logout' });
 });
 
 module.exports = router;
