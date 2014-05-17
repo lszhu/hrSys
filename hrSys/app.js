@@ -5,7 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-//var auth = require('./routes/auth').authentication;
+var debug = require('debug')('app');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -29,12 +29,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // redirect to login page before any access
 app.use('/', function(req, res, next) {
-    console.log('req.session: ' + req.session);
+    debug('req.session: ' + req.session);
     if (!req.session.user && req.path != '/login') {
         req.session.error = 'NoLogin';
         return res.redirect('/login');
     }
-    console.log('req.session: ' + req.session);
     next();
 });
 

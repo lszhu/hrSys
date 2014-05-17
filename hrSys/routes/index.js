@@ -1,13 +1,15 @@
 var express = require('express');
 var router = express.Router();
 var util = require('util');
+// for debug
+var debug = require('debug')('route');
 
-// temp accounts
+// account authentication
 var auth = require('./auth').auth;
 
 /* GET home page. */
 router.get('/', function(req, res) {
-    console.log("session: " + util.inspect(req.session));
+    debug("session: " + util.inspect(req.session));
     res.render('index', { title: 'Express' });
 });
 
@@ -23,8 +25,8 @@ router.post('/login', function(req, res) {
         username: req.body.username,
         password: req.body.password
     };
-    console.log(acc);
-    console.log("session: " + util.inspect(req.session));
+    debug(acc);
+    debug("session: " + util.inspect(req.session));
     if (auth(acc)) {
         req.session.user = acc.username;
         req.session.error = undefined;
@@ -188,7 +190,7 @@ router.get('/help', function(req, res) {
 router.all('/logout', function(req, res) {
     req.session.user = undefined;
     //req.session.error = "NoLogin";
-    //console.log(req.session);
+    debug(req.session);
     res.redirect('/login');
     //res.render('index', { title: 'logout' });
 });
