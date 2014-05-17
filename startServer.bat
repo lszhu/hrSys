@@ -1,0 +1,1 @@
+supervisor -i public hrSys\bin\www
