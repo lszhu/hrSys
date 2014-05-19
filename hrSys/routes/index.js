@@ -110,19 +110,34 @@ router.post('/item', function(req, res) {
         industry: industry,
         jobType: jobType,
         workPlace: workPlace,
-        preferredTraining: preferredTraining
+        preferredTraining: preferredTraining,
+        modifiedDate: new Date()
     };
     db.save(userMessage);
     res.render('editResponse', {userMessage: userMessage});
 });
 
-/* statistics page. */
-router.get('/statistics', function(req, res) {
-    res.render('statistics', { title: 'statistics' });
+/* prepare statistics table page, ask for search parameters. */
+router.get('/tables/:title', function(req, res) {
+    var tables = {
+        farmerInCounty: '农村劳动力转移就业人员（县内）',
+        farmerOutCounty: '农村劳动力转移就业人员（县外）',
+        townsfolk: '城镇劳动力（居民）就业人员',
+        graduate: '大、中专毕业生就业',
+        annual: '劳动力资源登记台帐',
+        summary: '劳动力资源统计汇总表'};
+    debug('title: ' + req.param('title'));
+    res.render(
+        'statistics',
+        {
+            tableName: req.param('title'),
+            tables: tables
+        }
+    );
 });
 
-/* statistics page. */
-router.post('/statistics', function(req, res) {
+/* show statistics table page. */
+router.post('/tables', function(req, res) {
     res.render('index', { title: 'statistics' });
 });
 
