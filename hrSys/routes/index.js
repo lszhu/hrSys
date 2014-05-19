@@ -5,6 +5,8 @@ var util = require('util');
 // for debug
 var debug = require('debug')('route');
 
+// data for make table
+var table = require('./table');
 // account authentication
 var auth = require('./auth').auth;
 // access database
@@ -119,13 +121,8 @@ router.post('/item', function(req, res) {
 
 /* prepare statistics table page, ask for search parameters. */
 router.get('/tables/:title', function(req, res) {
-    var tables = {
-        farmerInCounty: '农村劳动力转移就业人员（县内）',
-        farmerOutCounty: '农村劳动力转移就业人员（县外）',
-        townsfolk: '城镇劳动力（居民）就业人员',
-        graduate: '大、中专毕业生就业',
-        annual: '劳动力资源登记台帐',
-        summary: '劳动力资源统计汇总表'};
+    var tables = table.tablesCnName;
+    debug('tables: ' + util.inspect(table.tablesName));
     debug('title: ' + req.param('title'));
     res.render(
         'statistics',
@@ -138,7 +135,26 @@ router.get('/tables/:title', function(req, res) {
 
 /* show statistics table page. */
 router.post('/tables', function(req, res) {
-    res.render('index', { title: 'statistics' });
+    var area = req.body.area;
+    var tableName = req.body.table;
+    var condition = {};
+    if (area) {
+        condition.address = new RegExp(area);
+    }
+    db.query(condition, function(err, data) {
+        if (err) {
+            console.error('error: ' + err);
+            res.render('error', {title: 'Database error, try again later.'});
+            return;
+        }
+        res.render('dbResponse',
+        //res.render('table',
+            {
+                title: table.tablesCnName[tableName],
+                data: data
+            }
+        );
+    });
 });
 
 /* search page. */

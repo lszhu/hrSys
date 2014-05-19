@@ -79,8 +79,8 @@ exports.save = function(hrMsg) {
         });
 };
 
-exports.search = function(condition) {
-    return Item.find(condition).exec();
+exports.query = function(condition, callback) {
+    Item.find(condition, callback);
 };
 
 exports.count = {
