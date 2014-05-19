@@ -147,8 +147,8 @@ router.post('/tables', function(req, res) {
             res.render('error', {title: 'Database error, try again later.'});
             return;
         }
-        res.render('dbResponse',
-        //res.render('table',
+        //res.render('dbResponse',
+        res.render('table',
             {
                 title: table.tablesCnName[tableName],
                 data: data
