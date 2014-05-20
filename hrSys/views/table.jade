@@ -2,15 +2,26 @@ extends layout
 block content
   link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
   include nav.jade
-  h1.text-center= title
-  ul
+  //h1.text-center= title
+  //ul
     each val, index in data
       li= index + ' = ' + val
   .panel.panel-default
     .panel-heading.text-center
-      h1 Panel heading
+      h1= table.cnName[tableName]
     table.table.table-condensed.table-bordered.table-hover.table-responsive
       thead
+        tr
+          th 序号
+          each val, key in table.columns
+            th= table.cnItemName[val]
+        tbody
+          each item, row in data
+            tr
+              td= row + 1
+              each index in table.columns[tableName]
+                td= item[index]
+      //thead
         tr
           th 序号
           th 姓名
@@ -23,7 +34,7 @@ block content
           th 从事工种
           th 参保情况
           th 月收入
-      tbody
+      //tbody
         tr
           td 1
           td Mark

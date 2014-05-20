@@ -60,31 +60,31 @@ router.get('/item', function(req, res) {
 /* add/modify page. */
 router.post('/item', function(req, res) {
     var insurance = [];
-    for (var i = 0; i < db.count.insurance; i++) {
+    for (var i = 0; i < table.cnInsurance.length; i++) {
         if (req.body['insurance' + i]) {
             insurance.push(i);
         }
     }
     var workPlace = [];
-    for (i = 0; i < db.count.workPlace; i++) {
+    for (i = 0; i < table.cnWorkPlace.length; i++) {
         if (req.body['workPlace' + i]) {
             workPlace.push(i);
         }
     }
     var jobType = [];
-    for (i = 0; i < db.count.jobType; i++) {
+    for (i = 0; i < table.cnJobType.length; i++) {
         if (req.body['jobType' + i]) {
             jobType.push(i);
         }
     }
     var industry = [];
-    for (i = 0; i < db.count.industry; i++) {
+    for (i = 0; i < table.cnIndustry.length; i++) {
         if (req.body['industry' + i]) {
             industry.push(i);
         }
     }
     var preferredTraining = [];
-    for (i = 0; i < db.count.preferredTraining; i++) {
+    for (i = 0; i < table.cnPreferredTraining.length; i++) {
         if (req.body['preferredTraining' + i]) {
             preferredTraining.push(i)
         }
@@ -121,14 +121,13 @@ router.post('/item', function(req, res) {
 
 /* prepare statistics table page, ask for search parameters. */
 router.get('/tables/:title', function(req, res) {
-    var tables = table.tablesCnName;
     debug('tables: ' + util.inspect(table.tablesName));
     debug('title: ' + req.param('title'));
     res.render(
         'statistics',
         {
             tableName: req.param('title'),
-            tables: tables
+            tables: table.cnName
         }
     );
 });
@@ -136,7 +135,7 @@ router.get('/tables/:title', function(req, res) {
 /* show statistics table page. */
 router.post('/tables', function(req, res) {
     var area = req.body.area;
-    var tableName = req.body.table;
+    //var tableName = req.body.table;
     var condition = {};
     if (area) {
         condition.address = new RegExp(area);
@@ -147,10 +146,11 @@ router.post('/tables', function(req, res) {
             res.render('error', {title: 'Database error, try again later.'});
             return;
         }
-        //res.render('dbResponse',
-        res.render('table',
+        res.render(
+            'table',
             {
-                title: table.tablesCnName[tableName],
+                tableName: req.body.table,
+                table: table,
                 data: data
             }
         );
