@@ -62,7 +62,9 @@ exports.save = function(hrMsg) {
 };
 
 exports.query = function(condition, callback) {
-    Item.find(condition, callback);
+    Item.find(condition)
+        .lean()
+        .exec(callback);
 };
 
 // used to create test data

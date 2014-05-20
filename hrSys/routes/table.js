@@ -193,3 +193,46 @@ module.exports = {
     cnJobType: jobType,
     cnIndustry: industry
 };
+
+function translate(field, cnNameList) {
+    if (typeof field != 'object') {
+        return cnNameList[field];
+    }
+    var list = [];
+    for (var i = 0; i < field.length; i++) {
+        list.push(cnNameList[field[i]]);
+    }
+    return list;
+}
+
+function itemTranslate(item) {
+    if (item.marriage) {
+        item['marriage'] = '已婚';
+    } else {
+        item.marriage = '未婚';
+    }
+    //console.log('marriage: ' + item.marriage);
+    var recorders = {
+        'education': education,
+        'insurance': insurance,
+        'technicalGrade': technicalGrade,
+        'preferredTraining': preferredTraining,
+        'salary': salary,
+        'workExperience': workExperience,
+        'workPlace': workPlace,
+        'jobType': jobType,
+        'industry': industry
+    };
+    for (var i in recorders) {
+        if (recorders.hasOwnProperty(i)) {
+            item[i] = translate(item[i], recorders[i]);
+        }
+    }
+}
+
+module.exports.dataTranslate = function(data) {
+    var len = data.length;
+    for (var i = 0; i < len; i++) {
+        itemTranslate(data[i]);
+    }
+};

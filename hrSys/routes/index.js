@@ -135,7 +135,7 @@ router.get('/tables/:title', function(req, res) {
 /* show statistics table page. */
 router.post('/tables', function(req, res) {
     var area = req.body.area;
-    //var tableName = req.body.table;
+    var tableName = req.body.table;
     var condition = {};
     if (area) {
         condition.address = new RegExp(area);
@@ -146,11 +146,14 @@ router.post('/tables', function(req, res) {
             res.render('error', {title: 'Database error, try again later.'});
             return;
         }
+        table.dataTranslate(data);
+        debug('data translated: ' + data.length);
         res.render(
             'table',
             {
-                tableName: req.body.table,
-                table: table,
+                title: table.cnName[tableName],
+                columns: table.columns[tableName],
+                cnItemName: table.cnItemName,
                 data: data
             }
         );
