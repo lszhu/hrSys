@@ -18,31 +18,53 @@ block content
             input.form-control(type="text", name="idNumber", placeholder="输入身份证号", required="required")
           .input-group
             span.input-group-addon 民 族
-            input.form-control(type="text", name="nation", placeholder="输入民族")
+            select.form-control(name="nation")
+              option(value="汉族") 汉族
+              option(value="蒙古族") 蒙古族
+              option(value="回族") 回族
+              option(value="藏族") 藏族
+              option(value="维吾尔族") 维吾尔族
+              option(value="苗族") 苗族
+              option(value="彝族") 彝族
             span.input-group-addon 年 龄
             input.form-control(type="text", disabled="disabled")
             span.input-group-addon 性 别
+            input.form-control(type="text", disabled="disabled")
+          .input-group
+
+            span.input-group-addon 学 历
+            select.form-control(name="education")
+              option(value="小学及以下") 小学及以下
+              option(value="初中") 初中
+              option(value="高中") 高中
+              option(value="中专中技") 中专中技
+              option(value="大专") 大专
+              option(value="本科及以上") 本科及以上
+            span.input-group-addon 毕业时间
+            input.form-control(type="text")
+            span.input-group-addon 就业失业登记证号
             input.form-control(type="text", disabled="disabled")
           .input-group
             span.input-group-addon 婚姻状况
             select.form-control(name="marriage", placeholder="是否结婚")
               option(value="0") 未婚
               option(value="1") 已婚
-            span.input-group-addon 文化程度
-            select.form-control(name="education")
-              option(value="0") 初中及以下
-              option(value="1") 高中
-              option(value="2") 职业高中
-              option(value="3") 技工学校
-              option(value="4") 中专
-              option(value="5") 大专
-              option(value="6") 大学以上
+            span.input-group-addon 户口性质
+            select.form-control(name="")
+              option(value="农业户口") 农业户口
+              option(value="非农业户口") 非农业户口
+            span.input-group-addon 政治面貌
+            select.form-control(name="")
+              option(value="中共党员") 中共党员
+              option(value="群众") 群众
+              option(value="团员") 团员
+              option(value="民主人士") 民主人士
+              option(value="其他") 其他
           .input-group
             span.input-group-addon 联系电话
-            input.form-control(type="text", name="phone", placeholder="输入联系电话（可输入多个）")
-          .input-group
-            span.input-group-addon 户籍地址
-            input.form-control(type="text", name="address", placeholder="输入户籍所在地址")
+            input.form-control(type="text", name="phone", placeholder="输入联系电话")
+            span.input-group-addon 地址
+            input.form-control(type="text", name="address", disabled="disabled")
         .col-sm-3
           img.img-thumbnail(src="/images/test.jpg", alt="- - 正面免冠照片 - -", style="height:170px;")
         .col-sm-12

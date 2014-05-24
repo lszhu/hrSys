@@ -20,6 +20,12 @@ db.once('open', function() {
     console.log('database connected.');
 });
 
+
+var document = new Schema({
+
+});
+
+// old data schema
 var itemSchema = new Schema({
     username: String,
     idNumber: String,
