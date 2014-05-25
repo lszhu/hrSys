@@ -5,66 +5,83 @@ block content
   //h1= title
   include nav.jade
   .container
-    form.panel.panel-info(action="/item", method="POST")
+    form.panel.panel-info(role="form", action="/item", method="POST")
       .panel-heading
         //.container
-        h1.text-center 劳动力资源调查登记表
+        h1.text-center 劳动力资源登记表
       .panel-body
         .col-sm-9
+          div(style="width: 33%; float: left;")
+            .input-group
+              span.input-group-addon 姓 名
+              input.form-control(type="text", name="username", placeholder="输入姓名", required="required")
+          div(style="width: 40%; float: left;")
+            .input-group
+              span.input-group-addon 身份证号
+              input.form-control(type="text", name="idNumber", placeholder="输入身份证号", required="required")
+          div(style="width: 27%; float: left;")
+            .input-group
+              span.input-group-addon 民 族
+              select.form-control(name="nation")
+                option(value="汉族") 汉族
+                option(value="蒙古族") 蒙古族
+                option(value="回族") 回族
+                option(value="藏族") 藏族
+                option(value="维吾尔族") 维吾尔族
+                option(value="苗族") 苗族
+                option(value="彝族") 彝族
           .input-group
-            span.input-group-addon 姓 名
-            input.form-control(type="text", name="username", placeholder="输入姓名", required="required")
-            span.input-group-addon 身份证号
-            input.form-control(type="text", name="idNumber", placeholder="输入身份证号", required="required")
-          .input-group
-            span.input-group-addon 民 族
-            select.form-control(name="nation")
-              option(value="汉族") 汉族
-              option(value="蒙古族") 蒙古族
-              option(value="回族") 回族
-              option(value="藏族") 藏族
-              option(value="维吾尔族") 维吾尔族
-              option(value="苗族") 苗族
-              option(value="彝族") 彝族
             span.input-group-addon 年 龄
-            input.form-control(type="text", disabled="disabled")
+            input.form-control(type="text", readonly="readonly", tabindex="-1")
             span.input-group-addon 性 别
-            input.form-control(type="text", disabled="disabled")
-          .input-group
-
-            span.input-group-addon 学 历
-            select.form-control(name="education")
-              option(value="小学及以下") 小学及以下
-              option(value="初中") 初中
-              option(value="高中") 高中
-              option(value="中专中技") 中专中技
-              option(value="大专") 大专
-              option(value="本科及以上") 本科及以上
-            span.input-group-addon 毕业时间
-            input.form-control(type="text")
+            input.form-control(type="text", readonly="readonly", tabindex="-1")
             span.input-group-addon 就业失业登记证号
-            input.form-control(type="text", disabled="disabled")
+            input.form-control(type="text", readonly="readonly", tabindex="-1")
           .input-group
-            span.input-group-addon 婚姻状况
-            select.form-control(name="marriage", placeholder="是否结婚")
-              option(value="0") 未婚
-              option(value="1") 已婚
-            span.input-group-addon 户口性质
-            select.form-control(name="")
-              option(value="农业户口") 农业户口
-              option(value="非农业户口") 非农业户口
-            span.input-group-addon 政治面貌
-            select.form-control(name="")
-              option(value="中共党员") 中共党员
-              option(value="群众") 群众
-              option(value="团员") 团员
-              option(value="民主人士") 民主人士
-              option(value="其他") 其他
-          .input-group
-            span.input-group-addon 联系电话
-            input.form-control(type="text", name="phone", placeholder="输入联系电话")
-            span.input-group-addon 地址
-            input.form-control(type="text", name="address", disabled="disabled")
+            span.input-group-addon 地 址
+            input.form-control(type="text", name="address", readonly="readonly", tabindex="-1")
+            span.input-group-addon 行政区划代码
+            input.form-control(type="text", name="", readonly="readonly", tabindex="-1")
+
+          div(style="width: 33%; float: left;")
+            .input-group
+              span.input-group-addon 学 历
+              select.form-control(name="education")
+                option(value="小学及以下") 小学及以下
+                option(value="初中") 初中
+                option(value="高中") 高中
+                option(value="中专中技") 中专中技
+                option(value="大专") 大专
+                option(value="本科及以上") 本科及以上
+          div(style="width: 33%; float: left;")
+            .input-group
+              span.input-group-addon 毕业时间
+              input.form-control(type="text")
+          div(style="width: 34%; float: left;")
+            .input-group
+              span.input-group-addon 联系电话
+              input.form-control(type="text", name="phone", placeholder="输入联系电话")
+          div(style="width: 33%; float: left;")
+            .input-group
+              span.input-group-addon 户口性质
+              select.form-control(name="")
+                option 农业户口
+                option 非农业户口
+          div(style="width: 33%; float: left;")
+            .input-group
+              span.input-group-addon 政治面貌
+              select.form-control(name="")
+                option 群众
+                option 中共党员
+                option 团员
+                option 民主人士
+                option 其他
+          div(style="width: 34%; float: left;")
+            .input-group
+              span.input-group-addon 婚姻状况
+              select.form-control(name="marriage", placeholder="是否结婚")
+                option 已婚
+                option 未婚
         .col-sm-3
           img.img-thumbnail(src="/images/test.jpg", alt="- - 正面免冠照片 - -", style="height:170px;")
         .col-sm-12
@@ -72,58 +89,18 @@ block content
         .col-sm-12
           .panel.panel-default
             .panel-heading.text-center
-              strong 参保情况（多选）
+              strong 劳动技能/已享受就业服务信息
             .panel-body
-              .col-sm-4
-                label.checkbox-inline 城乡居民养老保险
-                  input(type="checkbox", name="insurance0")
-              .col-sm-4
-                label.checkbox-inline 新型农村合作医疗保险
-                  input(type="checkbox", name="insurance1")
-              .col-sm-4
-                label.checkbox-inline 企业职工基本养老保险
-                  input(type="checkbox", name="insurance2")
-              .col-sm-4
-                label.checkbox-inline 企业职工基本医疗保险
-                  input(type="checkbox", name="insurance3")
-              .col-sm-4
-                label.checkbox-inline 失业保险
-                  input(type="checkbox", name="insurance4")
-              .col-sm-4
-                label.checkbox-inline 工伤保险
-                  input(type="checkbox", name="insurance5")
-              .col-sm-4
-                label.checkbox-inline 生育保险
-                  input(type="checkbox", name="insurance6")
-        .col-sm-12
-          .panel.panel-default
-            .panel-heading.text-center
-              strong 就业情况
-            .panel-body
-              include jobSpec.jade
-        .col-sm-12
-          .panel.panel-default
-            .panel-heading.text-center
-              strong 培训情况
-            .panel-body
-              .col-sm-12
                 .input-group
-                  span.input-group-addon 现有技术等级
-                  select.form-control(name="technicalGrade")
-                    option(value="0") 无
-                    option(value="1") 初级技工
-                    option(value="2") 中级技工
-                    option(value="3") 高级技工
-                    option(value="4") 技师
-                    option(value="5") 高级技师
-                  span.input-group-addon 是否参加过培训
+                  span.input-group-addon 职业培训
                   select.form-control(name="trainingStatus")
-                    option(value="0") 未参加过任何培训
-                    option(value="1") 农村劳动力技能培训
-                    option(value="2") 其他培训
-                  span.input-group-addon 参加过的培训
-                  input.form-control(type="text", name="postTraining", list="course", placeholder="输入培训名称")
-                  datalist#course
+                    option 无
+                    option 职业培训
+                    option 创业培训
+                    option 企业高技能人才培训
+                  span.input-group-addon 培训项目
+                  input.form-control(type="text", name="postTraining", list="courses", placeholder="输入培训名称")
+                  datalist#courses
                     option 服装缝纫
                     option 制鞋
                     option 电子技术
@@ -138,73 +115,77 @@ block content
                     option 服务员
                     option 美容美发
                     option 商业营销
-              .col-sm-12
+                  span.input-group-addon 国家职业资格证书
+                  select.form-control(name="technicalGrade")
+                    option 无
+                    option 初级技工
+                    option 中级技工
+                    option 高级技工
+                    option 技师
+                    option 高级技师
                 br
-              .col-sm-12
-                .panel.panel-default
-                  .panel-heading.text-center
-                    strong 参加农村劳动力技能培训意向（多选）
-                  .panel-body
-                    .col-sm-3
-                      label.checkbox-inline 服装缝纫
-                        input(type="checkbox", name="preferredTraining0")
-                    .col-sm-3
-                      label.checkbox-inline 制鞋
-                        input(type="checkbox", name="preferredTraining1")
-                    .col-sm-3
-                      label.checkbox-inline 电子技术
-                        input(type="checkbox", name="preferredTraining2")
-                    .col-sm-3
-                      label.checkbox-inline 电脑
-                        input(type="checkbox", name="preferredTraining3")
-                    .col-sm-3
-                      label.checkbox-inline 家电维修
-                        input(type="checkbox", name="preferredTraining4")
-                    .col-sm-3
-                      label.checkbox-inline 电工
-                        input(type="checkbox", name="preferredTraining5")
-                    .col-sm-3
-                      label.checkbox-inline 焊工
-                        input(type="checkbox", name="preferredTraining6")
-                    .col-sm-3
-                      label.checkbox-inline 数控车床
-                        input(type="checkbox", name="preferredTraining7")
-                    .col-sm-3
-                      label.checkbox-inline 家政服务
-                        input(type="checkbox", name="preferredTraining8")
-                    .col-sm-3
-                      label.checkbox-inline 保安
-                        input(type="checkbox", name="preferredTraining9")
-                    .col-sm-3
-                      label.checkbox-inline 烹饪
-                        input(type="checkbox", name="preferredTraining10")
-                    .col-sm-3
-                      label.checkbox-inline 服务员
-                        input(type="checkbox", name="preferredTraining11")
-                    .col-sm-3
-                      label.checkbox-inline 美容美发
-                        input(type="checkbox", name="preferredTraining12")
-                    .col-sm-3
-                      label.checkbox-inline 商业营销
-                        input(type="checkbox", name="preferredTraining13")
-                    .col-sm-3
-                      label.checkbox-inline 其他
-                        input(type="checkbox", name="preferredTraining14")
+                .input-group
+                  span.input-group-addon 已享受就业服务
+                  select.form-control(name="postService")
+                    option 无
+                    option 职业介绍
+                    option 职业培训
+                    option 职业技能鉴定
+                    option 社会保险补贴
+                    option 公益性岗位安置
+                    option 小额担保贷款
+                    option 就业见习
+                  span.input-group-addon 已享受其他服务
+                  input.form-control(type="text", name="extraService", placeholder="输入服务名称")
+
+        .col-sm-12
+          .panel.panel-default
+            .panel-heading.text-center
+              strong 个人就业信息
+            .panel-body
+              include jobSpec.jade
+
+        .col-sm-12
+          .panel.panel-default
+            .panel-heading.text-center
+              strong 参加社会保险信息（多选）
+            .panel-body
+              .col-sm-4
+                label.checkbox-inline 城镇职工养老保险
+                  input(type="checkbox", name="insurance0")
+              .col-sm-4
+                label.checkbox-inline 城镇居民养老保险
+                  input(type="checkbox", name="insurance1")
+              .col-sm-4
+                label.checkbox-inline 新型农村养老保险
+                  input(type="checkbox", name="insurance2")
+              .col-sm-4
+                label.checkbox-inline 城镇职工医疗保险
+                  input(type="checkbox", name="insurance3")
+              .col-sm-4
+                label.checkbox-inline 城镇居民医疗保险
+                  input(type="checkbox", name="insurance4")
+              .col-sm-4
+                label.checkbox-inline 失业保险
+                  input(type="checkbox", name="insurance5")
+              .col-sm-4
+                label.checkbox-inline 工伤保险
+                  input(type="checkbox", name="insurance6")
+              .col-sm-4
+                label.checkbox-inline 新型农村合作医疗保险
+                  input(type="checkbox", name="insurance7")
 
       .panel-footer
         .container
-          .col-sm-3
+          .col-sm-3.col-sm-offset-1
             .input-group
               span.input-group-addon 填报人
               input.form-control(type="text", name="editor", placeholder="输入姓名")
-          .col-sm-3
-            .input-group
-              span.input-group-addon 审核人
-              input.form-control(type="text", name="auditor", placeholder="输入姓名")
-          .col-sm-5
+          .col-sm-2
+          .col-sm-4
             .input-group
               span.input-group-addon 填报日期
-              input.form-control(type="text", disabled="disabled", placeholder="填报日期")
+              input.form-control(type="text", readonly="readonly", tabindex="-1", placeholder="填报日期")
           .col-sm-10
             br
           .col-sm-7.col-sm-offset-2

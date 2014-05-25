@@ -100,6 +100,7 @@ router.post('/item', function(req, res) {
         employment: req.body.employment,
         workTrend: req.body.workTrend,
         jobPreference: req.body.jobPreference,
+        postService: req.body.postService,
         project: req.body.project,
         salary: req.body.salary,
         workExperience: req.body.workExperience,
@@ -115,7 +116,7 @@ router.post('/item', function(req, res) {
         preferredTraining: preferredTraining,
         modifiedDate: new Date()
     };
-    db.save(userMessage);
+    //db.save(userMessage);
     res.render('editResponse', {userMessage: userMessage});
 });
 
