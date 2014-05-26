@@ -62,25 +62,25 @@ router.post('/item', function(req, res) {
     var insurance = [];
     for (var i = 0; i < table.cnInsurance.length; i++) {
         if (req.body['insurance' + i]) {
-            insurance.push(i);
+            insurance.push(table.cnInsurance[i]);
         }
     }
     var preferredService = [];
     for (i = 0; i < table.cnService.length; i++) {
         if (req.body['preferredService' + i]) {
-            preferredService.push(i);
+            preferredService.push(table.cnService[i]);
         }
     }
     var preferredJobType = [];
     for (i = 0; i < table.cnJobType.length; i++) {
         if (req.body['preferredJobType' + i]) {
-            preferredJobType.push(i);
+            preferredJobType.push(table.cnJobType[i]);
         }
     }
     var jobType = [];
     for (i = 0; i < table.cnJobType.length; i++) {
         if (req.body['jobType' + i]) {
-            jobType.push(i);
+            jobType.push(table.cnJobType[i]);
         }
     }
 
@@ -113,10 +113,11 @@ router.post('/item', function(req, res) {
         // employment info
         employmentInfo: {
             employer: req.body.employer,
-            industry: req.body.industry,
             jobType: jobType,
+            industry: req.body.industry,
             startWorkTime: req.body.startWorkTime,
             workplace: req.body.workplace,
+            workProvince: req.body.workProvince,
             salary: req.body.salary,
             jobForm: req.body.jobForm
         },
@@ -142,7 +143,14 @@ router.post('/item', function(req, res) {
         editor: req.body.editor,
         modifiedDate: new Date()
     };
-    //db.save(userMessage);
+
+    userMessage.address = db.getAddress(req.session.user);
+    if (userMessage.employment) {
+        userMessage.unemploymentInfo = null;
+    } else {
+        userMessage.employmentInfo = null;
+    }
+    db.save(userMessage);
     res.render('editResponse', {userMessage: userMessage});
 });
 

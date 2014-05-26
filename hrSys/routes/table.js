@@ -8,15 +8,23 @@ var cnName = {
 };
 
 var cnItemName = {
+    districtId: '行政区划代码',
+    county: '县（市）',
+    town: '街道（乡镇）',
+    village: '社区（村）',
     username: '姓名',
-    idNumber: '身份证号',
-    age: '年龄',
+    idNumber: '身份证号码',
+    workRegisterId:'就业失业登记证号',
     gender: '性别',
-    nation: '名族',
+    age: '年龄',
+    birthday: '出生日期',
+    nation: '民族',
+    politicalOutlook: '政治面貌',
+    education: '学历',
+    censusRegisterType: '户口性质',
     marriage: '婚姻状况',
-    address: '户籍地址',
     phone: '联系电话',
-    education: '文化程度',
+
     employment: '就业情况',
     workTrend: '是否打算外出就业',
     jobPreference: '外出就业意向',
@@ -194,16 +202,16 @@ module.exports = {
     columns: columns,
     cnName: cnName,
     cnItemName: cnItemName,
-    cnEducation: education,
-    cnInsurance: insurance,
-    cnTechnicalGrade: technicalGrade,
+//    cnEducation: education,
+//    cnTechnicalGrade: technicalGrade,
     cnPreferredTraining: preferredTraining,
-    cnSalary: salary,
-    cnWorkExperience: workExperience,
-    cnWorkPlace: workPlace,
+//    cnSalary: salary,
+//    cnWorkExperience: workExperience,
+//    cnWorkPlace: workPlace,
     cnJobType: jobType,
-    cnIndustry: industry,
-    cnService: serviceType
+//    cnIndustry: industry,
+    cnService: serviceType,
+    cnInsurance: insurance
 };
 
 function translate(field, cnNameList) {

@@ -1,6 +1,10 @@
 extends layout
 block content
-  h3 basic info
+  h3 upload info
   ul
     each val, index in userMessage
-      li= index + ' = ' + val.toString()
+      - if (val && typeof val == 'object')
+        each v, i in val
+          li= i + ' = ' + v
+      - else
+        li= index + ' = ' + val

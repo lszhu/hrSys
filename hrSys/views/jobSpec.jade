@@ -12,17 +12,10 @@ br
       strong 已就业信息
     .panel-body
       .col-sm-12
-        div(style="width: 50%; float: left")
-          .input-group
-            span.input-group-addon 就业单位
-            input.form-control(type="text", name="employer")
-        div(style="width: 50%; float: left")
-          .input-group
-            span.input-group-addon 从事产业类型
-            select.form-control(name="industry")
-              option 第一产业
-              option 第二产业
-              option 第三产业
+        .input-group
+          span.input-group-addon 就业单位
+          input.form-control(type="text", name="employer")
+
       .col-sm-12
         br
       .col-sm-12
@@ -39,7 +32,13 @@ br
             .col-sm-3
               label.checkbox-inline 木工
                 input(type="checkbox", name="jobType2")
-
+        div(style="width: 50%; float: left")
+          .input-group
+            span.input-group-addon 从事产业类型
+            select.form-control(name="industry")
+              option 第一产业
+              option 第二产业
+              option 第三产业
         div(style="width: 50%; float: left")
           .input-group
             span.input-group-addon 就业时间
@@ -56,8 +55,17 @@ br
               option 境外
         div(style="width: 50%; float: left")
           .input-group
+            span.input-group-addon 外出省份
+            select.form-control(name="workProvince")
+              option 北京
+              option 上海
+              option 广东
+              option 重庆
+              option 海南
+        div(style="width: 50%; float: left")
+          .input-group
             span.input-group-addon 年收入
-            input.form-control(type="text", name="salary")
+            input.form-control(type="number", name="salary")
         div(style="width: 50%; float: left")
           .input-group
             span.input-group-addon 就业形式
@@ -95,13 +103,13 @@ br
           .input-group
             span.input-group-addon 失业原因
             select.form-control(name="unemploymentCause")
+              option 其他符合失业登记条件
               option 从各类学校毕业、肄业
               option 从企业、机关、事业单位等各类用人单位失业
               option 个体工商户业主或者私营企业业主停业、破产停止经营
               option 承包土地被征用并符合规定条件
               option 军人退出现役且未纳入国家统一安置
               option 刑满释放、假释、监外执行或解除劳动教养
-              option 其他符合失业登记条件
         div(style="width: 50%; float: left")
           .input-group
             span.input-group-addon 困难群体情况
@@ -268,6 +276,10 @@ br
       .col-sm-12
         .input-group
           span.input-group-addon 培训需求意向
+          label.input-group-addon
+            span
+              input(type="radio" name="preferredTraining", checked="checked")
+              | 无
           label.input-group-addon
             span
               input(type="radio" name="preferredTraining")

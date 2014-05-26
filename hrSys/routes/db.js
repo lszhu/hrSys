@@ -22,7 +22,67 @@ db.once('open', function() {
 
 
 var document = new Schema({
-
+    // basic info
+    username: String,
+    idNumber: String,
+    nation: String,
+    // readonly basic info
+    age: Number,
+    gender: String,
+    workRegisterId: String,
+    address: {
+        county: String,
+        town: String,
+        village: String
+    },
+    districtId: Number,
+    // still basic info
+    education: String,
+    graduateDate: Number,
+    phone: String,
+    censusRegisterType: String,
+    politicalOutlook: String,
+    marriage: String,
+    // training and service info
+    trainingType: String,
+    postTraining: String,
+    technicalGrade: String,
+    postService: String,
+    extraPostService: String,
+    // employment/unemployment switch
+    employment: Boolean,
+    // employment info
+    employmentInfo: {
+        employer: String,
+        jobType: [String],
+        industry: String,
+        startWorkTime: String,
+        workplace: String,
+        workProvince: String,
+        salary: Number,
+        jobForm: String
+    },
+    // unemployment info
+    unemploymentInfo: {
+        humanCategory: String,
+        unemployedDate: String,
+        unemploymentCause: String,
+        familyType: String,
+        preferredJobType: [String],
+        extraPreferredJobType: String,
+        preferredSalary: Number,
+        preferredIndustry: String,
+        preferredWorkplace: String,
+        preferredJobForm: String,
+        preferredService: [String],
+        extraPreferredService: String,
+        preferredTraining: String
+    },
+    // insurance info
+    insurance: [String],
+    // editor info
+    editor: String,
+    modifiedDate: Date
 });
 
 // old data schema
@@ -53,8 +113,9 @@ var itemSchema = new Schema({
     modifiedDate: Date
 });
 
-var Item = mongoose.model('hrmsg', itemSchema);
+//var Item = mongoose.model('hrmsg', itemSchema);
 
+var Item = mongoose.model('hrmsg', document);
 exports.save = function(hrMsg) {
     Item.update(
         {idNumber: hrMsg.idNumber},
@@ -71,6 +132,15 @@ exports.query = function(condition, callback) {
     Item.find(condition)
         .lean()
         .exec(callback);
+};
+
+exports.getAddress = function(editor) {
+    console.log('editor: ' + editor);
+    return {
+        county: '蓝山县',
+        town: '塔峰镇',
+        village: '城南'
+    };
 };
 
 // used to create test data
