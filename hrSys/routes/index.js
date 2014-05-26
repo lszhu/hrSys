@@ -65,10 +65,16 @@ router.post('/item', function(req, res) {
             insurance.push(i);
         }
     }
-    var workPlace = [];
-    for (i = 0; i < table.cnWorkPlace.length; i++) {
-        if (req.body['workPlace' + i]) {
-            workPlace.push(i);
+    var preferredService = [];
+    for (i = 0; i < table.cnService.length; i++) {
+        if (req.body['preferredService' + i]) {
+            preferredService.push(i);
+        }
+    }
+    var preferredJobType = [];
+    for (i = 0; i < table.cnJobType.length; i++) {
+        if (req.body['preferredJobType' + i]) {
+            preferredJobType.push(i);
         }
     }
     var jobType = [];
@@ -77,43 +83,63 @@ router.post('/item', function(req, res) {
             jobType.push(i);
         }
     }
-    var industry = [];
-    for (i = 0; i < table.cnIndustry.length; i++) {
-        if (req.body['industry' + i]) {
-            industry.push(i);
-        }
-    }
-    var preferredTraining = [];
-    for (i = 0; i < table.cnPreferredTraining.length; i++) {
-        if (req.body['preferredTraining' + i]) {
-            preferredTraining.push(i)
-        }
-    }
+
     var userMessage = {
+        // basic info
         username: req.body.username,
         idNumber: req.body.idNumber,
         nation: req.body.nation,
-        marriage: req.body.marriage,
+        // readonly basic info
+        age: req.body.age,
+        gender: req.body.gender,
+        workRegisterId: req.body.workRegisterId,
         address: req.body.address,
-        phone: req.body.phone,
+        districtId: req.body.districtId,
+        // still basic info
         education: req.body.education,
-        employment: req.body.employment,
-        workTrend: req.body.workTrend,
-        jobPreference: req.body.jobPreference,
-        postService: req.body.postService,
-        project: req.body.project,
-        salary: req.body.salary,
-        workExperience: req.body.workExperience,
-        technicalGrade: req.body.technicalGrade,
-        trainingStatus: req.body.trainingStatus,
+        graduateDate: req.body.graduateDate,
+        phone: req.body.phone,
+        censusRegisterType: req.body.censusRegisterType,
+        politicalOutlook: req.body.politicalOutlook,
+        marriage: req.body.marriage,
+        // training and service info
+        trainingType: req.body.trainingType,
         postTraining: req.body.postTraining,
-        editor: req.body.editor,
-        auditor: req.body.auditor,
+        technicalGrade: req.body.technicalGrade,
+        postService: req.body.postService,
+        extraPostService: req.body.extraPostService,
+        // employment/unemployment switch
+        employment: req.body.employment,
+        // employment info
+        employmentInfo: {
+            employer: req.body.employer,
+            industry: req.body.industry,
+            jobType: jobType,
+            startWorkTime: req.body.startWorkTime,
+            workplace: req.body.workplace,
+            salary: req.body.salary,
+            jobForm: req.body.jobForm
+        },
+        // unemployment info
+        unemploymentInfo: {
+            humanCategory: req.body.humanCategory,
+            unemployedDate: req.body.unemployedDate,
+            unemploymentCause: req.body.unemploymentCause,
+            familyType: req.body.familyType,
+            preferredJobType: preferredJobType,
+            extraPreferredJobType: req.body.extraPreferredJobType,
+            preferredSalary: req.body.preferredSalary,
+            preferredIndustry: req.body.preferredIndustry,
+            preferredWorkplace: req.body.preferredWorkplace,
+            preferredJobForm: req.body.preferredJobForm,
+            preferredService: preferredService,
+            extraPreferredService: req.body.extraPreferredService,
+            preferredTraining: req.body.preferredTraining
+        },
+        // insurance info
         insurance: insurance,
-        industry: industry,
-        jobType: jobType,
-        workPlace: workPlace,
-        preferredTraining: preferredTraining,
+        // editor info
+        editor: req.body.editor,
         modifiedDate: new Date()
     };
     //db.save(userMessage);

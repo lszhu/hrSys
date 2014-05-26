@@ -32,16 +32,16 @@ block content
                 option(value="彝族") 彝族
           .input-group
             span.input-group-addon 年 龄
-            input.form-control(type="text", readonly="readonly", tabindex="-1")
+            input.form-control(type="text", name="age" readonly="readonly", tabindex="-1")
             span.input-group-addon 性 别
-            input.form-control(type="text", readonly="readonly", tabindex="-1")
+            input.form-control(type="text", name="gender", readonly="readonly", tabindex="-1")
             span.input-group-addon 就业失业登记证号
-            input.form-control(type="text", readonly="readonly", tabindex="-1")
+            input.form-control(type="text", name="workRegisterId", readonly="readonly", tabindex="-1")
           .input-group
             span.input-group-addon 地 址
             input.form-control(type="text", name="address", readonly="readonly", tabindex="-1")
             span.input-group-addon 行政区划代码
-            input.form-control(type="text", name="", readonly="readonly", tabindex="-1")
+            input.form-control(type="text", name="districtId", readonly="readonly", tabindex="-1")
 
           div(style="width: 33%; float: left;")
             .input-group
@@ -56,7 +56,7 @@ block content
           div(style="width: 33%; float: left;")
             .input-group
               span.input-group-addon 毕业时间
-              input.form-control(type="text")
+              input.form-control(type="text", name="graduateDate")
           div(style="width: 34%; float: left;")
             .input-group
               span.input-group-addon 联系电话
@@ -64,13 +64,13 @@ block content
           div(style="width: 33%; float: left;")
             .input-group
               span.input-group-addon 户口性质
-              select.form-control(name="")
+              select.form-control(name="censusRegisterType")
                 option 农业户口
                 option 非农业户口
           div(style="width: 33%; float: left;")
             .input-group
               span.input-group-addon 政治面貌
-              select.form-control(name="")
+              select.form-control(name="politicalOutlook")
                 option 群众
                 option 中共党员
                 option 团员
@@ -93,7 +93,7 @@ block content
             .panel-body
                 .input-group
                   span.input-group-addon 职业培训
-                  select.form-control(name="trainingStatus")
+                  select.form-control(name="trainingType")
                     option 无
                     option 职业培训
                     option 创业培训
@@ -135,8 +135,9 @@ block content
                     option 公益性岗位安置
                     option 小额担保贷款
                     option 就业见习
+                    option 其他服务
                   span.input-group-addon 已享受其他服务
-                  input.form-control(type="text", name="extraService", placeholder="输入服务名称")
+                  input.form-control(type="text", name="extraPostService", placeholder="输入服务名称")
 
         .col-sm-12
           .panel.panel-default
@@ -185,7 +186,7 @@ block content
           .col-sm-4
             .input-group
               span.input-group-addon 填报日期
-              input.form-control(type="text", readonly="readonly", tabindex="-1", placeholder="填报日期")
+              input.form-control(type="text", name="registerDate", disabled="disabled", tabindex="-1", placeholder="填报日期")
           .col-sm-10
             br
           .col-sm-7.col-sm-offset-2

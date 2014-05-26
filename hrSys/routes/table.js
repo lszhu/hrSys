@@ -50,13 +50,14 @@ var education = [
 
 //参保情况
 var insurance = [
-    '城乡居民养老保险',
-    '新型农村合作医疗保险',
-    '企业职工基本养老保险',
-    '企业职工基本医疗保险',
+    '城镇职工养老保险',
+    '城镇居民养老保险',
+    '新型农村养老保险',
+    '城镇职工医疗保险',
+    '城镇居民医疗保险',
     '失业保险',
     '工伤保险',
-    '生育保险'
+    '新型农村合作医疗保险'
 ];
 
 //现有技术等级
@@ -163,6 +164,16 @@ var industry = [
     '仓储和邮政业'
 ];
 
+// service type
+var serviceType = [
+    '职业介绍',
+    '职业培训',
+    '职业技能鉴定',
+    '社会保险补贴',
+    '公益性岗位安置',
+    '小额担保贷款',
+    '就业见习'
+];
 
 var columns = {
     farmerInCounty: ['username', 'gender', 'age', 'education',
@@ -191,7 +202,8 @@ module.exports = {
     cnWorkExperience: workExperience,
     cnWorkPlace: workPlace,
     cnJobType: jobType,
-    cnIndustry: industry
+    cnIndustry: industry,
+    cnService: serviceType
 };
 
 function translate(field, cnNameList) {
