@@ -143,6 +143,15 @@ exports.getAddress = function(editor) {
     };
 };
 
+exports.preprocessUserMsg = function(userMsg) {
+
+    if (userMsg.employment) {
+        userMsg.unemploymentInfo = null;
+    } else {
+        userMsg.employmentInfo = null;
+    }
+};
+
 // used to create test data
 var newItem = new Item({
     username: 'test',

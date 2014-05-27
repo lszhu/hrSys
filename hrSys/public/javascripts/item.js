@@ -1,5 +1,9 @@
 // 验证身份证号的合法性
-function ckIdNumber(idNumber) {
+function validIdNumber(idNumber) {
+    if (idNumber.length != 18 || 12 < idNumber.slice(10, 12) ||
+        idNumber.slice(6, 8) < 19 || 20 < idNumber.slice(6, 8)) {
+        return false;
+    }
     var weights = [
         '7', '9', '10', '5', '8', '4', '2', '1', '6',
         '3', '7', '9', '10', '5', '8', '4', '2', '1'
@@ -19,7 +23,7 @@ function ckIdNumber(idNumber) {
 
 // 由身份证号得到年龄
 function getAge(idNumber) {
-    if (!ckIdNumber(idNumber)) {
+    if (!validIdNumber(idNumber)) {
         return '';
     }
     var now = (new Date()).getFullYear();
@@ -29,7 +33,7 @@ function getAge(idNumber) {
 
 // 由身份证号得到性别
 function getGender(idNumber) {
-    if (!ckIdNumber(idNumber)) {
+    if (!validIdNumber(idNumber)) {
         return '';
     }
     return idNumber.charAt(16) % 2 ? '男' : '女';
@@ -44,13 +48,33 @@ function getDate() {
     return y + '年 ' + m + '月 ' + d + '日';
 }
 
+// 检查年份的合法性
+function validYear(year) {
+    return !isNaN(year) && 1900 < year && year < 2100;
+}
+
+// 检查电话的合法性
+function validPhone(phone) {
+    return !isNaN(phone) && 6 < phone.length && phone.length < 13;
+}
+
+// 检查年月日的合法性，格式为：YYYYMMDD
+function validDate(d) {
+    return d.length == 8 && !isNaN(d) && d.slice(0, 4) < 2100 &&
+        d.slice(4, 6) < 13 && d.slice(6) < 32;
+}
+
+// 检查电话的合法性
+function validsalary(salary) {
+    return !isNaN(salary);
+}
 // 页面装载完成后执行
 $(function() {
     // 校验身份证号，自动填入年龄性别
     $('input[name=idNumber]').blur(function(e) {
         var value = e.target.value.trim();
         // 校验身份证号
-        if (!ckIdNumber(value)) {
+        if (!validIdNumber(value)) {
             if (confirm("身份证号码输入有误！")) {
                 setTimeout(function() {
                     $('input[name=idNumber]').focus();

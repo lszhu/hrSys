@@ -149,13 +149,9 @@ router.post('/item', function(req, res) {
         editor: req.body.editor,
         modifiedDate: new Date()
     };
-
-    userMessage.address = db.getAddress(req.session.user);
-    if (userMessage.employment) {
-        userMessage.unemploymentInfo = null;
-    } else {
-        userMessage.employmentInfo = null;
-    }
+    // this attribute is used only for control. and is not saved to DB
+    userMessage.administrator = req.session.user;
+    db.preprocessUserMsg(userMessage);
     db.save(userMessage);
     res.render('editResponse', {userMessage: userMessage});
 });
