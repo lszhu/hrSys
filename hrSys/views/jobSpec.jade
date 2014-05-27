@@ -42,11 +42,11 @@ br
         div(style="width: 50%; float: left")
           .input-group
             span.input-group-addon 就业时间
-            input.form-control(type="text", name="startWorkTime")
+            input.form-control(type="text", name="startWorkDate", placeholder="年月日格式为：yyyymmdd")
 
         div(style="width: 50%; float: left")
           .input-group
-            span.input-group-addon 就业地点
+            span.input-group-addon &nbsp;&nbsp;&nbsp;就业地点&nbsp;&nbsp;&nbsp;&nbsp;
             select.form-control(name="workplace")
               option 县内
               option 县外市内
@@ -64,8 +64,8 @@ br
               option 海南
         div(style="width: 50%; float: left")
           .input-group
-            span.input-group-addon 年收入
-            input.form-control(type="number", name="salary")
+            span.input-group-addon 年收入 (万元)
+            input.form-control(type="text", name="salary")
         div(style="width: 50%; float: left")
           .input-group
             span.input-group-addon 就业形式
@@ -97,7 +97,7 @@ br
               option 其他
         div(style="width: 50%; float: left")
           .input-group
-            span.input-group-addon 失业时间
+            span.input-group-addon &nbsp;&nbsp;&nbsp;&nbsp;失业时间&nbsp;&nbsp;&nbsp;
             input.form-control(type="text", name="unemployedDate")
         div(style="width: 50%; float: left")
           .input-group
@@ -202,12 +202,12 @@ br
             .col-sm-12
               .input-group
                 span.input-group-addon 其他工种意向
-                input.form-control(type="text", name="extraPreferredJobType", placeholder="输入其他工种名称")
+                input.form-control(type="text", name="extraPreferredJobType", placeholder="输入其他工种名称，可输入多项，用逗号隔开")
 
       .col-sm-12
         div(style="width: 50%; float: left")
           .input-group
-            span.input-group-addon 工资收入期望（年）
+            span.input-group-addon 工资收入期望(年)
             input.form-control(type="text", name="preferredSalary")
         div(style="width: 50%; float: left")
           .input-group
@@ -218,7 +218,7 @@ br
               option 第三产业
         div(style="width: 50%; float: left")
           .input-group
-            span.input-group-addon 就业区域意向
+            span.input-group-addon &nbsp;&nbsp;&nbsp;就业区域意向&nbsp;&nbsp;&nbsp;
             select.form-control(name="preferredWorkplace")
               option 县内
               option 县外市内
@@ -271,7 +271,7 @@ br
             .col-sm-12
               .input-group
                 span.input-group-addon 其他服务需求
-                input.form-control(type="text", name="extraPreferredService", placeholder="输入服务名称")
+                input.form-control(type="text", name="extraPreferredService", placeholder="输入服务名称，可输入多项，用逗号隔开")
 
       .col-sm-12
         .input-group

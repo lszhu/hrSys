@@ -47,7 +47,7 @@ var document = new Schema({
     trainingType: String,
     postTraining: String,
     technicalGrade: String,
-    postService: String,
+    postService: [String],
     extraPostService: String,
     // employment/unemployment switch
     employment: Boolean,
@@ -56,7 +56,7 @@ var document = new Schema({
         employer: String,
         jobType: [String],
         industry: String,
-        startWorkTime: String,
+        startWorkDate: String,
         workplace: String,
         workProvince: String,
         salary: Number,

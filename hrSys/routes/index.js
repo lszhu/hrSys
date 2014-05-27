@@ -65,6 +65,12 @@ router.post('/item', function(req, res) {
             insurance.push(table.cnInsurance[i]);
         }
     }
+    var postService = [];
+    for (i = 0; i < table.cnService.length; i++) {
+        if (req.body['postService' + i]) {
+            postService.push(table.cnService[i]);
+        }
+    }
     var preferredService = [];
     for (i = 0; i < table.cnService.length; i++) {
         if (req.body['preferredService' + i]) {
@@ -106,7 +112,7 @@ router.post('/item', function(req, res) {
         trainingType: req.body.trainingType,
         postTraining: req.body.postTraining,
         technicalGrade: req.body.technicalGrade,
-        postService: req.body.postService,
+        postService: postService,
         extraPostService: req.body.extraPostService,
         // employment/unemployment switch
         employment: req.body.employment,
@@ -115,7 +121,7 @@ router.post('/item', function(req, res) {
             employer: req.body.employer,
             jobType: jobType,
             industry: req.body.industry,
-            startWorkTime: req.body.startWorkTime,
+            startWorkDate: req.body.startWorkDate,
             workplace: req.body.workplace,
             workProvince: req.body.workProvince,
             salary: req.body.salary,
@@ -162,7 +168,7 @@ router.get('/tables/:title', function(req, res) {
         'statistics',
         {
             tableName: req.param('title'),
-            tables: table.cnName
+            tables: table.cnTableName
         }
     );
 });
@@ -187,7 +193,7 @@ router.post('/tables', function(req, res) {
             'table',
             {
                 title: table.cnName[tableName],
-                columns: table.columns[tableName],
+                columns: table.tableColumns[tableName],
                 cnItemName: table.cnItemName,
                 data: data
             }

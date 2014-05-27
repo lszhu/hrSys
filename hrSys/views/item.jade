@@ -13,7 +13,7 @@ block content
         .col-sm-9
           div(style="width: 33%; float: left;")
             .input-group
-              span.input-group-addon 姓 名
+              span.input-group-addon &nbsp;&nbsp;&nbsp;姓 名&nbsp;&nbsp;&nbsp;
               input.form-control(type="text", name="username", placeholder="输入姓名", required="required")
           div(style="width: 40%; float: left;")
             .input-group
@@ -30,22 +30,30 @@ block content
                 option(value="维吾尔族") 维吾尔族
                 option(value="苗族") 苗族
                 option(value="彝族") 彝族
-          .input-group
-            span.input-group-addon 年 龄
-            input.form-control(type="text", name="age" readonly="readonly", tabindex="-1")
-            span.input-group-addon 性 别
-            input.form-control(type="text", name="gender", readonly="readonly", tabindex="-1")
-            span.input-group-addon 就业失业登记证号
-            input.form-control(type="text", name="workRegisterId", readonly="readonly", tabindex="-1")
-          .input-group
-            span.input-group-addon 地 址
-            input.form-control(type="text", name="address", readonly="readonly", tabindex="-1")
-            span.input-group-addon 行政区划代码
-            input.form-control(type="text", name="districtId", readonly="readonly", tabindex="-1")
+          div(style="width: 33%; float: left;")
+            .input-group
+              span.input-group-addon &nbsp;&nbsp;&nbsp;年 龄&nbsp;&nbsp;&nbsp;
+              input.form-control(type="text", name="age" readonly="readonly", tabindex="-1")
+          div(style="width: 27%; float: left;")
+            .input-group
+              span.input-group-addon &nbsp;&nbsp;&nbsp;性 别&nbsp;&nbsp;&nbsp;
+              input.form-control(type="text", name="gender", readonly="readonly", tabindex="-1")
+          div(style="width: 40%; float: left;")
+            .input-group
+              span.input-group-addon 就业失业登记证号
+              input.form-control(type="text", name="workRegisterId", readonly="readonly", tabindex="-1")
+          div(style="width: 60%; float: left;")
+            .input-group
+              span.input-group-addon &nbsp;&nbsp;&nbsp;地 址&nbsp;&nbsp;&nbsp;
+              input.form-control(type="text", name="address", readonly="readonly", tabindex="-1")
+          div(style="width: 40%; float: left;")
+            .input-group
+              span.input-group-addon &nbsp;&nbsp;&nbsp;行政区划代码&nbsp;&nbsp;&nbsp;&nbsp;
+              input.form-control(type="text", name="districtId", readonly="readonly", tabindex="-1")
 
           div(style="width: 33%; float: left;")
             .input-group
-              span.input-group-addon 学 历
+              span.input-group-addon &nbsp;&nbsp;&nbsp;学 历&nbsp;&nbsp;&nbsp;
               select.form-control(name="education")
                 option(value="小学及以下") 小学及以下
                 option(value="初中") 初中
@@ -56,7 +64,7 @@ block content
           div(style="width: 33%; float: left;")
             .input-group
               span.input-group-addon 毕业时间
-              input.form-control(type="text", name="graduateDate")
+              input.form-control(type="text", name="graduateDate", placeholder="输入毕业年份")
           div(style="width: 34%; float: left;")
             .input-group
               span.input-group-addon 联系电话
@@ -89,8 +97,9 @@ block content
         .col-sm-12
           .panel.panel-default
             .panel-heading.text-center
-              strong 劳动技能/已享受就业服务信息
+              strong 劳动技能信息
             .panel-body
+              .col-sm-12
                 .input-group
                   span.input-group-addon 职业培训
                   select.form-control(name="trainingType")
@@ -123,21 +132,39 @@ block content
                     option 高级技工
                     option 技师
                     option 高级技师
+
+        .col-sm-12
+          .panel.panel-default
+            .panel-heading.text-center
+              strong 已享受就业服务
+            .panel-body
+              .col-sm-3
+                label.checkbox-inline 职业介绍
+                  input(type="checkbox", name="postService0")
+              .col-sm-3
+                label.checkbox-inline 职业培训
+                  input(type="checkbox", name="postService1")
+              .col-sm-3
+                label.checkbox-inline 职业技能鉴定
+                  input(type="checkbox", name="postService2")
+              .col-sm-3
+                label.checkbox-inline 社会保险补贴
+                  input(type="checkbox", name="postService3")
+              .col-sm-3
+                label.checkbox-inline 公益性岗位安置
+                  input(type="checkbox", name="postService4")
+              .col-sm-3
+                label.checkbox-inline 小额担保贷款
+                  input(type="checkbox", name="postService5")
+              .col-sm-3
+                label.checkbox-inline 就业见习
+                  input(type="checkbox", name="postService6")
+              .col-sm-12
                 br
+              .col-sm-12
                 .input-group
-                  span.input-group-addon 已享受就业服务
-                  select.form-control(name="postService")
-                    option 无
-                    option 职业介绍
-                    option 职业培训
-                    option 职业技能鉴定
-                    option 社会保险补贴
-                    option 公益性岗位安置
-                    option 小额担保贷款
-                    option 就业见习
-                    option 其他服务
                   span.input-group-addon 已享受其他服务
-                  input.form-control(type="text", name="extraPostService", placeholder="输入服务名称")
+                  input.form-control(type="text", name="extraPostService", placeholder="输入服务名称，可输入多项，用逗号隔开")
 
         .col-sm-12
           .panel.panel-default
@@ -191,3 +218,4 @@ block content
             br
           .col-sm-7.col-sm-offset-2
               button.btn.btn-lg.btn-block.btn-success(type="submit", role="button") 保存登记表
+  script(src="/javascripts/item.js")

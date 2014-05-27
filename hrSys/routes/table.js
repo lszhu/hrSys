@@ -1,4 +1,4 @@
-var cnName = {
+var cnTableName = {
     farmerInCounty: '农村劳动力转移就业人员（县内）',
     farmerOutCounty: '农村劳动力转移就业人员（县外）',
     townsfolk: '城镇劳动力（居民）就业人员',
@@ -8,7 +8,9 @@ var cnName = {
 };
 
 var cnItemName = {
+    // 个人基本信息
     districtId: '行政区划代码',
+    address: '地址',                     // 由county/town/village合并而得
     county: '县（市）',
     town: '街道（乡镇）',
     village: '社区（村）',
@@ -24,28 +26,46 @@ var cnItemName = {
     censusRegisterType: '户口性质',
     marriage: '婚姻状况',
     phone: '联系电话',
-
-    employment: '就业情况',
-    workTrend: '是否打算外出就业',
-    jobPreference: '外出就业意向',
-    project: '打算返乡',
-    salary: '外出务工月收入',
-    workExperience: '外出务工时间',
-    technicalGrade: '现有技术等级',
-    trainingStatus: '是否参加过培训',
-    postTraining: '参加过的培训',
-    editor: '填报人',
-    auditor: '审核人',
+    // 个人就业信息
+    trained: '是否参加技能培训',           // 是/否，由trainingType值是否为“无”而定
+    trainingType: '培训类型',
+    postTraining: '培训项目',             // trained为否时，本栏目为空
+    certified: '是否获得国家职业资格证书',  // 是/否
+    technicalGrade: '职业资格等级',
+    postService: '已享受就业服务',         // 从extraPostService获得其他服务
+    // 就业状态
+    employment: '个人就业信息',            // true/false
+    // 已转移就业信息
+    employer: '就业单位',
+    jobType: '主要从事工种',
+    industry: '从事产业类型',
+    startWorkDate: '就业时间',             // 格式为yyyymmdd
+    workplace: '就业地点',
+    workProvince: '外出省份',              // 如果workplace为“省外”则填入本栏
+    salary: '年收入（万元）',
+    jobForm: '就业形式',
+    // 暂未转移就业信息
+    humanCategory: '人员身份',
+    unemployedDate: '失业时间',
+    unemploymentCause: '失业原因',
+    familyType: '困难群体情况',
+    preferredJobType: '就业工种意向',     // 从extraPreferredJobType获得未列出工种
+    preferredIndustry: '就业产业意向',
+    preferredSalary: '工资收入意向',
+    preferredWorkplace: '就业区域意向',
+    preferredJobForm: '就业形式意向',
+    preferredService: '就业服务需求',     // 从extraPreferredService获得未列出服务
+    preferredTraining: '培训需求类型',
+    // 多选参保信息
     insurance: '参保情况',
-    industry: '从事行业',
-    jobType: '从事工种',
-    workPlace: '就业地点',
-    preferredTraining: '参加农村劳动力技能培训意向',
+    // 其他制表信息
+    editor: '填报人',
     modifiedDate: '填报日期'
 };
 
 
 //文化程度
+/*
 var education = [
     '初中及以下',
     '高中',
@@ -55,20 +75,22 @@ var education = [
     '大专',
     '大学以上'
 ];
+*/
 
 //参保情况
 var insurance = [
     '城镇职工养老保险',
     '城镇居民养老保险',
-    '新型农村养老保险',
+    '新型农村养老保险',         // 新农保
     '城镇职工医疗保险',
     '城镇居民医疗保险',
     '失业保险',
     '工伤保险',
-    '新型农村合作医疗保险'
+    '新型农村合作医疗保险'      // 新农合
 ];
 
 //现有技术等级
+/*
 var technicalGrade = [
     '无',
     '初级技工',
@@ -77,6 +99,7 @@ var technicalGrade = [
     '技师',
     '高级技师'
 ];
+*/
 
 //参加农村劳动力技能培训意向
 var preferredTraining = [
@@ -98,6 +121,7 @@ var preferredTraining = [
 ];
 
 //外出务工月收入
+/*
 var salary = [
     '1500元以下',
     '1500-2000元',
@@ -127,6 +151,7 @@ var workPlace = [
     '其他',
     '境外'
 ];
+ */
 
 //从事工种
 var jobType = [
@@ -155,6 +180,7 @@ var jobType = [
 ];
 
 //从事行业（多选）
+/*
 var industry = [
     '采矿业',
     '制造业',
@@ -171,6 +197,7 @@ var industry = [
     '电力燃气及水的生产供应业',
     '仓储和邮政业'
 ];
+*/
 
 // service type
 var serviceType = [
@@ -183,7 +210,7 @@ var serviceType = [
     '就业见习'
 ];
 
-var columns = {
+var TableColumns = {
     farmerInCounty: ['username', 'gender', 'age', 'education',
         'marriage', 'address', 'workPlace', 'jobType', 'insurance', 'salary'],
     farmerOutCounty: ['username', 'gender', 'age', 'education',
@@ -199,8 +226,8 @@ var columns = {
 
 
 module.exports = {
-    columns: columns,
-    cnName: cnName,
+    TableColumns: TableColumns,
+    cnTableName: cnTableName,
     cnItemName: cnItemName,
 //    cnEducation: education,
 //    cnTechnicalGrade: technicalGrade,
