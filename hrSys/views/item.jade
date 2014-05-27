@@ -14,7 +14,7 @@ block content
           div(style="width: 33%; float: left;")
             .input-group
               span.input-group-addon &nbsp;&nbsp;&nbsp;姓 名&nbsp;&nbsp;&nbsp;
-              input.form-control(type="text", name="username", placeholder="输入姓名", required="required")
+              input.form-control(type="text", name="username", autofocus="autofocus", placeholder="输入姓名", required="required")
           div(style="width: 40%; float: left;")
             .input-group
               span.input-group-addon 身份证号
@@ -45,11 +45,11 @@ block content
           div(style="width: 60%; float: left;")
             .input-group
               span.input-group-addon &nbsp;&nbsp;&nbsp;地 址&nbsp;&nbsp;&nbsp;
-              input.form-control(type="text", name="address", readonly="readonly", tabindex="-1")
+              input.form-control(type="text", name="address", readonly="readonly", placeholder="县市与乡镇、乡镇与村社区间用空格分开", value="永州市蓝山县 塔峰镇 早禾村", tabindex="-1")
           div(style="width: 40%; float: left;")
             .input-group
               span.input-group-addon &nbsp;&nbsp;&nbsp;行政区划代码&nbsp;&nbsp;&nbsp;&nbsp;
-              input.form-control(type="text", name="districtId", readonly="readonly", tabindex="-1")
+              input.form-control(type="text", name="districtId", readonly="readonly", value="4311270101", tabindex="-1")
 
           div(style="width: 33%; float: left;")
             .input-group
@@ -108,7 +108,7 @@ block content
                     option 创业培训
                     option 企业高技能人才培训
                   span.input-group-addon 培训项目
-                  input.form-control(type="text", name="postTraining", list="courses", placeholder="输入培训名称")
+                  input.form-control(type="text", name="postTraining", disabled="disabled", list="courses", placeholder="输入培训名称")
                   datalist#courses
                     option 服装缝纫
                     option 制鞋

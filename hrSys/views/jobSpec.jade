@@ -6,7 +6,7 @@
     label.radio-inline <strong>暂未就业信息</strong>
       input(type="radio", name="employment", value="暂未就业信息")
 br
-.col-sm-12
+.col-sm-12#employment
   .panel.panel-default
     .panel-heading.text-center
       strong 已就业信息
@@ -14,7 +14,7 @@ br
       .col-sm-12
         .input-group
           span.input-group-addon 就业单位
-          input.form-control(type="text", name="employer")
+          input.form-control(type="text", name="employer", placeholder="在此输入就业单位或组织")
 
       .col-sm-12
         br
@@ -42,7 +42,7 @@ br
         div(style="width: 50%; float: left")
           .input-group
             span.input-group-addon 就业时间
-            input.form-control(type="text", name="startWorkDate", placeholder="年月日格式为：yyyymmdd")
+            input.form-control(type="text", name="startWorkDate", placeholder="年月日格式为：YYYYMMDD")
 
         div(style="width: 50%; float: left")
           .input-group
@@ -56,7 +56,8 @@ br
         div(style="width: 50%; float: left")
           .input-group
             span.input-group-addon 外出省份
-            select.form-control(name="workProvince")
+            select.form-control(name="workProvince", disabled="disabled")
+              option
               option 北京
               option 上海
               option 广东
@@ -79,7 +80,7 @@ br
               option 务农
               option 其他
 
-.col-sm-12
+.col-sm-12#unemployment(style="display: none")
   .panel.panel-default
     .panel-heading.text-center
       strong 暂未就业信息
@@ -98,7 +99,7 @@ br
         div(style="width: 50%; float: left")
           .input-group
             span.input-group-addon &nbsp;&nbsp;&nbsp;&nbsp;失业时间&nbsp;&nbsp;&nbsp;
-            input.form-control(type="text", name="unemployedDate")
+            input.form-control(type="text", name="unemployedDate", placeholder="年月日格式为：YYYYMMDD")
         div(style="width: 50%; float: left")
           .input-group
             span.input-group-addon 失业原因
