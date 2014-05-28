@@ -169,6 +169,16 @@ router.get('/tables/:title', function(req, res) {
     );
 });
 
+/* export data page. */
+router.get('/export', function(req, res) {
+    res.render('export', { title: 'export' });
+});
+
+/* export data page. */
+router.post('/export', function(req, res) {
+    res.render('export', { title: 'export' });
+});
+
 /* show statistics table page. */
 router.post('/tables', function(req, res) {
     var area = req.body.area;

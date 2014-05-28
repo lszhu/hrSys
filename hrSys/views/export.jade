@@ -1,0 +1,53 @@
+extends layout
+block content
+  //link(rel="stylesheet" href="/stylesheets/signin.css")
+  link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
+  //h1= title
+  include nav.jade
+  .container
+    form.panel.panel-info(role="form", action="/export", method="POST")
+      .panel-heading
+        //.container
+        h1.text-center 批量导出到电子表格
+      .panel-body
+        .col-sm-8.col-sm-offset-2
+          h3 导出范围设定：
+        .col-sm-8.col-sm-offset-2
+          .input-group
+            span.input-group-addon 乡镇/办事处
+            select.form-control(name="town")
+              option 不限
+              option 塔峰镇
+              option 竹管寺镇
+              option 总市办事处
+              option 祠堂圩乡
+              option 蓝屏办事处
+              option 楠市镇
+              option 正市办事处
+        .col-sm-12
+          br
+        .col-sm-8.col-sm-offset-2
+          .input-group
+            span.input-group-addon 行政村/社区
+            select.form-control(name="village")
+              option 不限
+              option 汉族
+              option 蒙古族
+              option 回族
+              option 藏族
+              option 维吾尔族
+              option 苗族
+              option 彝族
+        .col-sm-12
+          br
+        .col-sm-6.col-sm-offset-3
+          button.btn.btn-lg.btn-block.btn-success(type="submit", role="button") 导出文件并下载
+        .col-sm-12
+          br
+        .col-sm-8.col-sm-offset-2.text-center
+          span 正在导出中
+        .col-sm-8.col-sm-offset-2
+          .progress.progress-striped.active
+            .progress-bar(role="progressbar", aria-valuenow="85", aria-valuemin="0", aria-valuemax="100", style="width: 85%")
+              span 85%
+  script(src="/javascripts/export.js")
