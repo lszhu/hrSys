@@ -120,38 +120,6 @@ var preferredTraining = [
     '其他'
 ];
 
-//外出务工月收入
-/*
-var salary = [
-    '1500元以下',
-    '1500-2000元',
-    '2000-3000元',
-    '3000元以上',
-    '不详'
-];
-
-//外出务工时间
-var workExperience = [
-    '半年以下',
-    '半年以上',
-    '一年以上',
-    '二年以上',
-    '三年以上',
-    '五年以上',
-    '十年以上'
-];
-
-//就业地点
-var workPlace = [
-    '县内',
-    '县外市内',
-    '市外',
-    '长三角',
-    '珠三角',
-    '其他',
-    '境外'
-];
- */
 
 //从事工种
 var jobType = [
@@ -211,22 +179,22 @@ var serviceType = [
 ];
 
 var TableColumns = {
-    farmerInCounty: ['username', 'gender', 'age', 'education',
-        'marriage', 'address', 'workPlace', 'jobType', 'insurance', 'salary'],
-    farmerOutCounty: ['username', 'gender', 'age', 'education',
-        'marriage', 'address', 'workPlace', 'jobType', 'insurance', 'salary'],
-    townsfolk: ['username', 'gender', 'age', 'education',
-        'marriage', 'address', 'workPlace', 'jobType', 'insurance', 'salary'],
-    graduate: ['username', 'gender', 'age', 'education',
-        'address', 'employment', 'phone'],
-    annual: ['username', 'gender', 'age', 'education',
-        'marriage', 'address', 'idNumber', 'jobType', 'salary'],
+    farmerInCounty: ['username', 'gender', 'age', 'education', 'marriage',
+        'address', 'employer', 'workPlace', 'jobType', 'insurance', 'salary'],
+    farmerOutCounty: ['username', 'gender', 'age', 'education', 'marriage',
+        'address', 'employer', 'workPlace', 'jobType', 'insurance', 'salary'],
+    townsfolk: ['username', 'gender', 'age', 'education', 'marriage',
+        'address', 'employer', 'workPlace', 'jobType', 'insurance', 'salary'],
+    graduate: ['username', 'gender', 'age', 'education', 'graduateDate',
+        'workRegisterId', 'address', 'employment', 'phone'],
+    annual: ['username', 'gender', 'age', 'education', 'marriage',
+        'address', 'idNumber', 'jobType', 'phone'],
     summary: []
 };
 
 
 module.exports = {
-    TableColumns: TableColumns,
+    tableColumns: TableColumns,
     cnTableName: cnTableName,
     cnItemName: cnItemName,
 //    cnEducation: education,
@@ -239,6 +207,19 @@ module.exports = {
 //    cnIndustry: industry,
     cnService: serviceType,
     cnInsurance: insurance
+};
+
+///////////////////////////////////////////////////
+module.exports.prepareForTable = function(msg) {
+    var a = msg.address;
+    msg.address = a.county + a.town + a.village;
+    if (msg.employment == '1') {
+        msg.employer = msg.employmentInfo.employer;
+        msg.workplace = msg.employmentInfo.workplace;
+        msg.jobType = msg.employmentInfo.jobType;
+        // employmentInfo.salary保存的收入是以万元为单位，此处转为月收入
+        msg.salary = Math.floor(msg.employmentInfo.salary * 100 / 12) * 100;
+    }
 };
 
 function translate(field, cnNameList) {

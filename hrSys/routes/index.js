@@ -173,7 +173,7 @@ router.get('/tables/:title', function(req, res) {
 router.post('/tables', function(req, res) {
     var area = req.body.area;
     var tableName = req.body.table;
-    var condition = {};
+    var condition = {employment: '已就业'};
     if (area) {
         condition.address = new RegExp(area);
     }
@@ -183,14 +183,12 @@ router.post('/tables', function(req, res) {
             res.render('error', {title: 'Database error, try again later.'});
             return;
         }
-        table.dataTranslate(data);
+        //table.dataTranslate(data);
         debug('data translated: ' + data.length);
         res.render(
-            'table',
+            'tableEmployed',
             {
-                title: table.cnName[tableName],
-                columns: table.tableColumns[tableName],
-                cnItemName: table.cnItemName,
+                title: table.cnTableName[tableName],
                 data: data
             }
         );

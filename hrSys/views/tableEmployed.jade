@@ -1,0 +1,65 @@
+extends layout
+block content
+  link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
+  include nav.jade
+  //h1.text-center= title
+  //ul
+    each val, index in data
+      li= index + ' = ' + val
+  .panel.panel-default
+    .panel-heading.text-center
+      h1= title
+    table.table.table-condensed.table-bordered.table-hover.table-responsive
+      //thead
+        tr
+          th 序号
+          each val, key in columns
+            th= cnItemName[val]
+        tbody
+          each item, row in data
+            tr
+              td= row + 1
+              each index in columns
+                td= item[index]
+      thead
+        tr
+          th 序号
+          th 姓名
+          th 性别
+          th 年龄
+          th 文化程度
+          th 婚否
+          th 住址
+          th 就业单位
+          th 工作地点
+          th 从事工种
+          th 参保情况
+          th 月收入
+      tbody
+        each item, row in data
+          tr
+            td= row + 1
+            td= item.username
+            td= item.gender
+            td= item.age
+            td= item.education
+            td= item.marriage
+            td= item.address.town + item.address.village
+            td= item.employmentInfo.employer
+            td= item.employmentInfo.workplace
+            td= item.employmentInfo.jobType
+            td= item.insurance
+            td= Math.floor(item.employmentInfo.salary * 100 / 12) * 100
+
+        //tr
+          td 1
+          td Mark
+          td Otto
+          td @mdo
+          td 1
+          td Mark
+          td Otto
+          td @mdo
+          td Otto
+          td 1
+          td Mark

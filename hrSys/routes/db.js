@@ -50,7 +50,7 @@ var document = new Schema({
     postService: [String],
     extraPostService: String,
     // employment/unemployment switch
-    employment: Boolean,
+    employment: String,
     // employment info
     employmentInfo: {
         employer: String,
@@ -85,6 +85,63 @@ var document = new Schema({
     modifiedDate: Date
 });
 
+var Item = mongoose.model('hrmsg', document);
+exports.save = function(hrMsg) {
+    Item.update(
+        {idNumber: hrMsg.idNumber},
+        hrMsg,
+        {upsert: true},
+        function(err) {
+            if (err) {
+                console.error('save error: \n%o', err);
+            }
+        });
+};
+
+exports.query = function(condition, callback) {
+    Item.find(condition)
+        .lean()
+        .exec(callback);
+};
+
+exports.getAddress = getAddress;
+function getAddress(editor) {
+    console.log('editor: ' + editor);
+    return {
+        county: '蓝山县',
+        town: '塔峰镇',
+        village: '塔峰西路'
+    };
+}
+
+exports.preprocessUserMsg = function(userMsg) {
+    userMsg.address = getAddress(userMsg.administrator);
+    if (userMsg.employment == '已就业') {
+        userMsg.unemploymentInfo = null;
+    } else {
+        userMsg.employmentInfo = null;
+    }
+};
+
+////////////////////////////////////////////////////////
+// used to create test data
+var newItem = new Item({
+    username: 'test',
+    idNumber: '987655442398765544',
+    nation: '维吾尔族',
+    marriage: true,
+    education: 3,
+    phone: '13912345678',
+    address: '中国湖南长沙岳麓山',
+    insurance: [0, 1, 3, 4],
+    employment: 2,
+    workTrend: true,
+    jobPreference: 2,
+    workPlace: [0, 1, 2, 5],
+    auditor: '张三',
+    modifiedDate: new Date()
+});
+
 // old data schema
 var itemSchema = new Schema({
     username: String,
@@ -114,58 +171,3 @@ var itemSchema = new Schema({
 });
 
 //var Item = mongoose.model('hrmsg', itemSchema);
-
-var Item = mongoose.model('hrmsg', document);
-exports.save = function(hrMsg) {
-    Item.update(
-        {idNumber: hrMsg.idNumber},
-        hrMsg,
-        {upsert: true},
-        function(err) {
-            if (err) {
-                console.error('save error: \n%o', err);
-            }
-        });
-};
-
-exports.query = function(condition, callback) {
-    Item.find(condition)
-        .lean()
-        .exec(callback);
-};
-
-exports.getAddress = function(editor) {
-    console.log('editor: ' + editor);
-    return {
-        county: '蓝山县',
-        town: '塔峰镇',
-        village: '城南'
-    };
-};
-
-exports.preprocessUserMsg = function(userMsg) {
-
-    if (userMsg.employment) {
-        userMsg.unemploymentInfo = null;
-    } else {
-        userMsg.employmentInfo = null;
-    }
-};
-
-// used to create test data
-var newItem = new Item({
-    username: 'test',
-    idNumber: '987655442398765544',
-    nation: '维吾尔族',
-    marriage: true,
-    education: 3,
-    phone: '13912345678',
-    address: '中国湖南长沙岳麓山',
-    insurance: [0, 1, 3, 4],
-    employment: 2,
-    workTrend: true,
-    jobPreference: 2,
-    workPlace: [0, 1, 2, 5],
-    auditor: '张三',
-    modifiedDate: new Date()
-});

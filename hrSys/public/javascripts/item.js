@@ -50,6 +50,9 @@ function getDate() {
 
 // 检查年份的合法性
 function validYear(year) {
+    if (!year) {
+        return true;
+    }
     return !isNaN(year) && 1900 < year && year < 2100;
 }
 
@@ -64,8 +67,8 @@ function validDate(d) {
         d.slice(4, 6) < 13 && d.slice(6) < 32;
 }
 
-// 检查电话的合法性
-function validsalary(salary) {
+// 检查收入数目的合法性
+function validSalary(salary) {
     return !isNaN(salary);
 }
 // 页面装载完成后执行
@@ -75,7 +78,7 @@ $(function() {
         var value = e.target.value.trim();
         // 校验身份证号
         if (!validIdNumber(value)) {
-            if (confirm("身份证号码输入有误！")) {
+            if (confirm("身份证号码输入有误，需重新输入！")) {
                 setTimeout(function() {
                     $('input[name=idNumber]').focus();
                 }, 10);
@@ -87,27 +90,105 @@ $(function() {
         $('input[name=gender]').val(getGender(value));
     });
 
+    // 校验毕业时间
+    $('input[name=graduateDate]').blur(function(e) {
+        var value = e.target.value.trim();
+        if (!validYear(value)) {
+            if (confirm('毕业年份输入有误！')) {
+                setTimeout(function() {
+                    $('input[name=graduateDate]').focus();
+                }, 10);
+            }
+        }
+    });
+
+    // 校验联系电话
+    $('input[name=phone]').blur(function(e) {
+        var value = e.target.value.trim();
+        if (!validPhone(value)) {
+            if (confirm('联系电话输入有误！')) {
+                setTimeout(function() {
+                    $('input[name=phone]').focus();
+                }, 10);
+            }
+        }
+    });
+
+    // 校验就业时间
+    $('input[name=startWorkDate]').blur(function(e) {
+        var value = e.target.value.trim();
+        if (!validDate(value)) {
+            if (confirm('就业时间输入有误！')) {
+                setTimeout(function() {
+                    $('input[name=startWorkDate]').focus();
+                }, 10);
+            }
+        }
+    });
+
+    // 校验年收入
+    $('input[name=salary]').blur(function(e) {
+        var value = e.target.value.trim();
+        if (!validSalary(value)) {
+            if (confirm('年收入输入有误！')) {
+                setTimeout(function() {
+                    $('input[name=salary]').focus();
+                }, 10);
+            }
+        }
+    });
+
+    // 校验失业时间
+    $('input[name=unemployedDate]').blur(function(e) {
+        var value = e.target.value.trim();
+        if (!validDate(value)) {
+            if (confirm('就业时间输入有误！')) {
+                setTimeout(function() {
+                    $('input[name=unemployedDate]').focus();
+                }, 10);
+            }
+        }
+    });
+    // 校验工资收入期望
+    $('input[name=preferredSalary]').blur(function(e) {
+        var value = e.target.value.trim();
+        if (!validSalary(value)) {
+            if (confirm('工资收入期望输入有误！')) {
+                setTimeout(function() {
+                    $('input[name=preferredSalary]').focus();
+                }, 10);
+            }
+        }
+    });
+
     // 控制“培训项目”表单栏的可用状态
     $('select[name=trainingType]').change(function() {
-        var disabled = ($('select[name=trainingType]').val() == '无');
-        $('input[name=postTraining]').prop('disabled', disabled);
+        var readOnly = ($('select[name=trainingType]').val() == '无');
+        $('input[name=postTraining]').prop('readonly', readOnly);
     });
 
     // 控制“已就业信息”或“暂未就业信息”的显示
     var radios = $('input[name=employment]');
-    radios.filter('[value=已就业信息]').focus(function() {
+    radios.filter('[value=已就业]').focus(function() {
         $('#employment').css({display: 'block'});
         $('#unemployment').css({display: 'none'});
     });
-    radios.filter('[value=暂未就业信息]').focus(function() {
+    radios.filter('[value=0]').focus(function() {
         $('#employment').css({display: 'none'});
         $('#unemployment').css({display: 'block'});
     });
+    if (radios.filter('[value=暂未就业]').prop('checked')) {
+        $('#employment').css({display: 'none'});
+        $('#unemployment').css({display: 'block'});
+    } else {
+        $('#employment').css({display: 'block'});
+        $('#unemployment').css({display: 'none'});
+    }
 
     // 控制“培训项目”表单栏的可用状态
     $('select[name=workplace]').change(function() {
-        var disabled = ($('select[name=workplace]').val() != '外省');
-        $('select[name=workProvince]').prop('disabled', disabled);
+        var readOnly = ($('select[name=workplace]').val() != '外省');
+        $('select[name=workProvince]').prop('readonly', readOnly);
     });
 
     // 自动填入填报时间

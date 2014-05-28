@@ -1,10 +1,10 @@
 .row
   .col-sm-3.col-sm-offset-3.text-center
     label.radio-inline <strong>已就业信息</strong>
-      input(type="radio", name="employment", value="已就业信息", checked="checked")
+      input(type="radio", name="employment", value="已就业", checked="checked")
   .col-sm-3.text-center
     label.radio-inline <strong>暂未就业信息</strong>
-      input(type="radio", name="employment", value="暂未就业信息")
+      input(type="radio", name="employment", value="暂未就业")
 br
 .col-sm-12#employment
   .panel.panel-default
@@ -56,7 +56,7 @@ br
         div(style="width: 50%; float: left")
           .input-group
             span.input-group-addon 外出省份
-            select.form-control(name="workProvince", disabled="disabled")
+            select.form-control(name="workProvince", readonly="readonly")
               option
               option 北京
               option 上海
@@ -80,7 +80,7 @@ br
               option 务农
               option 其他
 
-.col-sm-12#unemployment(style="display: none")
+.col-sm-12#unemployment
   .panel.panel-default
     .panel-heading.text-center
       strong 暂未就业信息
