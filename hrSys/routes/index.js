@@ -49,14 +49,30 @@ router.get('/account', function(req, res) {
 
 /* administration page. */
 router.post('/account', function(req, res) {
+    if (req.body.password != req.body.retryPassword) {
+        console.log('password not match');
+        res.render(
+            'editResponse',
+            {
+                title: 'account manager',
+                postMessage: {err: 'password not match!'}
+            }
+        );
+        return;
+    }
+    var enabled = (req.body.status == 'enable');
     var account = {
         username: req.body.username,
-        status: req.body.status,
+        enabled: enabled,
         password: req.body.password,
         retryPassword: req.body.password,
         area: req.body.area,
-        permission: req.body.permission
+        permission: req.body.permission,
+        // account type (independent/bind)
+        type: 'independent'
     };
+
+    db.saveAccount(account);
     res.render(
         'editResponse',
         {

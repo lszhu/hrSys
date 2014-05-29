@@ -47,8 +47,8 @@ block content
               .input-group
                 span.input-group-addon 可用状态
                 select.form-control(name="status")
-                  option(value='1') 可用
-                  option(value='0') 禁用
+                  option(value='enable') 可用
+                  option(value='disable') 禁用
           .col-sm-12
             br
             div(style="width: 50%; float: left;")
@@ -76,8 +76,8 @@ block content
               .input-group
                 span.input-group-addon 访问权限
                 select.form-control(name="permission")
-                  option(value='0') 无限制
-                  option(value='1') 只读
+                  option(value='unlimited') 无限制
+                  option(value='readonly') 只读
           .col-sm-6.col-sm-offset-3
             br
             button.btn.btn-block.btn-default.btn-success(type="submit") 新增账号
