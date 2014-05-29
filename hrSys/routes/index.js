@@ -43,13 +43,27 @@ router.post('/login', function(req, res) {
 });
 
 /* administration page. */
-router.get('/admin', function(req, res) {
-    res.render('admin', { title: 'administration' });
+router.get('/account', function(req, res) {
+    res.render('account', { title: 'administration' });
 });
 
 /* administration page. */
-router.post('/admin', function(req, res) {
-    res.render('index', { title: 'administration' });
+router.post('/account', function(req, res) {
+    var account = {
+        username: req.body.username,
+        status: req.body.status,
+        password: req.body.password,
+        retryPassword: req.body.password,
+        area: req.body.area,
+        permission: req.body.permission
+    };
+    res.render(
+        'editResponse',
+        {
+            title: 'account manager',
+            postMessage: account
+        }
+    );
 });
 
 /* add/modify item page. */
@@ -153,7 +167,7 @@ router.post('/item', function(req, res) {
     userMessage.administrator = req.session.user;
     db.preprocessUserMsg(userMessage);
     db.save(userMessage);
-    res.render('editResponse', {userMessage: userMessage});
+    res.render('editResponse', {postMessage: userMessage});
 });
 
 /* prepare statistics table page, ask for search parameters. */

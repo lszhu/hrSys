@@ -56,13 +56,17 @@ nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
           a.dropdown-toggle(href="#", data-toggle="dropdown") 系统管理
             b.caret
           ul.dropdown-menu
+            - var adminArea = "塔峰镇早禾村"
             li
-              a(href="#") 管辖区域：
+              p.text-center 账号管辖区域：
+              p.text-center= "-- " + adminArea + " --"
             li.divider
             li
-              a(href="#") 账号管理
+              a(href="/account") 独立账号管理
             li
-              a(href="#") 系统数据维护
+              a(href="/account") 批量账号管理
+            li
+              a(href="#") 账号密码修改
         li
           a(href="/help") 帮助
         li

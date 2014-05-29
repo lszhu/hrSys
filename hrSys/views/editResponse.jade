@@ -1,8 +1,8 @@
 extends layout
 block content
-  h3 upload info
+  h3= title
   ul
-    each val, index in userMessage
+    each val, index in postMessage
       - if (val && typeof val == 'object')
         each v, i in val
           li= i + ' = ' + v
