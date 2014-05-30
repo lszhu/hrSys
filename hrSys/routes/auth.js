@@ -7,12 +7,25 @@ var accounts = [
     {username: 'jerry', password: 'letmein'}
 ];
 
-exports.auth = function(acc) {
-    for (var i = 0; i < accounts.length; i++) {
-        if (acc.username == accounts[i].username &&
-            acc.password == accounts[i].password) {
-            return true;
-        }
+// builtin account
+var builtinAccount = {
+    username: 'admin',
+    password: 'admin',
+    area: '不限',
+    permission: '不限',
+    type: 'independent'
+};
+function auth(acc, stdAcc) {
+    if (stdAcc && stdAcc.enabled &&
+        acc.username == stdAcc.username &&
+        acc.password == stdAcc.password ) {
+        return true;
     }
-    return false;
+    return acc.username == builtinAccount.username &&
+        acc.password == builtinAccount.password;
+}
+
+module.exports = {
+    auth: auth,
+    builtinUser: builtinAccount.username
 };

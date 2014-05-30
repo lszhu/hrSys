@@ -8,7 +8,7 @@ var debug = require('debug')('route');
 // data for make table
 var table = require('./table');
 // account authentication
-var auth = require('./auth').auth;
+var auth = require('./auth');
 // access database
 var db = require('./db');
 
@@ -26,20 +26,34 @@ router.get('/login', function(req, res) {
 /* login page. */
 router.post('/login', function(req, res) {
     //res.render('index', { title: 'login' });
-    acc = {
-        username: req.body.username,
-        password: req.body.password
+    var acc = {
+        username: req.body.username.trim(),
+        password: req.body.password.trim()
     };
-    debug(acc);
+    debug('account: ' + JSON.stringify(acc));
     debug("session: " + util.inspect(req.session));
-    if (auth(acc)) {
-        req.session.user = acc.username;
-        req.session.error = undefined;
-        res.redirect('/');
-    } else {
-        res.render('login', {error: '用户名或密码错误！'})
-    }
-    //res.end('auth ok');
+    db.getAccount(acc.username, function(error, account) {
+        debug('account from DB: ' + JSON.stringify(account));
+        debug('auth.auth(acc, account): ' + auth.auth(acc, account));
+        if (auth.auth(acc, account)) {
+            if (acc.username == auth.builtinUser) {
+                acc.area = '不限';
+                acc.permisssion = '不限';
+                acc.type = 'independent'
+            } else {
+                acc.area = account.area;
+                acc.permission = account.permission;
+                acc.type = account.type;
+            }
+            req.session.user = acc;
+            req.session.error = undefined;
+            res.redirect('/');
+        } else {
+            res.render('login', {error: '用户名或密码错误！'})
+        }
+        //res.end('auth ok');
+    });
+
 });
 
 /* administration page. */
@@ -199,16 +213,6 @@ router.get('/tables/:title', function(req, res) {
     );
 });
 
-/* export data page. */
-router.get('/export', function(req, res) {
-    res.render('export', { title: 'export' });
-});
-
-/* export data page. */
-router.post('/export', function(req, res) {
-    res.render('export', { title: 'export' });
-});
-
 /* show statistics table page. */
 router.post('/tables', function(req, res) {
     var area = req.body.area;
@@ -233,6 +237,16 @@ router.post('/tables', function(req, res) {
             }
         );
     });
+});
+
+/* export data page. */
+router.get('/export', function(req, res) {
+    res.render('export', { title: 'export' });
+});
+
+/* export data page. */
+router.post('/export', function(req, res) {
+    res.render('export', { title: 'export' });
 });
 
 /* search page. */

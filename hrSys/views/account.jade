@@ -65,7 +65,7 @@ block content
               .input-group
                 span.input-group-addon 访问区域
                 select.form-control(name="area")
-                  option(value='0') 无限制
+                  option(value='0') 无限区域
                   option(value='1') 塔峰镇
                   option(value='2') 竹管寺镇
                   option(value='3') 总市办事处
@@ -76,8 +76,8 @@ block content
               .input-group
                 span.input-group-addon 访问权限
                 select.form-control(name="permission")
-                  option(value='unlimited') 无限制
-                  option(value='readonly') 只读
+                  option 无限制
+                  option 只读
           .col-sm-6.col-sm-offset-3
             br
             button.btn.btn-block.btn-default.btn-success(type="submit") 新增账号

@@ -156,7 +156,7 @@ exports.queryAccounts = function(condition, callback) {
 
 // get account information
 exports.getAccount = function(username, callback) {
-    Account.find({username: username}, callback)
+    Account.findOne({username: username}, callback)
 };
 
 ////////////////////////////////////////////////////////
