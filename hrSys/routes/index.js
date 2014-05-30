@@ -17,7 +17,10 @@ var districtName = require('../lib/districtId');
 /* GET home page. */
 router.get('/', function(req, res) {
     debug("session: " + util.inspect(req.session));
-    res.render('index', { title: 'Express' });
+    res.render('index', {
+        title: '劳动力资源信息库',
+        adminArea: districtName['431127'][req.session.user.area]
+    });
 });
 
 /* login page. */
@@ -71,6 +74,7 @@ router.get('/account', function(req, res) {
             }
             debug('type of accounts: ' +
                 Object.prototype.toString.call(accounts));
+            // if no builtin user in accounts, add one.
             if (accounts.every(
                 function(a) {return a.username != auth.builtinUser;})) {
                 accounts.unshift({
@@ -81,8 +85,10 @@ router.get('/account', function(req, res) {
                     permission: '管理员'
                 });
             }
+
             for (var i = 0; i < accounts.length; i++) {
                 debug('districtId: ' + accounts.area);
+                // translate district ID to name
                 if (districtName['431127'].hasOwnProperty(accounts[i].area)) {
                     accounts[i].area = districtName['431127'][accounts[i].area];
                 }
@@ -93,6 +99,7 @@ router.get('/account', function(req, res) {
             res.render(
                 'account',
                 {
+                    adminArea: districtName['431127'][req.session.user.area],
                     title: 'administration',
                     accounts: accounts,
                     builtinUser: auth.builtinUser,
@@ -130,6 +137,8 @@ router.post('/account', function(req, res) {
         account.area = '0';
     }
     db.saveAccount(account);
+    res.redirect('/account');
+    /*
     res.render(
         'editResponse',
         {
@@ -137,11 +146,40 @@ router.post('/account', function(req, res) {
             postMessage: account
         }
     );
+    */
+});
+
+/* process account update */
+router.get('/updateAccount', function(req, res) {
+    var user = req.query.user;
+    var op = req.query.op;
+    if (user == 'admin') {
+        db.getAccount('admin', function(err, acc) {
+            if (!acc) {
+                return;
+            }
+            if (op == 'disable' || op == 'enable') {
+                db.changeAccountStatus(req.query.user, op == 'enable');
+                res.send('ok');
+            }
+        });
+    }
+    if (op == 'disable' || op == 'enable') {
+        db.changeAccountStatus(req.query.user, op == 'enable');
+        res.send('ok');
+    }
+    if (op == 'remove') {
+        db.deleteAccount(user);
+        res.send('ok');
+    }
 });
 
 /* add/modify item page. */
 router.get('/item', function(req, res) {
-    res.render('item', { title: 'add/modify item' });
+    res.render('item', {
+        title: 'add/modify item',
+        adminArea: districtName['431127'][req.session.user.area]
+    });
 });
 
 /* add/modify page. */

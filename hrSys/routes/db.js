@@ -147,6 +147,29 @@ exports.saveAccount = function(acc) {
         });
 };
 
+// change account status
+exports.changeAccountStatus = function(user, status) {
+    Account.update({username: user}, {enabled: status}, function(err) {
+        if (err) {
+            console.error('save error: \n%o', err);
+        }
+    });
+};
+
+// change account password
+exports.changeAccountPassword = function(user, password) {
+
+};
+
+// delete account
+exports.deleteAccount = function(user) {
+    Account.remove({username: user}, function(err) {
+        if (err) {
+            console.error('save error: \n%o', err);
+        }
+    });
+};
+
 // query accounts information
 exports.queryAccounts = function(condition, callback) {
     Account.find(condition)

@@ -25,7 +25,7 @@ block content
           each item, row in accounts
             tr
               td= row + 1
-              td= item.username
+              td.account= item.username
               td= item.area + item.permission
               td
                 if item.enabled
