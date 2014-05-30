@@ -22,19 +22,26 @@ block content
             td 可用状态
             td 删除账号
             td 重置密码
-          tr
-            td 1
-            td admin
-            td 不 限
-            td
-              button.btn.btn-default.btn-xs.btn-success(type="button") 启 用
-            td
-              button.btn.btn-default.btn-xs.btn-danger(type="button") 删 除
-            td
-              button.btn.btn-default.btn-xs.btn-info(type="button") 重 置
+          each item, row in accounts
+            tr
+              td= row + 1
+              td= item.username
+              td= item.area + item.permission
+              td
+                if item.enabled
+                  button.btn.btn-default.btn-xs.btn-success(type="button") 启 用
+                else
+                  button.btn.btn-default.btn-xs.btn-warning(type="button") 禁 用
+              td
+                if builtinUser == item.username
+                  button.btn.btn-default.btn-xs.btn-danger.disabled(type="button") 不能删除
+                else
+                  button.btn.btn-default.btn-xs.btn-danger(type="button") 删 除
+              td
+                button.btn.btn-default.btn-xs.btn-info(type="button") 重 置
 
         .col-sm-4.col-sm-offset-4.text-center
-          h4 <strong>添加新账号</strong>
+          h4 <strong>添加/更新账号</strong>
         .col-sm-12
           br
         form(role="form", action="/account", method="POST")
@@ -65,21 +72,25 @@ block content
               .input-group
                 span.input-group-addon 访问区域
                 select.form-control(name="area")
-                  option(value='0') 无限区域
-                  option(value='1') 塔峰镇
-                  option(value='2') 竹管寺镇
-                  option(value='3') 总市办事处
-                  option(value='4') 祠堂圩乡
-                  option(value='5') 蓝屏办事处
-                  option(value='6') 楠市镇
+                  each item, key in town
+                    option(value=key)= item
+
+                  //
+                    option(value="43112701") 塔峰镇
+                    option(value="43112702") 竹管寺镇
+                    option(value="43112703") 总市办事处
+                    option(value="43112704") 祠堂圩乡
+                    option(value="43112705") 蓝屏办事处
+                    option(value="43112706") 楠市镇
             div(style="width: 50%; float: left;")
               .input-group
                 span.input-group-addon 访问权限
                 select.form-control(name="permission")
-                  option 无限制
+                  option 管理员
+                  option 所有权限
                   option 只读
           .col-sm-6.col-sm-offset-3
             br
-            button.btn.btn-block.btn-default.btn-success(type="submit") 新增账号
+            button.btn.btn-block.btn-default.btn-success(type="submit") 新增/更新账号
 
   script(src="/javascripts/account.js")

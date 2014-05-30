@@ -11,8 +11,8 @@ var accounts = [
 var builtinAccount = {
     username: 'admin',
     password: 'admin',
-    area: '不限',
-    permission: '不限',
+    area: '0',
+    permission: '管理员',
     type: 'independent'
 };
 function auth(acc, stdAcc) {

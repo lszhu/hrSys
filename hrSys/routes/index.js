@@ -11,6 +11,8 @@ var table = require('./table');
 var auth = require('./auth');
 // access database
 var db = require('./db');
+// district Id and name
+var districtName = require('../lib/districtId');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -37,8 +39,8 @@ router.post('/login', function(req, res) {
         debug('auth.auth(acc, account): ' + auth.auth(acc, account));
         if (auth.auth(acc, account)) {
             if (acc.username == auth.builtinUser) {
-                acc.area = '不限';
-                acc.permisssion = '不限';
+                acc.area = '0';
+                acc.permisssion = '所有权限';
                 acc.type = 'independent'
             } else {
                 acc.area = account.area;
@@ -58,7 +60,46 @@ router.post('/login', function(req, res) {
 
 /* administration page. */
 router.get('/account', function(req, res) {
-    res.render('account', { title: 'administration' });
+    db.queryAccounts(
+        {type: 'independent'},
+        function(err, accounts) {
+            if (err) {
+                res.render('error', {
+                    message: err.message,
+                    error: err
+                });
+            }
+            debug('type of accounts: ' +
+                Object.prototype.toString.call(accounts));
+            if (accounts.every(
+                function(a) {return a.username != auth.builtinUser;})) {
+                accounts.unshift({
+                    username: auth.builtinUser,
+                    typ: 'independent',
+                    enabled: true,
+                    area: '0',
+                    permission: '管理员'
+                });
+            }
+            for (var i = 0; i < accounts.length; i++) {
+                debug('districtId: ' + accounts.area);
+                if (districtName['431127'].hasOwnProperty(accounts[i].area)) {
+                    accounts[i].area = districtName['431127'][accounts[i].area];
+                }
+                if (accounts[i].permission == '管理员') {
+                    accounts[i].area = '';
+                }
+            }
+            res.render(
+                'account',
+                {
+                    title: 'administration',
+                    accounts: accounts,
+                    builtinUser: auth.builtinUser,
+                    town: districtName['431127']
+                });
+        }
+    );
 });
 
 /* administration page. */
@@ -85,7 +126,9 @@ router.post('/account', function(req, res) {
         // account type (independent/bind)
         type: 'independent'
     };
-
+    if (account.permission == '管理员') {
+        account.area = '0';
+    }
     db.saveAccount(account);
     res.render(
         'editResponse',
