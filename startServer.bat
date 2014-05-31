@@ -1,2 +1,2 @@
-set DEBUG=app,route
-supervisor -i public -- hrSys\bin\www
+set DEBUG=hrSys,app,route
+nodemon -w hrSys -i hrSys\public -i hrSys\views hrSys\bin\www

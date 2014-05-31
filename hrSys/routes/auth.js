@@ -1,13 +1,5 @@
-
-// temp accounts
-var accounts = [
-    {username: 'default', password: 'default'},
-    {username: 'admin', password: 'admin'},
-    {username: 'jason', password: 'letmein'},
-    {username: 'jerry', password: 'letmein'}
-];
-
-// builtin account
+var builtinAccount = require('../config/config').builtinAccount;
+/* builtin account
 var builtinAccount = {
     username: 'admin',
     password: 'admin',
@@ -15,13 +7,15 @@ var builtinAccount = {
     permission: '管理员',
     type: 'independent'
 };
+*/
+
 function auth(acc, stdAcc) {
-    if (stdAcc && stdAcc.enabled &&
-        acc.username == stdAcc.username &&
-        acc.password == stdAcc.password ) {
-        return true;
+    if (stdAcc) {
+        return acc && stdAcc.enabled &&
+            acc.username == stdAcc.username &&
+            acc.password == stdAcc.password;
     }
-    return acc.username == builtinAccount.username &&
+    return acc && acc.username == builtinAccount.username &&
         acc.password == builtinAccount.password;
 }
 

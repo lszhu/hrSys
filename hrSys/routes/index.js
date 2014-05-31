@@ -12,7 +12,7 @@ var auth = require('./auth');
 // access database
 var db = require('./db');
 // district Id and name
-var districtName = require('../lib/districtId');
+var districtName = require('../config/districtId');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -43,7 +43,7 @@ router.post('/login', function(req, res) {
         if (auth.auth(acc, account)) {
             if (acc.username == auth.builtinUser) {
                 acc.area = '0';
-                acc.permisssion = '所有权限';
+                acc.permisssion = '管理员';
                 acc.type = 'independent'
             } else {
                 acc.area = account.area;
@@ -87,7 +87,7 @@ router.get('/account', function(req, res) {
             }
 
             for (var i = 0; i < accounts.length; i++) {
-                debug('districtId: ' + accounts.area);
+                debug('districtId: ' + accounts[i].area);
                 // translate district ID to name
                 if (districtName['431127'].hasOwnProperty(accounts[i].area)) {
                     accounts[i].area = districtName['431127'][accounts[i].area];
@@ -153,8 +153,12 @@ router.post('/account', function(req, res) {
 router.get('/updateAccount', function(req, res) {
     var user = req.query.user;
     var op = req.query.op;
-    if (user == 'admin') {
-        db.getAccount('admin', function(err, acc) {
+    if (user == req.session.user.username) {
+        res.send('error');
+        return;
+    }
+    if (user == auth.builtinUser) {
+        db.getAccount(auth.builtinUser, function(err, acc) {
             if (!acc) {
                 return;
             }
@@ -163,15 +167,17 @@ router.get('/updateAccount', function(req, res) {
                 res.send('ok');
             }
         });
+    } else {
+        if (op == 'disable' || op == 'enable') {
+            db.changeAccountStatus(req.query.user, op == 'enable');
+            res.send('ok');
+        }
+        if (op == 'remove') {
+            db.deleteAccount(user);
+            res.send('ok');
+        }
     }
-    if (op == 'disable' || op == 'enable') {
-        db.changeAccountStatus(req.query.user, op == 'enable');
-        res.send('ok');
-    }
-    if (op == 'remove') {
-        db.deleteAccount(user);
-        res.send('ok');
-    }
+
 });
 
 /* add/modify item page. */

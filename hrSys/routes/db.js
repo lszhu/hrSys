@@ -1,7 +1,13 @@
+// monggodb server parameters
+var db = require('../config/config').db;
+
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId;
 
+mongoose.connect('mongodb://' + db.server.address + ':' +
+    db.server.port + '/' + db.server.dbName, db.parameter);
+/*
 mongoose.connect(
     'mongodb://localhost:27017/hrsys',
     {
@@ -10,16 +16,16 @@ mongoose.connect(
         pass: 'letmein'
         //auth: {authenticationDatabase: 'hrsys'}
     }
-);
-var db = mongoose.connection;
+*/
 
-db.on('error', function(err) {
+var dbConnection = mongoose.connection;
+
+dbConnection.on('error', function(err) {
     console.error('connection error:', err);
 });
-db.once('open', function() {
+dbConnection.once('open', function() {
     console.log('database connected.');
 });
-
 
 var personSchema = new Schema({
     // basic info
