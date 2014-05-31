@@ -127,7 +127,6 @@ router.post('/account', function(req, res) {
         username: req.body.username,
         enabled: enabled,
         password: req.body.password,
-        retryPassword: req.body.password,
         area: req.body.area,
         permission: req.body.permission,
         // account type (independent/bind)
@@ -178,6 +177,36 @@ router.get('/updateAccount', function(req, res) {
         }
     }
 
+});
+
+/* reset password page. */
+router.get('/resetPassword', function(req, res) {
+    res.render('resetPassword', { title: '重置密码' });
+});
+
+/* change password page. */
+router.post('/resetPassword', function(req, res) {
+    var username = req.body.username;
+    var password = req.body.password;
+    var retryPassword = req.body.retryPassword;
+    if (!password || password != retryPassword) {
+        res.send('errPassword');
+        return;
+    }
+    debug('session.user.name: ' + req.session.user.name);
+    debug('username: ' + username);
+    if (req.session.user.username != username &&
+        req.session.user.permission != '管理员') {
+        res.send('errPermission');
+        return;
+    }
+    db.changeAccountPassword(username, password, function(err) {
+        if (err) {
+            res.send('errDbOperation');
+        } else {
+            res.send('ok');
+        }
+    });
 });
 
 /* add/modify item page. */

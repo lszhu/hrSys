@@ -163,8 +163,8 @@ exports.changeAccountStatus = function(user, status) {
 };
 
 // change account password
-exports.changeAccountPassword = function(user, password) {
-
+exports.changeAccountPassword = function(user, password, callback) {
+    Account.update({username: user}, {password: password}, callback);
 };
 
 // delete account

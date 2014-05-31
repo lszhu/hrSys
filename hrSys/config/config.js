@@ -1,6 +1,6 @@
 // 此处修改内置管理员账号的名称和密码等信息
 var builtinAccount = {
-    username: 'admin',          // 管理员名称
+    username: 'admin',            // 管理员名称
     password: 'admin',            // 管理员密码
     area: '0',
     permission: '管理员',
