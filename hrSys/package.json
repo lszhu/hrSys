@@ -1,20 +1,19 @@
 {
     "name": "hrSys",
-    "version": "0.0.1",
+    "version": "0.6.0",
     "private": true,
     "scripts": {
         "start": "node ./bin/www"
     },
     "dependencies": {
-        "express": "~4.2",
+        "express": "~4.3",
         "static-favicon": "~1.0",
         "morgan": "~1.0",
         "cookie-parser": "~1.1",
         "express-session": "~1.1",
         "body-parser": "~1.2",
-        "debug": "~0.7",
+        "debug": "~0.8",
         "jade": "~1.3",
-        "mongoose": "~3.8",
-        "xlsx": "~0.7"
+        "mongoose": "~3.8"
     }
 }
