@@ -1,0 +1,46 @@
+extends layout
+block content
+  //link(rel="stylesheet" href="/stylesheets/signin.css")
+  link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
+  //h1= title
+  include nav.jade
+  .container
+    .panel.panel-info
+      .panel-heading
+        //.container
+        h1.text-center 关联账号管理
+      .panel-body
+
+        .col-sm-6.col-sm-offset-3
+          button.btn.btn-block.btn-lg.btn-default.btn-success 批量初始化登录账号
+        .col-sm-12
+          hr
+        .col-sm-10.col-sm-offset-1
+          .input-group
+            span.input-group-addon 登录密码
+            input.form-control(type="password", name="password", placeholder="输入登录密码", required="required")
+            span.input-group-addon 确认密码
+            input.form-control(type="password", name="retryPassword", placeholder="再次输入密码", required="required")
+            span.input-group-btn
+              button.btn.btn-default.btn-success 批量初始化密码
+        .col-sm-12
+          hr
+        .col-sm-8.col-sm-offset-2
+          .input-group
+            span.input-group-addon 访问权限
+            select.form-control(name="permission")
+              option 所有权限
+              option 只读
+            span.input-group-btn
+              button.btn.btn-default.btn-success 批量改变账号权限
+        .col-sm-12
+          hr
+        .col-sm-8.col-sm-offset-2
+          .input-group
+            span.input-group-addon 访问权限
+            select.form-control(name="permission")
+              option 可用
+              option 禁用
+            span.input-group-btn
+              button.btn.btn-default.btn-success 批量改变账号状态
+  script(src="/javascripts/account.js")

@@ -209,6 +209,17 @@ router.post('/resetPassword', function(req, res) {
     });
 });
 
+/* batch account management page. */
+router.get('/batchAccount', function(req, res) {
+    res.render('batchAccount', { title: 'batchAccount' });
+});
+
+/* batch account management page. */
+router.post('/batchAccount', function(req, res) {
+    res.render('batchAccount', { title: 'batchAccount' });
+});
+
+
 /* add/modify item page. */
 router.get('/item', function(req, res) {
     res.render('item', {

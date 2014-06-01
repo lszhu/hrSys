@@ -173,7 +173,7 @@ $(function() {
         $('#employment').css({display: 'block'});
         $('#unemployment').css({display: 'none'});
     });
-    radios.filter('[value=0]').focus(function() {
+    radios.filter('[value=暂未就业]').focus(function() {
         $('#employment').css({display: 'none'});
         $('#unemployment').css({display: 'block'});
     });
