@@ -89,8 +89,10 @@ router.get('/account', function(req, res) {
             for (var i = 0; i < accounts.length; i++) {
                 debug('districtId: ' + accounts[i].area);
                 // translate district ID to name
-                if (districtName['431127'].hasOwnProperty(accounts[i].area)) {
-                    accounts[i].area = districtName['431127'][accounts[i].area];
+                var town = accounts[i].area.slice(0, 8);
+                if (districtName['431127'].hasOwnProperty(town)) {
+                    accounts[i].area = districtName['431127'][town] +
+                        districtName[town][accounts[i].area];
                 }
                 if (accounts[i].permission == '管理员') {
                     accounts[i].area = '';
@@ -103,7 +105,7 @@ router.get('/account', function(req, res) {
                     title: 'administration',
                     accounts: accounts,
                     builtinUser: auth.builtinUser,
-                    town: districtName['431127']
+                    districtName: districtName
                 });
         }
     );

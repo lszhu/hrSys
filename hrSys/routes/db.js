@@ -107,6 +107,7 @@ exports.save = function(hrMsg) {
 exports.query = function(condition, callback) {
     PersonMsg.find(condition)
         .lean()         // make return value changeable
+        .sort('username')
         .exec(callback);
 };
 
@@ -180,6 +181,7 @@ exports.deleteAccount = function(user) {
 exports.queryAccounts = function(condition, callback) {
     Account.find(condition)
         .lean()         // make return value changeable
+        .sort('username')
         .exec(callback);
 };
 

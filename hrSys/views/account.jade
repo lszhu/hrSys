@@ -11,7 +11,7 @@ block content
         h1.text-center 账号管理
       .panel-body
         .col-sm-4.col-sm-offset-4.text-center
-          h4 <strong>账号列表</strong>
+          h4 <strong>独立账号列表</strong>
         .col-sm-12
           hr
         table.table.table-condensed.table-striped
@@ -70,11 +70,22 @@ block content
             br
             div(style="width: 50%; float: left;")
               .input-group
+                span.input-group-addon 访问权限
+                select.form-control(name="permission")
+                  option 所有权限
+                  option 只读
+                  option 管理员
+            div(style="width: 50%; float: left;")
+              .input-group
                 span.input-group-addon 访问区域
                 select.form-control(name="area")
-                  each item, key in town
-                    option(value=key)= item
-
+                  optgroup(label=districtName["0"])
+                    option(value="0")= districtName["0"]
+                  each item, key in districtName['431127']
+                    optgroup(label=item)
+                      each v, i in districtName[key]
+                        option(value=i)= v
+                    //option(value=key)= item
                   //
                     option(value="43112701") 塔峰镇
                     option(value="43112702") 竹管寺镇
@@ -82,13 +93,6 @@ block content
                     option(value="43112704") 祠堂圩乡
                     option(value="43112705") 蓝屏办事处
                     option(value="43112706") 楠市镇
-            div(style="width: 50%; float: left;")
-              .input-group
-                span.input-group-addon 访问权限
-                select.form-control(name="permission")
-                  option 管理员
-                  option 所有权限
-                  option 只读
           .col-sm-6.col-sm-offset-3
             br
             button.btn.btn-block.btn-default.btn-success(type="submit") 新增/更新账号
