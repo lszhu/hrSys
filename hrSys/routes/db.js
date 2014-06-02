@@ -136,6 +136,7 @@ var accountSchema = new Schema({
     enabled: Boolean,
     area: String,
     permission: String,
+    // type can be 'independent' or 'bound'
     type: String
 });
 
@@ -187,7 +188,50 @@ exports.queryAccounts = function(condition, callback) {
 
 // get account information
 exports.getAccount = function(username, callback) {
-    Account.findOne({username: username}, callback)
+    Account.findOne({username: username}, callback);
+};
+
+// batch initiate bound account with district ID
+exports.batchInitAccount = function(districts, callback) {
+    for (var town in districts['431127']) {
+        if (!districts['431127'].hasOwnProperty(town)) {
+            continue;
+        }
+        for (var village in districts[town]) {
+            if (!districts[town].hasOwnProperty(village)) {
+                continue;
+            }
+            var account = {
+                username: village,
+                password: Date.now(),
+                enabled: false,
+                area: village,
+                permission: '只读',
+                type: 'bound'
+            };
+            Account.update(
+                {username: acc.username},
+                account,
+                {upsert: true},
+                callback
+            );
+        }
+    }
+};
+
+// batch initiate bound account with district ID
+exports.batchInitPassword = function(password, callback) {
+    Account.update({type: 'bound'}, {password: password}, callback);
+};
+
+// batch initiate bound account with district ID
+exports.batchInitPermission = function(permission, callback) {
+    Account.update({type: 'bound'}, {permission: permission}, callback);
+};
+
+// batch initiate bound account with district ID
+exports.batchInitStatus = function(status, callback) {
+    Account.update({type: 'bound'}, {status: status}, callback);
 };
 
 ////////////////////////////////////////////////////////

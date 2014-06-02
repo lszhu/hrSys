@@ -14,12 +14,21 @@ var db = require('./db');
 // district Id and name
 var districtName = require('../config/districtId');
 
+function getAdminAreaName(districtId) {
+    if (districtId == '0') {
+        return districtName['0'];
+    }
+    if (districtId.length == 10) {
+        return districtName[districtId.slice(0, 8)][districtId];
+    }
+    return '未定义';
+}
 /* GET home page. */
 router.get('/', function(req, res) {
     debug("session: " + util.inspect(req.session));
     res.render('index', {
         title: '劳动力资源信息库',
-        adminArea: districtName['431127'][req.session.user.area]
+        adminArea: getAdminAreaName(req.session.user.area)
     });
 });
 
@@ -101,7 +110,7 @@ router.get('/account', function(req, res) {
             res.render(
                 'account',
                 {
-                    adminArea: districtName['431127'][req.session.user.area],
+                    adminArea: getAdminAreaName(req.session.user.area),
                     title: 'administration',
                     accounts: accounts,
                     builtinUser: auth.builtinUser,
@@ -183,7 +192,13 @@ router.get('/updateAccount', function(req, res) {
 
 /* reset password page. */
 router.get('/resetPassword', function(req, res) {
-    res.render('resetPassword', { title: '重置密码' });
+    res.render(
+        'resetPassword',
+        {
+            title: '重置密码',
+            adminArea: getAdminAreaName(req.session.user.area)
+        }
+    );
 });
 
 /* change password page. */
@@ -213,12 +228,32 @@ router.post('/resetPassword', function(req, res) {
 
 /* batch account management page. */
 router.get('/batchAccount', function(req, res) {
-    res.render('batchAccount', { title: 'batchAccount' });
+    res.render(
+        'batchAccount',
+        {
+            title: 'batchAccount',
+            adminArea: getAdminAreaName(req.session.user.area)
+        }
+    );
 });
 
 /* batch account management page. */
 router.post('/batchAccount', function(req, res) {
-    res.render('batchAccount', { title: 'batchAccount' });
+    if (req.session.user.permission != '管理员') {
+        res.send('permission denied');
+        return;
+    }
+    if (req.body.command == 'initAccount') {
+        batchInitAccount();
+    } else if (req.body.command == 'initPassword') {
+        batchInitPassword();
+    } else if (req.body.command == 'changePermission') {
+        batchChangePermission();
+    } else if (req.body.command == 'changeStatus') {
+        batchChangeStatus();
+    } else {
+        res.send('err');
+    }
 });
 
 
@@ -226,7 +261,7 @@ router.post('/batchAccount', function(req, res) {
 router.get('/item', function(req, res) {
     res.render('item', {
         title: 'add/modify item',
-        adminArea: districtName['431127'][req.session.user.area]
+        adminArea: getAdminAreaName(req.session.user.area)
     });
 });
 
@@ -337,7 +372,8 @@ router.get('/tables/:title', function(req, res) {
         'statistics',
         {
             tableName: req.param('title'),
-            tables: table.cnTableName
+            tables: table.cnTableName,
+            adminArea: getAdminAreaName(req.session.user.area)
         }
     );
 });
@@ -362,7 +398,8 @@ router.post('/tables', function(req, res) {
             'tableEmployed',
             {
                 title: table.cnTableName[tableName],
-                data: data
+                data: data,
+                adminArea: getAdminAreaName(req.session.user.area)
             }
         );
     });
@@ -370,27 +407,57 @@ router.post('/tables', function(req, res) {
 
 /* export data page. */
 router.get('/export', function(req, res) {
-    res.render('export', { title: 'export' });
+    res.render(
+        'export',
+        {
+            title: 'export',
+            adminArea: getAdminAreaName(req.session.user.area)
+        }
+    );
 });
 
 /* export data page. */
 router.post('/export', function(req, res) {
-    res.render('export', { title: 'export' });
+    res.render(
+        'export',
+        {
+            title: 'export',
+            adminArea: getAdminAreaName(req.session.user.area)
+        }
+    );
 });
 
 /* search page. */
 router.get('/search', function(req, res) {
-    res.render('search', { title: 'search' });
+    res.render(
+        'search',
+        {
+            title: 'search',
+            adminArea: getAdminAreaName(req.session.user.area)
+        }
+    );
 });
 
 /* search page. */
 router.post('/search', function(req, res) {
-    res.render('index', { title: 'search' });
+    res.render(
+        'search',
+        {
+            title: 'search',
+            adminArea: getAdminAreaName(req.session.user.area)
+        }
+    );
 });
 
 /* help page. */
 router.get('/help', function(req, res) {
-    res.render('help', { title: 'search' });
+    res.render(
+        'help',
+        {
+            title: 'help',
+            adminArea: getAdminAreaName(req.session.user.area)
+        }
+    );
 });
 
 /* logout page. */
