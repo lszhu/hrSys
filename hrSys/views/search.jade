@@ -1,16 +1,53 @@
 extends layout
 block content
-  link(rel="stylesheet" href="/stylesheets/signin.css")
+  //link(rel="stylesheet" href="/stylesheets/signin.css")
+  link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
   //h1= title
   include nav.jade
-  div.container
-    form.form-signin(role="form", action="/login", method="POST")
-      h2.form-signin-heading 搜索条件
-      label 姓名：
-      input.form-control(type="text", placeholder="在此输入姓名", required="required")
-      label 身份证号：
-      input.form-control(type="password", placeholder="在此输入身份证号", required="required")
-      label.checkbox
-        input(type="checkbox", value="rememberMe")
-        span 大中专毕业生
-      button.btn.btn-lg.btn-primary.btn-block(type="submit") 搜索
+  .container
+    .panel.panel-info
+      .panel-heading
+        //.container
+        h1.text-center 关联账号管理
+      .panel-body
+        .col-sm-6.col-sm-offset-3
+          button#initAccount.btn.btn-block.btn-lg.btn-default.btn-success 批量初始化登录账号
+        .col-sm-12#initAccountMsg.text-center
+          br
+        .col-sm-12
+          hr
+        .col-sm-10.col-sm-offset-1
+          .input-group#initPassword
+            span.input-group-addon 登录密码
+            input.form-control(type="password", name="password", placeholder="输入登录密码", required="required")
+            span.input-group-addon 确认密码
+            input.form-control(type="password", name="retryPassword", placeholder="再次输入密码", required="required")
+            span.input-group-btn
+              button.btn.btn-default.btn-success 批量初始化密码
+        .col-sm-12#initPasswordMsg.text-center
+          br
+        .col-sm-12
+          hr
+        .col-sm-8.col-sm-offset-2
+          .input-group#changePermission
+            span.input-group-addon 访问权限
+            select.form-control(name="permission")
+              option 所有权限
+              option 只读
+            span.input-group-btn
+              button.btn.btn-default.btn-success 批量改变账号权限
+        .col-sm-12#changePermissionMsg.text-center
+          br
+        .col-sm-12
+          hr
+        .col-sm-8.col-sm-offset-2
+          .input-group#changeStatus
+            span.input-group-addon 账号状态
+            select.form-control(name="permission")
+              option 可用
+              option 禁用
+            span.input-group-btn
+              button.btn.btn-default.btn-success 批量改变账号状态
+        .col-sm-12#changeStatusMsg.text-center
+          br
+  script(src="/javascripts/batchAccount.js")

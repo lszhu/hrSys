@@ -19,7 +19,8 @@ function getAdminAreaName(districtId) {
         return districtName['0'];
     }
     if (districtId.length == 10) {
-        return districtName[districtId.slice(0, 8)][districtId];
+        return districtName['431127'][districtId.slice(0, 8)] +
+            districtName[districtId.slice(0, 8)][districtId];
     }
     return '未定义';
 }
@@ -241,16 +242,46 @@ router.get('/batchAccount', function(req, res) {
 router.post('/batchAccount', function(req, res) {
     if (req.session.user.permission != '管理员') {
         res.send('permission denied');
+        res.send('err');
         return;
     }
+    debug('command: ' + req.body.command);
     if (req.body.command == 'initAccount') {
-        batchInitAccount();
+        db.batchInitAccount(districtName, function(err) {
+            if (err) {
+                console.error('save error: \n%o', err);
+                res.send('err');
+                return;
+            }
+            res.send('ok');
+        });
     } else if (req.body.command == 'initPassword') {
-        batchInitPassword();
+        db.batchInitPassword(req.body.password, function(err) {
+            if (err) {
+                console.error('save error: \n%o', err);
+                res.send('err');
+                return;
+            }
+            res.send('ok');
+        });
     } else if (req.body.command == 'changePermission') {
-        batchChangePermission();
+        db.batchChangePermission(req.body.permission, function(err) {
+            if (err) {
+                console.error('save error: \n%o', err);
+                res.send('err');
+                return;
+            }
+            res.send('ok');
+        });
     } else if (req.body.command == 'changeStatus') {
-        batchChangeStatus();
+        db.batchChangeStatus(req.body.status, function(err) {
+            if (err) {
+                console.error('save error: \n%o', err);
+                res.send('err');
+                return;
+            }
+            res.send('ok');
+        });
     } else {
         res.send('err');
     }

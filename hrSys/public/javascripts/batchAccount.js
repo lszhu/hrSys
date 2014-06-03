@@ -38,7 +38,7 @@ $('#initPassword').find('button').click(function() {
 });
 
 $('#changePermission').find('button').click(function() {
-    var right = $('#changePermission').find('input');
+    var right = $('#changePermission').find('select').val();
     $.post('/batchAccount',
         {command: 'changePermission', permission: right},
         function(data) {
@@ -55,7 +55,7 @@ $('#changePermission').find('button').click(function() {
 });
 
 $('#changeStatus').find('button').click(function() {
-    var status = ($('#changeStatus').find('input').val() == '可用');
+    var status = ($('#changeStatus').find('select').val() == '可用');
 
     $.post('/batchAccount',
         {command: 'changeStatus', status: status},

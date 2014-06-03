@@ -1,3 +1,4 @@
+var debug = require('debug')('db');
 // monggodb server parameters
 var db = require('../config/config').db;
 
@@ -193,45 +194,81 @@ exports.getAccount = function(username, callback) {
 
 // batch initiate bound account with district ID
 exports.batchInitAccount = function(districts, callback) {
+    var error = false;
+    var count = 0;
     for (var town in districts['431127']) {
+        debug('townId: ' + town);
         if (!districts['431127'].hasOwnProperty(town)) {
             continue;
         }
         for (var village in districts[town]) {
+            debug('villageId: ' + village);
             if (!districts[town].hasOwnProperty(village)) {
                 continue;
             }
             var account = {
                 username: village,
-                password: Date.now(),
+                password: Date.now().toString(),
                 enabled: false,
                 area: village,
                 permission: '只读',
                 type: 'bound'
             };
+            // used to count in doing update
+            count++;
             Account.update(
-                {username: acc.username},
+                {username: village},
                 account,
                 {upsert: true},
-                callback
+                function(err) {
+                    return err ? (error = err) : count--;
+                }
             );
         }
     }
+    // access DB timeout is 3s
+    var timeout = 3000;
+    // check DB update result every 0.1s
+    setTimeout(result, 100);
+    function result() {
+        if (count == 0) {
+            return callback();
+        }
+        if (timeout <  0) {
+            return callback('dbAccessTimeout');
+        }
+        timeout -= 100;
+        setTimeout(result, 100);
+    }
+
 };
 
 // batch initiate bound account with district ID
 exports.batchInitPassword = function(password, callback) {
-    Account.update({type: 'bound'}, {password: password}, callback);
+    Account.update(
+        {type: 'bound'},
+        {password: password},
+        {multi: true},
+        callback
+    );
 };
 
 // batch initiate bound account with district ID
-exports.batchInitPermission = function(permission, callback) {
-    Account.update({type: 'bound'}, {permission: permission}, callback);
+exports.batchChangePermission = function(permission, callback) {
+    Account.update(
+        {type: 'bound'},
+        {permission: permission},
+        {multi: true},
+        callback);
 };
 
 // batch initiate bound account with district ID
-exports.batchInitStatus = function(status, callback) {
-    Account.update({type: 'bound'}, {status: status}, callback);
+exports.batchChangeStatus = function(status, callback) {
+    Account.update(
+        {type: 'bound'},
+        {enabled: status},
+        {multi: true},
+        callback);
 };
 
 ////////////////////////////////////////////////////////
