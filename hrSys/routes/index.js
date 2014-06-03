@@ -30,7 +30,7 @@ function getAdminAreaName(districtId) {
         return districtName['0'];
     }
     if (districtId.length == 10) {
-        return districtName['431127'][districtId.slice(0, 8)] +
+        return districtName['431127'][districtId.slice(0, 8)] + ' ' +
             districtName[districtId.slice(0, 8)][districtId];
     }
     return '未定义';
@@ -301,10 +301,15 @@ router.post('/batchAccount', function(req, res) {
 
 /* add/modify item page. */
 router.get('/item', function(req, res) {
+    debug('req.session.user.area: ' + JSON.stringify(req.session.user.area));
     res.render('item', {
-        title: 'add/modify item',
+        title: '添加人力资源信息',
         adminArea: getAdminAreaName(req.session.user.area),
-        nations: nations
+        nations: nations,
+        districtId: req.session.user.area,
+        editor: req.session.user.username,
+        address: districtName['4311']['431127'] + ' ' +
+            getAdminAreaName(req.session.user.area)
     });
 });
 
@@ -341,6 +346,22 @@ router.post('/item', function(req, res) {
         }
     }
 
+    var address;
+    if (req.session.user.area.length != 10) {
+        addr = req.body.address.split(/\s+/);
+        address = {
+            county: addr[0],
+            town: addr[1],
+            village: addr[2]
+        }
+    } else {
+        var name = req.session.user.username;
+        address = {
+            county: districtName['4311']['431127'],
+            town: districtName['431127'][name.slice(0, 8)],
+            village: districtName[name.slice(0, 8)][name]
+        }
+    }
     var userMessage = {
         // basic info
         username: req.body.username,
@@ -350,7 +371,7 @@ router.post('/item', function(req, res) {
         age: req.body.age,
         gender: req.body.gender,
         workRegisterId: req.body.workRegisterId,
-        address: req.body.address,
+        address: address,
         districtId: req.body.districtId,
         // still basic info
         education: req.body.education,
@@ -400,11 +421,14 @@ router.post('/item', function(req, res) {
         editor: req.body.editor,
         modifiedDate: new Date()
     };
-    // this attribute is used only for control. and is not saved to DB
-    userMessage.administrator = req.session.user;
+
     db.preprocessUserMsg(userMessage);
     db.save(userMessage);
-    res.render('editResponse', {postMessage: userMessage});
+    res.render('postItem', {
+        title: '添加人力资源信息',
+        adminArea: getAdminAreaName(req.session.user.area)
+    });
+    //res.redirect('/item');
 });
 
 /* prepare statistics table page, ask for search parameters. */

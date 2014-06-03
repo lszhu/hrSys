@@ -23,13 +23,8 @@ block content
             .input-group
               span.input-group-addon 民 族
               select.form-control(name="nation")
-                option(value="汉族") 汉族
-                option(value="蒙古族") 蒙古族
-                option(value="回族") 回族
-                option(value="藏族") 藏族
-                option(value="维吾尔族") 维吾尔族
-                option(value="苗族") 苗族
-                option(value="彝族") 彝族
+                each value, key in nations
+                  option= value
           div(style="width: 33%; float: left;")
             .input-group
               span.input-group-addon &nbsp;&nbsp;&nbsp;年 龄&nbsp;&nbsp;&nbsp;
@@ -42,14 +37,24 @@ block content
             .input-group
               span.input-group-addon 就业失业登记证号
               input.form-control(type="text", name="workRegisterId", readonly="readonly", tabindex="-1")
-          div(style="width: 60%; float: left;")
-            .input-group
-              span.input-group-addon &nbsp;&nbsp;&nbsp;地 址&nbsp;&nbsp;&nbsp;
-              input.form-control(type="text", name="address", readonly="readonly", placeholder="县市与乡镇、乡镇与村社区间用空格分开", value="永州市蓝山县 塔峰镇 早禾村", tabindex="-1")
-          div(style="width: 40%; float: left;")
-            .input-group
-              span.input-group-addon &nbsp;&nbsp;&nbsp;行政区划代码&nbsp;&nbsp;&nbsp;&nbsp;
-              input.form-control(type="text", name="districtId", readonly="readonly", value="4311270101", tabindex="-1")
+          if districtId.length == 10
+            div(style="width: 60%; float: left;")
+              .input-group
+                span.input-group-addon &nbsp;&nbsp;&nbsp;地 址&nbsp;&nbsp;&nbsp;
+                input.form-control(type="text", name="address", readonly="readonly", placeholder="县市与乡镇、乡镇与村社区间用空格分开", value=address, tabindex="-1")
+            div(style="width: 40%; float: left;")
+              .input-group
+                span.input-group-addon &nbsp;&nbsp;&nbsp;行政区划代码&nbsp;&nbsp;&nbsp;&nbsp;
+                input.form-control(type="text", name="districtId", readonly="readonly", value=districtId, tabindex="-1")
+          else
+            div(style="width: 60%; float: left;")
+              .input-group
+                span.input-group-addon &nbsp;&nbsp;&nbsp;地 址&nbsp;&nbsp;&nbsp;
+                input.form-control(type="text", name="address", placeholder="县市与乡镇、乡镇与村社区间用空格分开")
+            div(style="width: 40%; float: left;")
+              .input-group
+                span.input-group-addon &nbsp;&nbsp;&nbsp;行政区划代码&nbsp;&nbsp;&nbsp;&nbsp;
+                input.form-control(type="text", name="districtId", placeholder="输入10位代码")
 
           div(style="width: 33%; float: left;")
             .input-group
@@ -208,7 +213,7 @@ block content
           .col-sm-3.col-sm-offset-1
             .input-group
               span.input-group-addon 填报人
-              input.form-control(type="text", name="editor", placeholder="输入姓名")
+              input.form-control(type="text", name="editor", value=editor, readonly="readonly")
           .col-sm-2
           .col-sm-4
             .input-group

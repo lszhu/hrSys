@@ -112,6 +112,7 @@ exports.query = function(condition, callback) {
         .exec(callback);
 };
 
+/*
 exports.getAddress = getAddress;
 function getAddress(editor) {
     console.log('editor: ' + editor);
@@ -121,9 +122,10 @@ function getAddress(editor) {
         village: '塔峰西路'
     };
 }
+*/
 
 exports.preprocessUserMsg = function(userMsg) {
-    userMsg.address = getAddress(userMsg.administrator);
+    //userMsg.address = getAddress(userMsg.administrator);
     if (userMsg.employment == '已就业') {
         userMsg.unemploymentInfo = null;
     } else {
