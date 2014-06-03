@@ -431,6 +431,52 @@ router.post('/item', function(req, res) {
     //res.redirect('/item');
 });
 
+/* update person info page. */
+router.get('/update', function(req, res) {
+    res.render(
+        'updatePerson',
+        {
+            title: '指定待修改人员',
+            adminArea: getAdminAreaName(req.session.user.area)
+        }
+    );
+});
+
+/* update person info page. */
+router.post('/update', function(req, res) {
+    res.render(
+        'updatePerson',
+        {
+            title: '指定待修改人员',
+            adminArea: getAdminAreaName(req.session.user.area),
+            nations: nations
+        }
+    );
+});
+
+/* delete person info page. */
+router.get('/delete', function(req, res) {
+    res.render(
+        'deletePerson',
+        {
+            title: '指定待删除人员',
+            adminArea: getAdminAreaName(req.session.user.area)
+        }
+    );
+});
+
+/* delete person info page. */
+router.post('/delete', function(req, res) {
+    res.render(
+        'deletePerson',
+        {
+            title: '指定待删除人员',
+            adminArea: getAdminAreaName(req.session.user.area),
+            nations: nations
+        }
+    );
+});
+
 /* prepare statistics table page, ask for search parameters. */
 router.get('/tables/:title', function(req, res) {
     debug('tables: ' + util.inspect(table.tablesName));

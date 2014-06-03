@@ -1,0 +1,27 @@
+extends layout
+block content
+  //link(rel="stylesheet" href="/stylesheets/signin.css")
+  link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
+  //h1= title
+  include nav.jade
+  .container.col-sm-10.col-sm-offset-1
+    form.panel.panel-info(action='/queryPerson', method="POST")
+      .panel-heading
+        //.container
+        h1.text-center= title
+      .panel-body
+        .col-sm-8.col-sm-offset-2
+          .input-group
+            span.input-group-addon &nbsp;&nbsp;姓&nbsp;&nbsp;&nbsp;名&nbsp;&nbsp;
+            input.form-control(type="text", name="username", required="required")
+          .input-group
+            span.input-group-addon 身份证号
+            input.form-control(type="text", name="idNumber", required="required")
+          .input-group.hidden
+            span.input-group-addon operation
+            input.form-control(type="text", name="operation", value=operation)
+        .col-sm-6.col-sm-offset-3
+          br
+          button.btn.btn-block.btn-lg.btn-default.btn-success(type="submit", role="button") 确 定
+
+  script(src="/javascripts/search.js")
