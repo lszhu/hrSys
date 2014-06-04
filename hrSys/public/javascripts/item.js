@@ -198,10 +198,11 @@ $(function() {
         $('#unemployment').css({display: 'none'});
     }
 
-    // 控制“培训项目”表单栏的可用状态
+    // 控制“外出省份”表单栏的可用状态
     $('select[name=workplace]').change(function() {
-        var readOnly = ($('select[name=workplace]').val() != '外省');
-        $('select[name=workProvince]').prop('readonly', readOnly);
+        //var readOnly = ($('select[name=workplace]').val() != '外省');
+        var disabled = (this.value != '外省');
+        $('select[name=workProvince]').prop('disabled', disabled);
     });
 
     // 自动填入填报时间

@@ -64,19 +64,6 @@ var cnItemName = {
 };
 
 
-//文化程度
-/*
-var education = [
-    '初中及以下',
-    '高中',
-    '职业高中',
-    '技工学校',
-    '中专',
-    '大专',
-    '大学以上'
-];
-*/
-
 //参保情况
 var insurance = [
     '城镇职工养老保险',
@@ -100,52 +87,6 @@ var technicalGrade = [
     '高级技师'
 ];
 */
-
-//参加农村劳动力技能培训意向
-var preferredTraining = [
-    '服装缝纫',
-    '制鞋',
-    '电子技术',
-    '电脑',
-    '家电维修',
-    '电工',
-    '焊工',
-    '数控车床',
-    '家政服务',
-    '保安',
-    '烹饪',
-    '服务员',
-    '美容美发',
-    '商业营销',
-    '其他'
-];
-
-
-//从事工种
-var jobType = [
-    '家电维修',
-    '缝纫工',
-    '木工',
-    '油漆工',
-    '车工',
-    '钳工',
-    '电工',
-    '焊工',
-    '钢筋工',
-    '砌筑工',
-    '铸造工',
-    '家政服务',
-    '营业员',
-    '保安',
-    '汽车维修',
-    '管理人员',
-    '烹饪',
-    '制鞋',
-    '电脑',
-    '通信工程',
-    '美容美发',
-    '商业营销'
-];
 
 //从事行业（多选）
 /*
@@ -174,6 +115,7 @@ var serviceType = [
     '职业技能鉴定',
     '社会保险补贴',
     '公益性岗位安置',
+    '小额担保贷款贴息',
     '小额担保贷款',
     '就业见习'
 ];
@@ -199,12 +141,9 @@ module.exports = {
     cnItemName: cnItemName,
 //    cnEducation: education,
 //    cnTechnicalGrade: technicalGrade,
-    cnPreferredTraining: preferredTraining,
-//    cnSalary: salary,
+//    cnPreferredTraining: preferredTraining,
 //    cnWorkExperience: workExperience,
 //    cnWorkPlace: workPlace,
-    cnJobType: jobType,
-//    cnIndustry: industry,
     cnService: serviceType,
     cnInsurance: insurance
 };

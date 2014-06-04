@@ -13,6 +13,8 @@ var auth = require('./auth');
 var db = require('./db');
 // district Id and name
 var districtName = require('../config/districtId');
+// job type
+var jobType = require('../config/jobType');
 // worker employment/unemployment register id
 var workRegisterId = require('../config/workRegisterId');
 // nations
@@ -26,6 +28,12 @@ var nations = [
     "鄂温克族","德昂族","保安族","裕固族","京族","塔塔尔族","独龙族",
     "鄂伦春族","赫哲族","门巴族","珞巴族","基诺族","外籍人士"
 ];
+// province
+var provinces = ['北京市', '天津市', '河北省', '山西省', '内蒙古自治区',
+    '辽宁省', '吉林省', '黑龙江省', '上海市', '江苏省', '浙江省', '安徽省',
+    '福建省', '江西省', '山东省', '河南省', '湖北省', '广东省', '广西壮族自治区',
+    '海南省', '重庆市', '四川省', '贵州省', '云南省', '西藏自治区', '陕西省',
+    '甘肃省', '青海省', '宁夏回族自治区', '新疆维吾尔自治区'];
 
 function getAddress(districtId) {
     var address = {
@@ -333,10 +341,15 @@ router.get('/workRegisterId', function(req, res) {
 /* add/modify item page. */
 router.get('/item', function(req, res) {
     debug('req.session.user.area: ' + JSON.stringify(req.session.user.area));
+    //debug('jobType' + JSON.stringify(jobType));
     res.render('item', {
         title: '添加人力资源信息',
         adminArea: getAdminAreaName(req.session.user.area),
         nations: nations,
+        insurance: table.cnInsurance,
+        province: provinces,
+        jobType: jobType,
+        builtinService: table.cnService,
         districtId: req.session.user.area,
         editor: req.session.user.username,
         address: districtName['4311']['431127'] + ' ' +
@@ -349,31 +362,19 @@ router.post('/item', function(req, res) {
     var insurance = [];
     for (var i = 0; i < table.cnInsurance.length; i++) {
         if (req.body['insurance' + i]) {
-            insurance.push(table.cnInsurance[i]);
+            insurance.push(i);
         }
     }
     var postService = [];
     for (i = 0; i < table.cnService.length; i++) {
         if (req.body['postService' + i]) {
-            postService.push(table.cnService[i]);
+            postService.push(i);
         }
     }
     var preferredService = [];
     for (i = 0; i < table.cnService.length; i++) {
         if (req.body['preferredService' + i]) {
-            preferredService.push(table.cnService[i]);
-        }
-    }
-    var preferredJobType = [];
-    for (i = 0; i < table.cnJobType.length; i++) {
-        if (req.body['preferredJobType' + i]) {
-            preferredJobType.push(table.cnJobType[i]);
-        }
-    }
-    var jobType = [];
-    for (i = 0; i < table.cnJobType.length; i++) {
-        if (req.body['jobType' + i]) {
-            jobType.push(table.cnJobType[i]);
+            preferredService.push(i);
         }
     }
 
@@ -392,6 +393,11 @@ router.post('/item', function(req, res) {
     var workRegisterId = req.body.districtId;
     if (workRegisterId == '暂无') {
         workRegisterId = '';
+    }
+
+    var workProvince = req.body.workProvince;
+    if (workProvince == undefined) {
+        workProvince = '';
     }
 
     var userMessage = {
@@ -423,11 +429,11 @@ router.post('/item', function(req, res) {
         // employment info
         employmentInfo: {
             employer: req.body.employer,
-            jobType: jobType,
+            jobType: req.body.jobType,
             industry: req.body.industry,
             startWorkDate: req.body.startWorkDate,
             workplace: req.body.workplace,
-            workProvince: req.body.workProvince,
+            workProvince: workProvince,
             salary: req.body.salary,
             jobForm: req.body.jobForm
         },
@@ -437,7 +443,7 @@ router.post('/item', function(req, res) {
             unemployedDate: req.body.unemployedDate,
             unemploymentCause: req.body.unemploymentCause,
             familyType: req.body.familyType,
-            preferredJobType: preferredJobType,
+            preferredJobType: [req.body.jobType01, req.body.jobType02],
             extraPreferredJobType: req.body.extraPreferredJobType,
             preferredSalary: req.body.preferredSalary,
             preferredIndustry: req.body.preferredIndustry,
@@ -464,6 +470,7 @@ router.post('/item', function(req, res) {
 });
 
 /* update person info page. */
+/*
 router.get('/update', function(req, res) {
     res.render(
         'updatePerson',
@@ -473,18 +480,39 @@ router.get('/update', function(req, res) {
         }
     );
 });
-
+*/
 /* update person info page. */
+/*
 router.post('/update', function(req, res) {
-    res.render(
-        'updatePerson',
-        {
-            title: '指定待修改人员',
-            adminArea: getAdminAreaName(req.session.user.area),
-            nations: nations
+    var area = req.session.user.area;
+    var bound = req.body.condition;
+    if (area != '0') {
+        bound.address = getAddress(area);
+    }
+    debug('db.remove bound is: ' + JSON.stringify(bound));
+    db.query(bound, function(err, data) {
+        if (err) {
+            res.send('dbError');
+            return;
         }
-    );
+        if (data) {
+            res.render('item',
+                {
+                    title: '添加人力资源信息',
+                    initMsg: data,
+                    adminArea: getAdminAreaName(req.session.user.area),
+                    nations: nations,
+                    districtId: req.session.user.area,
+                    editor: req.session.user.username,
+                    address: districtName['4311']['431127'] + ' ' +
+                        getAdminAreaName(req.session.user.area)
+                }
+            )
+        }
+        res.send('ok');
+    });
 });
+*/
 
 /* delete person info page. */
 router.get('/delete', function(req, res) {
@@ -585,6 +613,7 @@ router.get('/search', function(req, res) {
             title: 'search',
             adminArea: getAdminAreaName(req.session.user.area),
             nations: nations,
+            jobType: jobType,
             districtName: districtName
         }
     );

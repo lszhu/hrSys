@@ -29,29 +29,29 @@ block content
             .input-group
               span.input-group-addon &nbsp;&nbsp;&nbsp;年 龄&nbsp;&nbsp;&nbsp;
               input.form-control(type="text", name="age" readonly="readonly", tabindex="-1")
-          div(style="width: 27%; float: left;")
+          div(style="width: 22%; float: left;")
             .input-group
               span.input-group-addon &nbsp;&nbsp;&nbsp;性 别&nbsp;&nbsp;&nbsp;
               input.form-control(type="text", name="gender", readonly="readonly", tabindex="-1")
-          div(style="width: 40%; float: left;")
+          div(style="width: 45%; float: left;")
             .input-group
               span.input-group-addon 就业失业登记证号
               input.form-control(type="text", name="workRegisterId", readonly="readonly", tabindex="-1")
           if districtId.length == 10
-            div(style="width: 60%; float: left;")
+            div(style="width: 55%; float: left;")
               .input-group
                 span.input-group-addon &nbsp;&nbsp;&nbsp;地 址&nbsp;&nbsp;&nbsp;
                 input.form-control(type="text", name="address", readonly="readonly", placeholder="县市与乡镇、乡镇与村社区间用空格分开", value=address, tabindex="-1")
-            div(style="width: 40%; float: left;")
+            div(style="width: 45%; float: left;")
               .input-group
                 span.input-group-addon &nbsp;&nbsp;&nbsp;行政区划代码&nbsp;&nbsp;&nbsp;&nbsp;
                 input.form-control(type="text", name="districtId", readonly="readonly", value=districtId, tabindex="-1")
           else
-            div(style="width: 60%; float: left;")
+            div(style="width: 55%; float: left;")
               .input-group
                 span.input-group-addon &nbsp;&nbsp;&nbsp;地 址&nbsp;&nbsp;&nbsp;
                 input.form-control(type="text", name="address", placeholder="县市与乡镇、乡镇与村社区间用空格分开")
-            div(style="width: 40%; float: left;")
+            div(style="width: 45%; float: left;")
               .input-group
                 span.input-group-addon &nbsp;&nbsp;&nbsp;行政区划代码&nbsp;&nbsp;&nbsp;&nbsp;
                 input.form-control(type="text", name="districtId", placeholder="输入10位代码")
@@ -143,6 +143,17 @@ block content
             .panel-heading.text-center
               strong 已享受就业服务
             .panel-body
+              each v, k in builtinService
+                .col-sm-3
+                  label.checkbox-inline= v
+                    input(type="checkbox", name="postService"+k)
+              .col-sm-12
+                br
+                .input-group
+                  span.input-group-addon 已享受其他服务
+                  input.form-control(type="text", name="extraPostService", placeholder="输入服务名称，可输入多项，用逗号隔开")
+
+            //.panel-body
               .col-sm-3
                 label.checkbox-inline 职业介绍
                   input(type="checkbox", name="postService0")
@@ -159,11 +170,14 @@ block content
                 label.checkbox-inline 公益性岗位安置
                   input(type="checkbox", name="postService4")
               .col-sm-3
-                label.checkbox-inline 小额担保贷款
+                label.checkbox-inline 小额担保贷款贴息
                   input(type="checkbox", name="postService5")
               .col-sm-3
-                label.checkbox-inline 就业见习
+                label.checkbox-inline 小额担保贷款
                   input(type="checkbox", name="postService6")
+              .col-sm-3
+                label.checkbox-inline 就业见习
+                  input(type="checkbox", name="postService7")
               .col-sm-12
                 br
               .col-sm-12
@@ -183,6 +197,11 @@ block content
             .panel-heading.text-center
               strong 参加社会保险信息（多选）
             .panel-body
+              each v, k in insurance
+                .col-sm-4
+                  label.checkbox-inline= v
+                    input(type="checkbox", name="insurance"+k)
+            //.panel-body
               .col-sm-4
                 label.checkbox-inline 城镇职工养老保险
                   input(type="checkbox", name="insurance0")

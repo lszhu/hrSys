@@ -61,7 +61,7 @@ var personSchema = new Schema({
     // employment info
     employmentInfo: {
         employer: String,
-        jobType: [String],
+        jobType: String,
         industry: String,
         startWorkDate: String,
         workplace: String,

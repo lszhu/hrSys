@@ -80,14 +80,13 @@ block content
           .input-group
             span.input-group-addon 意愿工种
             select.form-control(name="preferredJobType")
-              option 不限
-              option 单位负责人
-              option 专业、技术人员
-              option 办事人员
-              option 商业、服务业人员
-              option 农林牧渔水利生产人员
-              option 生产运输工人
-              option 其他
+              optgroup(label='不限')
+                option(value='0') 不限
+              each val, key in jobType
+                optgroup(label=val[key])
+                  each v, k in val
+                    option(value=k)= v
+
         .col-sm-4.col-sm-offset-2
           br
           button.btn.btn-block.btn-lg.btn-default.btn-success 查 询

@@ -12,26 +12,19 @@ br
       strong 已就业信息
     .panel-body
       .col-sm-12
-        .input-group
-          span.input-group-addon 就业单位
-          input.form-control(type="text", name="employer", placeholder="在此输入就业单位或组织")
-
+        div(style="width: 50%; float: left")
+          .input-group
+            span.input-group-addon &nbsp;&nbsp;&nbsp;就业单位&nbsp;&nbsp;&nbsp;&nbsp;
+            input.form-control(type="text", name="employer", placeholder="在此输入就业单位或组织")
+        div(style="width: 50%; float: left")
+          .input-group
+            span.input-group-addon 主要从事工种
+            select.form-control(name="jobType")
+              each val, key in jobType
+                optgroup(label=val[key])
+                  each v, k in val
+                    option(value=k)= v
       .col-sm-12
-        br
-      .col-sm-12
-        .panel.panel-default
-          .panel-heading.text-center
-            | 主要从事工种
-          .panel-body
-            .col-sm-3
-              label.checkbox-inline 家电维修
-                input(type="checkbox", name="jobType0")
-            .col-sm-3
-              label.checkbox-inline 缝纫工
-                input(type="checkbox", name="jobType1")
-            .col-sm-3
-              label.checkbox-inline 木工
-                input(type="checkbox", name="jobType2")
         div(style="width: 50%; float: left")
           .input-group
             span.input-group-addon 从事产业类型
@@ -41,7 +34,7 @@ br
               option 第三产业
         div(style="width: 50%; float: left")
           .input-group
-            span.input-group-addon 就业时间
+            span.input-group-addon &nbsp;&nbsp;&nbsp;就业时间&nbsp;&nbsp;&nbsp;&nbsp;
             input.form-control(type="text", name="startWorkDate", placeholder="格式为（年月日）：YYYYMMDD")
 
         div(style="width: 50%; float: left")
@@ -55,21 +48,17 @@ br
               option 境外
         div(style="width: 50%; float: left")
           .input-group
-            span.input-group-addon 外出省份
-            select.form-control(name="workProvince", readonly="readonly")
-              option
-              option 北京
-              option 上海
-              option 广东
-              option 重庆
-              option 海南
+            span.input-group-addon &nbsp;&nbsp;&nbsp;外出省份&nbsp;&nbsp;&nbsp;&nbsp;
+            select.form-control(name="workProvince", disabled="disabled")
+              each value, key in province
+                option= value
         div(style="width: 50%; float: left")
           .input-group
             span.input-group-addon 年收入 (万元)
             input.form-control(type="text", name="salary")
         div(style="width: 50%; float: left")
           .input-group
-            span.input-group-addon 就业形式
+            span.input-group-addon &nbsp;&nbsp;&nbsp;就业形式&nbsp;&nbsp;&nbsp;&nbsp;
             select.form-control(name="jobForm")
               option 灵活就业
               option 企业
@@ -130,81 +119,24 @@ br
       .col-sm-12
         .panel.panel-default
           .panel-heading.text-center
-            | 就业工种意向（多选）
+            | 就业工种意向
           .panel-body
-            .col-sm-3
-              label.checkbox-inline 家电维修
-                input(type="checkbox", name="preferredJobType0")
-            .col-sm-3
-              label.checkbox-inline 缝纫工
-                input(type="checkbox", name="preferredJobType1")
-            .col-sm-3
-              label.checkbox-inline 木工
-                input(type="checkbox", name="preferredJobType2")
-            .col-sm-3
-              label.checkbox-inline 油漆工
-                input(type="checkbox", name="preferredJobType3")
-            .col-sm-3
-              label.checkbox-inline 车工
-                input(type="checkbox", name="preferredJobType4")
-            .col-sm-3
-              label.checkbox-inline 钳工
-                input(type="checkbox", name="preferredJobType5")
-            .col-sm-3
-              label.checkbox-inline 电工
-                input(type="checkbox", name="preferredJobType6")
-            .col-sm-3
-              label.checkbox-inline 焊工
-                input(type="checkbox", name="preferredJobType7")
-            .col-sm-3
-              label.checkbox-inline 钢筋工
-                input(type="checkbox", name="preferredJobType8")
-            .col-sm-3
-              label.checkbox-inline 砌筑工
-                input(type="checkbox", name="preferredJobType9")
-            .col-sm-3
-              label.checkbox-inline 铸造工
-                input(type="checkbox", name="preferredJobType10")
-            .col-sm-3
-              label.checkbox-inline 家政服务
-                input(type="checkbox", name="preferredJobType11")
-            .col-sm-3
-              label.checkbox-inline 营业员
-                input(type="checkbox", name="preferredJobType12")
-            .col-sm-3
-              label.checkbox-inline 保安
-                input(type="checkbox", name="preferredJobType13")
-            .col-sm-3
-              label.checkbox-inline 汽车维修
-                input(type="checkbox", name="preferredJobType14")
-            .col-sm-3
-              label.checkbox-inline 管理人员
-                input(type="checkbox", name="preferredJobType15")
-            .col-sm-3
-              label.checkbox-inline 烹饪
-                input(type="checkbox", name="preferredJobType16")
-            .col-sm-3
-              label.checkbox-inline 制鞋
-                input(type="checkbox", name="preferredJobType17")
-            .col-sm-3
-              label.checkbox-inline 电脑
-                input(type="checkbox", name="preferredJobType18")
-            .col-sm-3
-              label.checkbox-inline 通信工程
-                input(type="checkbox", name="preferredJobType19")
-            .col-sm-3
-              label.checkbox-inline 美容美发
-                input(type="checkbox", name="preferredJobType20")
-            .col-sm-3
-              label.checkbox-inline 商业营销
-                input(type="checkbox", name="preferredJobType21")
-            .col-sm-12
-              br
-            .col-sm-12
+            div(style="width: 50%; float: left")
               .input-group
-                span.input-group-addon 其他工种意向
-                input.form-control(type="text", name="extraPreferredJobType", placeholder="输入其他工种名称，可输入多项，用逗号隔开")
-
+                span.input-group-addon 第一选择
+                select.form-control(name="jobType01")
+                  each val, key in jobType
+                    optgroup(label=val[key])
+                      each v, k in val
+                        option(value=k)= v
+            .div(style="width: 50%; float: left")
+              .input-group
+                span.input-group-addon 第二选择
+                select.form-control(name="jobType02")
+                  each val, key in jobType
+                    optgroup(label=val[key])
+                      each v, k in val
+                        option(value=k)= v
       .col-sm-12
         div(style="width: 50%; float: left")
           .input-group
@@ -246,6 +178,17 @@ br
           .panel-heading.text-center
             | 就业服务需求（多选）
           .panel-body
+            each v, k in builtinService
+              .col-sm-3
+                label.checkbox-inline= v
+                  input(type="checkbox", name="preferredService"+k)
+            .col-sm-12
+              br
+              .input-group
+                span.input-group-addon 已享受其他服务
+                input.form-control(type="text", name="extraPostService", placeholder="输入服务名称，可输入多项，用逗号隔开")
+
+          //.panel-body
             .col-sm-3
               label.checkbox-inline 职业介绍
                 input(type="checkbox", name="preferredService0")
@@ -275,21 +218,23 @@ br
                 input.form-control(type="text", name="extraPreferredService", placeholder="输入服务名称，可输入多项，用逗号隔开")
 
       .col-sm-12
-        .input-group
-          span.input-group-addon 培训需求意向
-          label.input-group-addon
-            span
-              input(type="radio" name="preferredTraining", checked="checked")
-              | 无
-          label.input-group-addon
-            span
-              input(type="radio" name="preferredTraining")
-              | 职业培训
-          label.input-group-addon
-            span
-              input(type="radio" name="preferredTraining")
-              | 创业培训
-          label.input-group-addon
-            span
-              input(type="radio" name="preferredTraining")
-              | 企业高技能人才培训
+        .panel.panel-default
+          .panel-heading.text-center
+            | 培训需求意向
+          .panel-body
+            .col-sm-2
+              label.radio-inline
+                input(type="radio" name="preferredTraining", checked="checked")
+                | 无
+            .col-sm-3
+              label.radio-inline
+                input(type="radio" name="preferredTraining")
+                | 职业培训
+            .col-sm-3
+              label.radio-inline
+                input(type="radio" name="preferredTraining")
+                | 创业培训
+            .col-sm-3
+              label.radio-inline
+                input(type="radio" name="preferredTraining")
+                | 企业高技能人才培训
