@@ -84,10 +84,20 @@ $(function() {
                 }, 10);
             }
         }
+        // 如果身份证末尾为'x'，改为大写字母
+        $('input[name=idNumber]').val(value.toUpperCase());
         // 自动填入年龄
         $('input[name=age]').val(getAge(value));
         // 自动填入性别
         $('input[name=gender]').val(getGender(value));
+
+        // 动态获取并填入就业失业登记证号
+        $.get('/workRegisterId',
+            {idNumber: value.toUpperCase()},
+            function(data) {
+                $('input[name=workRegisterId]').val(data);
+            });
+
     });
 
     // 校验毕业时间

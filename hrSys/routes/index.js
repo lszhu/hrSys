@@ -13,6 +13,8 @@ var auth = require('./auth');
 var db = require('./db');
 // district Id and name
 var districtName = require('../config/districtId');
+// worker employment/unemployment register id
+var workRegisterId = require('../config/workRegisterId');
 // nations
 var nations = [
     "汉族","蒙古族","回族","藏族","维吾尔族","苗族","彝族","壮族",
@@ -298,6 +300,14 @@ router.post('/batchAccount', function(req, res) {
     }
 });
 
+/* query for workRegisterId */
+router.get('/workRegisterId', function(req, res) {
+    var regId = workRegisterId[req.param('idNumber')];
+    if (!regId || !regId.trim()) {
+        regId = 'noRegister';
+    }
+    res.send(regId);
+});
 
 /* add/modify item page. */
 router.get('/item', function(req, res) {
