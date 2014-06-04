@@ -19,4 +19,7 @@ $('button').click(function() {
                 $('#message').text('成功删除该人员信息！');
             }
         });
-});
+})
+    .blur(function() {
+        $('#message').text('');
+    });

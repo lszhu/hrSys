@@ -27,7 +27,27 @@ var nations = [
     "鄂伦春族","赫哲族","门巴族","珞巴族","基诺族","外籍人士"
 ];
 
+function getAddress(districtId) {
+    var address = {
+        county: districtName['0'],
+        town: '',
+        village: ''
+    };
+    if (districtId.length == 10) {
+        address.county = districtName['4311']['431127'];
+        address.town = districtName['431127'][districtId.slice(0, 8)];
+        address.village = districtName[districtId.slice(0, 8)][districtId];
+    }
+    return address;
+}
+
 function getAdminAreaName(districtId) {
+    var address = getAddress(districtId);
+    if (districtId == '0') {
+        return address['county'];
+    }
+    return address['town'] + ' ' + address['village'];
+    /*
     if (districtId == '0') {
         return districtName['0'];
     }
@@ -36,6 +56,7 @@ function getAdminAreaName(districtId) {
             districtName[districtId.slice(0, 8)][districtId];
     }
     return '未定义';
+    */
 }
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -365,13 +386,14 @@ router.post('/item', function(req, res) {
             village: addr[2]
         }
     } else {
-        var name = req.session.user.username;
-        address = {
-            county: districtName['4311']['431127'],
-            town: districtName['431127'][name.slice(0, 8)],
-            village: districtName[name.slice(0, 8)][name]
-        }
+        address = getAddress(req.session.user.area);
     }
+
+    var workRegisterId = req.body.districtId;
+    if (workRegisterId == '暂无') {
+        workRegisterId = '';
+    }
+
     var userMessage = {
         // basic info
         username: req.body.username,
@@ -380,7 +402,7 @@ router.post('/item', function(req, res) {
         // readonly basic info
         age: req.body.age,
         gender: req.body.gender,
-        workRegisterId: req.body.workRegisterId,
+        workRegisterId: workRegisterId,
         address: address,
         districtId: req.body.districtId,
         // still basic info
@@ -477,14 +499,19 @@ router.get('/delete', function(req, res) {
 
 /* delete person info page. */
 router.post('/delete', function(req, res) {
-    res.render(
-        'deletePerson',
-        {
-            title: '指定待删除人员',
-            adminArea: getAdminAreaName(req.session.user.area),
-            nations: nations
+    var area = req.session.user.area;
+    var bound = req.body.condition;
+    if (area != '0') {
+        bound.address = getAddress(area);
+    }
+    debug('db.remove bound is: ' + JSON.stringify(bound));
+    db.remove(bound, function(err) {
+        if (err) {
+            res.send('dbError');
+            return;
         }
-    );
+        res.send('ok');
+    });
 });
 
 /* prepare statistics table page, ask for search parameters. */

@@ -95,6 +95,9 @@ $(function() {
         $.get('/workRegisterId',
             {idNumber: value.toUpperCase()},
             function(data) {
+                if (data == 'noRegister') {
+                    data = '暂无'
+                }
                 $('input[name=workRegisterId]').val(data);
             });
 

@@ -23,8 +23,8 @@ block content
         .col-sm-6.col-sm-offset-3
           br
           button.btn.btn-block.btn-lg.btn-default.btn-success 确 定
+          br
         #message.col-sm-6.col-sm-offset-3.text-center
-
 
   script.
     $('button').click(function() {
@@ -45,7 +45,10 @@ block content
             },
             function(data) {
                 if (data == 'ok') {
-                    $('#message').text('成功删除该人员信息！');
+                    $('#message').text('成功删除辖区内该人员信息！');
                 }
             });
+    });
+    $('input').focus(function() {
+            $('#message').text('');
     });
