@@ -380,7 +380,7 @@ router.post('/item', function(req, res) {
 
     var address;
     if (req.session.user.area.length != 10) {
-        addr = req.body.address.split(/\s+/);
+        var addr = req.body.address.split(/\s+/);
         address = {
             county: addr[0],
             town: addr[1],
@@ -444,7 +444,7 @@ router.post('/item', function(req, res) {
             unemploymentCause: req.body.unemploymentCause,
             familyType: req.body.familyType,
             preferredJobType: [req.body.jobType01, req.body.jobType02],
-            extraPreferredJobType: req.body.extraPreferredJobType,
+            //extraPreferredJobType: req.body.extraPreferredJobType,
             preferredSalary: req.body.preferredSalary,
             preferredIndustry: req.body.preferredIndustry,
             preferredWorkplace: req.body.preferredWorkplace,
@@ -544,7 +544,7 @@ router.post('/delete', function(req, res) {
 
 /* prepare statistics table page, ask for search parameters. */
 router.get('/tables/:title', function(req, res) {
-    debug('tables: ' + util.inspect(table.tablesName));
+    debug('tables: ' + util.inspect(table.cnTableName));
     debug('title: ' + req.param('title'));
     res.render(
         'statistics',

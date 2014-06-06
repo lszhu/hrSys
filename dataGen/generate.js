@@ -1,8 +1,9 @@
 var nameResource = require('./name');
-var district = require('../hrSys/config/districtId');
-var jobTypeList = require('../hrSys/config/jobType');
 var staticData = require('./staticData');
 
+var district = require('../hrSys/config/districtId');
+var jobTypeList = require('../hrSys/config/jobType');
+var db = require('../hrSys/routes/db');
 
 // 速写方式
 var random = Math.random;
@@ -42,7 +43,7 @@ function address(townN, villageN) {
 
     var town = district[townIndex.toString()];
     var villageIndex = floor(random() * villageN);
-    var i =  townIndex * 100 + villageIndex + 1 + '';
+    var i = '';
     while (villageIndex > 0) {
         // 生成索引字符串
         i = townIndex * 100 + villageIndex + 1 + '';
@@ -54,6 +55,7 @@ function address(townN, villageN) {
         villageIndex >>= 1;
     }
     if (villageIndex == 0) {
+        i = townIndex * 100 + 1 + '';
         address.village = town[i];
         address.districtId = i;
     }
@@ -116,17 +118,14 @@ function idNumber(birth) {
 
 function workRegisterId() {
     var serial = '';
-    for (i = 0; i < 10; i++) {
+    for (var i = 0; i < 10; i++) {
         serial += floor(random() * 10);
     }
-    return '431127' + serial;
+    return random() < 0.5 ? '' : '431127' + serial;
 }
 
 // 由身份证号得到年龄
 function age(idNumber) {
-    if (!validIdNumber(idNumber)) {
-        return '';
-    }
     var now = (new Date()).getFullYear();
     var year = idNumber.slice(6, 10);
     return now - year;
@@ -134,9 +133,6 @@ function age(idNumber) {
 
 // 由身份证号得到性别
 function gender(idNumber) {
-    if (!validIdNumber(idNumber)) {
-        return '';
-    }
     return idNumber.charAt(16) % 2 ? '男' : '女';
 }
 
@@ -336,6 +332,14 @@ function humanCategory(censusReg, age, edu) {
     }
 }
 
+// 失业时间
+function unemployedDate(age) {
+    var yearMs = 1000 * 60 * 60 * 24 * 365;
+    var span = (Math.sqrt(age - 13) - 1) * yearMs * random();
+    var time = new Date(Date.now() - span);
+    return dateFmt(time);
+}
+
 // 失业原因
 function unemploymentCause(age, humanCate) {
     var cause = staticData.unemploymentCause;
@@ -352,9 +356,10 @@ function unemploymentCause(age, humanCate) {
 }
 
 // 困难群体情况
-function familyType(birth, humanCate) {
+function familyType(age, humanCate) {
+    var birth = (new Date()).getFullYear() - age;
     var types = staticData.familyType;
-    if (birth.slice(0, 4) <= 1960) {
+    if (birth <= 1960) {
         return types[0];
     }
     if (humanCate == '复员军人') {
@@ -365,7 +370,7 @@ function familyType(birth, humanCate) {
 
 // 参保情况
 function insurance(censusReg) {
-    ins = staticData.insurance;
+    var ins = staticData.insurance;
     var list = [4, 1, 0, 3, 5, 6];
     if (censusReg == '农业户口') {
         list = [7, 2 , 5, 6];
@@ -388,13 +393,92 @@ function insurance(censusReg) {
 }
 
 function modifiedDate() {
-    return new Date(Date.now() - random() * 100000000000);
+    var year = 1000 * 60 * 60 * 24 * 365;
+    return new Date(Date.now() - random() * year * 3);
 }
 
+function createRandomDate(employed) {
+    var msg = {
+        username: name(nameResource),
+        nation: nation(staticData.nation),
+        idNumber: idNumber(birthday()),
+        workRegisterId: workRegisterId(),
+        phone: phone(),
+        politicalOutlook: politicalOutlook(staticData.politicalOutlook),
+        technicalGrade: technicalGrade(staticData.technicalGrade),
+        postService: service(staticData.serviceType),
+        extraPostService: service(staticData.extraService).join(',')
+    };
+    var tmp = msg.idNumber;
+    msg.age = age(tmp);
+    msg.gender = gender(tmp);
+    tmp = address(31, 43);
+    msg.address = tmp;
+    msg.districtId = tmp['districtId'];
+    tmp = graduation(msg.age, staticData.education);
+    msg.education = tmp.education;
+    msg.graduateDate = tmp.graduateDate;
+    msg.censusRegisterType = censusRegisterType(msg.districtId);
+    msg.marriage = marriage(msg.age);
+    tmp = training(staticData.trainingType, staticData.training);
+    msg.trainingType = tmp.trainingType;
+    msg.postTraining = tmp.postTraining;
 
+    msg.employmentInfo = {
+        employer: employer(nameResource.name),
+        jobType: jobType(jobTypeList),
+        industry: industry(staticData.industry),
+        startWorkDate: startWorkDate(msg.age),
+        salary: salary(),
+        jobForm: jobForm(staticData.jobForm)
+    };
+    tmp = workplace(staticData.workplace, staticData.province);
+    msg.employmentInfo.workplace = tmp.workplace;
+    msg.employmentInfo.workProvince = tmp.workProvince;
 
-// for test
-for (var i = 0; i < 20; i++) {
+    msg.unemploymentInfo = {
+        humanCategory: humanCategory(msg.censusRegisterType,
+            msg.age, msg.education),
+        unemployedDate: unemployedDate(msg.age),
+        unemploymentCause: unemploymentCause(msg.age, msg.humanCategory),
+        familyType: familyType(msg.age, msg.humanCategory),
+        preferredJobType: jobType(jobTypeList),
+        preferredSalary: salary(),
+        preferredIndustry: industry(staticData.industry),
+        preferredWorkplace: workplace(staticData.workplace,
+            staticData.province),
+        preferredJobForm: jobForm(staticData.jobForm),
+        preferredService: service(staticData.serviceType),
+        extraPreferredService: service(staticData.extraService),
+        preferredTraining: training(staticData.trainingType,
+            staticData.training).trainingType
+    };
+
+    msg.insurance = insurance(msg.censusRegisterType);
+    msg.editor = modifiedDate();
+
+    if (random() < 0.4) {
+        msg.employment = '已就业';
+        msg.unemploymentInfo = null;
+    } else {
+        msg.employment = '暂未就业';
+        msg.employmentInfo = null;
+    }
+
+    return msg;
+}
+
+function addRandomData(n) {
+    for (var i = 0; i < n; i++) {
+        db.save(createRandomDate());
+    }
+}
+
+addRandomData(10000);
+
+// only for basic function test
+//console.dir(createRandomDate());
+//for (var i = 0; i < 20; i++) {
     //console.log(name(nameResource));
     //console.log(JSON.stringify(address(31, 43)));
     //console.dir(address(31, 43));
@@ -430,14 +514,15 @@ for (var i = 0; i < 20; i++) {
         graduation(28, staticData.education));
     console.log(unemploymentCause(32, humanCate));
     */
+    //var myAge = floor(random() * 50 + 15);
+    //console.log(myAge + ':' + unemployedDate(myAge));
     /*
-    var birth = birthday();
-    var theAge = (new Date()).getFullYear() - birth.slice(0, 4);
+    var theAge = 15 + floor(random() * 50);
     var humanCate = humanCategory(censusRegisterType(area), theAge,
         graduation(theAge, staticData.education));
-    console.log(familyType(birth, humanCate));
+    console.log(familyType(theAge, humanCate));
     */
     //var censusReg = censusRegisterType(area);
     //console.log(insurance(censusReg));
     //console.dir(modifiedDate());
-}
+//}

@@ -76,7 +76,7 @@ var personSchema = new Schema({
         unemploymentCause: String,
         familyType: String,
         preferredJobType: [String],
-        extraPreferredJobType: String,
+        //extraPreferredJobType: String,
         preferredSalary: Number,
         preferredIndustry: String,
         preferredWorkplace: String,
@@ -207,7 +207,7 @@ function batchInitAccount(districts, callback) {
                 area: village,
                 permission: '只读',
                 type: 'bound'
-            }
+            };
             // used to count in doing update
             count++;
             Account.update(
