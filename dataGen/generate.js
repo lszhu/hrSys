@@ -243,7 +243,7 @@ function service(ser) {
 
 function employer(nameSrc) {
     var postfix = ['技术有限公司', '设备制造厂', '贸易有限公司',
-        '设计院', '协会', '联合会', '基金会'];
+        '设计院', '商场', '娱乐城', '协会', '联合会', '基金会'];
     var index = floor(random() * nameSrc.length) * 4 % nameSrc.length;
     return nameSrc.slice(index, index + 4) +
         postfix[floor(random() * postfix.length)];
@@ -307,7 +307,8 @@ function workplace(place, provinces) {
 }
 
 function salary() {
-    return (Math.pow(random(), 3) * 300) / 10 + 1
+    //return (Math.pow(random(), 2) * 300) / 10 + 1;
+    return floor(Math.pow(30, random()) * random() * 10) / 10 + 1;
 }
 
 // 就业形式

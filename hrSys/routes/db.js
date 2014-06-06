@@ -108,7 +108,7 @@ function save(hrMsg) {
 function query(condition, callback) {
     PersonMsg.find(condition)
         .lean()         // make return value changeable
-        .sort('username')
+        .sort({districtId: 1, username: 1})
         .exec(callback);
 }
 

@@ -572,6 +572,10 @@ router.post('/tables', function(req, res) {
         }
         //table.dataTranslate(data);
         debug('data translated: ' + data.length);
+        // to show no more than 500 items in web page
+        if (data.length > 500) {
+            data.length = 500;
+        }
         res.render(
             'tableEmployed',
             {
