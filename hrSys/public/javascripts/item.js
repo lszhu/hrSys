@@ -58,7 +58,8 @@ function validYear(year) {
 
 // 检查电话的合法性
 function validPhone(phone) {
-    return !isNaN(phone) && 6 < phone.length && phone.length < 13;
+    return !phone ||
+        !isNaN(phone) && 6 < phone.length && phone.length < 13;
 }
 
 // 检查年月日的合法性，格式为：YYYYMMDD
