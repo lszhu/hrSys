@@ -61,10 +61,11 @@ nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
               p.text-center 账号管辖区域：
               p.text-center= "-- " + adminArea + " --"
             li.divider
-            li
-              a(href="/account") 独立账号管理
-            li
-              a(href="/batchAccount") 关联账号管理
+            if superuser
+              li
+                a(href="/account") 独立账号管理
+              li
+                a(href="/batchAccount") 关联账号管理
             li
               a(href="/resetPassword") 账号密码修改
         li
