@@ -42,7 +42,7 @@ var personSchema = new Schema({
         town: String,
         village: String
     },
-    districtId: Number,
+    districtId: String,
     // still basic info
     education: String,
     graduateDate: Number,
@@ -107,6 +107,14 @@ function save(hrMsg) {
 
 function query(condition, callback) {
     PersonMsg.find(condition)
+        .lean()         // make return value changeable
+        .sort({districtId: 1, username: 1})
+        .exec(callback);
+}
+
+function search(condition, district, callback) {
+    var query = PersonMsg.find(condition).read('primary');
+    query.where(district)
         .lean()         // make return value changeable
         .sort({districtId: 1, username: 1})
         .exec(callback);

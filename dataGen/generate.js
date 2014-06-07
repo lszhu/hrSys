@@ -443,11 +443,11 @@ function createRandomDate(employed) {
         unemployedDate: unemployedDate(msg.age),
         unemploymentCause: unemploymentCause(msg.age, msg.humanCategory),
         familyType: familyType(msg.age, msg.humanCategory),
-        preferredJobType: jobType(jobTypeList),
+        preferredJobType: [jobType(jobTypeList), jobType(jobTypeList)],
         preferredSalary: salary(),
         preferredIndustry: industry(staticData.industry),
         preferredWorkplace: workplace(staticData.workplace,
-            staticData.province),
+            staticData.province).workplace,
         preferredJobForm: jobForm(staticData.jobForm),
         preferredService: service(staticData.serviceType),
         extraPreferredService: service(staticData.extraService),
@@ -458,7 +458,7 @@ function createRandomDate(employed) {
     msg.insurance = insurance(msg.censusRegisterType);
     msg.editor = modifiedDate();
 
-    if (random() < 0.4) {
+    if (employed) {
         msg.employment = '已就业';
         msg.unemploymentInfo = null;
     } else {
@@ -470,8 +470,10 @@ function createRandomDate(employed) {
 }
 
 function addRandomData(n) {
+    var employed;
     for (var i = 0; i < n; i++) {
-        db.save(createRandomDate());
+        employed = (random() < 0.6);
+        db.save(createRandomDate(employed));
     }
 }
 

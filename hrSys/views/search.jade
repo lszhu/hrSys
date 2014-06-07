@@ -36,31 +36,25 @@ block content
               each value, key in nations
                 option= value
           .input-group
-            span.input-group-addon 居住地点
-            select.form-control(name="nation")
-              optgroup(label="不限区域")
-                option(value="0") 不限区域
-              each value, key in districtName['431127']
-                optgroup(label=value)
-                  option(value=key) 辖区所有范围
-                  each v, k in districtName[key]
+            if area != '0'
+              span.input-group-addon 居住地点
+              select.form-control(name="districtId")
+                - var town = area.slice(0, 8)
+                optgroup(label="所属乡镇范围")
+                  option(value=town)= districtName['431127'][town]
+                optgroup(label="特定村落社区范围")
+                  each v, k in districtName[town]
                     option(value=k)= v
-
-          .input-group
-            span.input-group-addon 工作地点
-            select.form-control(name="nation")
-              option 不限
-              option 县内
-              option 县外市内
-              option 市外省内
-              option 外省
-              option 境外
-          .input-group
-            span.input-group-addon 就业状态
-            select.form-control(name="employment")
-              option 不限
-              option 已就业
-              option 暂未就业
+            else
+              span.input-group-addon 居住地点
+              select.form-control(name="districtId")
+                optgroup(label="不限区域")
+                  option(value="0") 不限
+                each value, key in districtName['431127']
+                  optgroup(label=value)
+                    option(value=key) 辖区所有范围
+                    each v, k in districtName[key]
+                      option(value=k)= v
           .input-group
             span.input-group-addon 户口性质
             select.form-control(name="censusRegisterType")
@@ -78,8 +72,23 @@ block content
               option(value="大专") 大专
               option(value="本科及以上") 本科及以上
           .input-group
-            span.input-group-addon 意愿工种
-            select.form-control(name="preferredJobType")
+            span.input-group-addon 就业状态
+            select.form-control(name="employment")
+              option 不限
+              option 已就业
+              option 暂未就业
+          .input-group.hidden
+            span.input-group-addon 工作地点
+            select.form-control(name="workplace")
+              option 不限
+              option 县内
+              option 县外市内
+              option 市外省内
+              option 外省
+              option 境外
+          .input-group.hidden
+            span.input-group-addon 从事工种
+            select.form-control(name="jobType")
               optgroup(label='不限')
                 option(value='0') 不限
               each val, key in jobType
@@ -95,4 +104,11 @@ block content
           button.btn.btn-block.btn-lg.btn-default.btn-success 导 出
         .col-sm-12#initAccountMsg.text-center
           br
+    .panel.panel-default
+      .panel-heading
+        //.container
+        h4.text-center <strong>劳动力资源查询结果</strong>
+        p.text-center （最多显示500条结果）
+      .panel-body#searchResult
+
   script(src="/javascripts/search.js")

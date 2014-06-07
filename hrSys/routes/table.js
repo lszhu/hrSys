@@ -120,13 +120,15 @@ var serviceType = [
     '就业见习'
 ];
 
-var TableColumns = {
+var tableColumns = {
+    search: ['username', 'gender', 'age', 'nation', 'address', 'education',
+        'censusRegisterType', 'employment', 'workplace', 'jobType'],
     farmerInCounty: ['username', 'gender', 'age', 'education', 'marriage',
-        'address', 'employer', 'workPlace', 'jobType', 'insurance', 'salary'],
+        'address', 'employer', 'workplace', 'jobType', 'insurance', 'salary'],
     farmerOutCounty: ['username', 'gender', 'age', 'education', 'marriage',
-        'address', 'employer', 'workPlace', 'jobType', 'insurance', 'salary'],
+        'address', 'employer', 'workplace', 'jobType', 'insurance', 'salary'],
     townsfolk: ['username', 'gender', 'age', 'education', 'marriage',
-        'address', 'employer', 'workPlace', 'jobType', 'insurance', 'salary'],
+        'address', 'employer', 'workplace', 'jobType', 'insurance', 'salary'],
     graduate: ['username', 'gender', 'age', 'education', 'graduateDate',
         'workRegisterId', 'address', 'employment', 'phone'],
     annual: ['username', 'gender', 'age', 'education', 'marriage',
@@ -134,18 +136,58 @@ var TableColumns = {
     summary: []
 };
 
+function address(a) {
+    return a.county + a.town + a.village;
+}
+
+function createSearchTable(n, data) {
+    if (n > data.length) {
+        n = data.length;
+    }
+    var html = '<table class="table table-condensed table-bordered table-' +
+        'hover table-responsive"><thead><td>序号</td>';
+    for (var j = 0; j < tableColumns.search.length; j++) {
+        html += '<td>' + cnItemName[tableColumns.search[j]] + '</td>';
+    }
+    html += '</thead><tbody>';
+    for (var i = 0; i < n; i++) {
+        html += '<tr><td>' + (i + 1) + '</td>';
+        for (j = 0; j < tableColumns.search.length - 2; j++) {
+            if (tableColumns.search[j] == 'address') {
+                html += '<td>' + address(data[i].address) + '</td>';
+                continue;
+            }
+            html += '<td>' + data[i][tableColumns.search[j]] +'</td>';
+        }
+        // insert workplace info from preferredWorkplace
+        if (data[i].employment == '已就业') {
+            html += '<td>' + data[i].employmentInfo.workplace + '</td>';
+            html += '<td>' + data[i].employmentInfo.jobType + '</td></tr>';
+        } else {
+            html += '<td>' + data[i].unemploymentInfo.preferredWorkplace +
+                '</td>';
+            html += '<td>' +
+                data[i].unemploymentInfo.preferredJobType.join(', ') +
+                '</td></tr>';
+        }
+    }
+    html += '</tbody></table>';
+    return html;
+}
+
 
 module.exports = {
-    tableColumns: TableColumns,
+    tableColumns: tableColumns,
     cnTableName: cnTableName,
     cnItemName: cnItemName,
 //    cnEducation: education,
 //    cnTechnicalGrade: technicalGrade,
 //    cnPreferredTraining: preferredTraining,
 //    cnWorkExperience: workExperience,
-//    cnWorkPlace: workPlace,
+//    cnworkplace: workplace,
     cnService: serviceType,
-    cnInsurance: insurance
+    cnInsurance: insurance,
+    createSearchTable: createSearchTable
 };
 
 ///////////////////////////////////////////////////
@@ -186,7 +228,7 @@ function itemTranslate(item) {
         'preferredTraining': preferredTraining,
         'salary': salary,
         'workExperience': workExperience,
-        'workPlace': workPlace,
+        'workplace': workplace,
         'jobType': jobType,
         'industry': industry
     };

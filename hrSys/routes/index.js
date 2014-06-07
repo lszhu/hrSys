@@ -283,8 +283,8 @@ router.get('/batchAccount', function(req, res) {
 /* batch account management page. */
 router.post('/batchAccount', function(req, res) {
     if (req.session.user.permission != '管理员') {
+        console.error('permission denied');
         res.send('permission denied');
-        res.send('err');
         return;
     }
     debug('command: ' + req.body.command);
@@ -618,6 +618,7 @@ router.get('/search', function(req, res) {
             adminArea: getAdminAreaName(req.session.user.area),
             nations: nations,
             jobType: jobType,
+            area: req.session.user.area,
             districtName: districtName
         }
     );
@@ -625,14 +626,51 @@ router.get('/search', function(req, res) {
 
 /* search page. */
 router.post('/search', function(req, res) {
-    res.render(
-        'search',
-        {
-            title: 'search',
-            adminArea: getAdminAreaName(req.session.user.area),
-            nations: nations
+    var sel = ['gender', 'nation', "districtId", 'censusRegisterType',
+        'education', 'employment', 'workplace', 'jobType'];
+    var bound = {};
+    var cond = req.body.condition;
+
+    // check access rights
+    var area = req.session.user.area;
+    if (area != 0 && area.slice(0, 8) != cond.districtId.slice(0, 8)) {
+        return res.send('permissionDeny');
+    }
+
+    if (cond.username) {
+        bound.username = new RegExp(cond.username);
+    }
+
+    if (cond.ageMin || cond.ageMax) {
+        bound.age = {
+            $gte: cond.ageMin ? cond.ageMin : 0,
+            $lte: cond.ageMax ? cond.ageMax : 100
+        };
+    }
+
+    for (var i = 0; i < sel.length; i++) {
+        if (cond[sel[i]] == '0' || cond[sel[i]] == '不限') {
+            continue;
         }
-    );
+        if (sel[i] == 'districtId') {
+            bound.districtId = new RegExp(cond.districtId.toString());
+            debug('regexp: ' + bound.districtId);
+            continue;
+        }
+        bound[sel[i]] = cond[sel[i]];
+    }
+    //bound.districtId = new RegExp(cond.districtId);
+    debug('bound: ' + JSON.stringify(bound));
+    db.query(bound, function(err, data) {
+        if (err) {
+            console.error('error: ' + err);
+            return res.send('Database error');
+        }
+        //table.dataTranslate(data);
+        debug('data translated: ' + data.length);
+        // to show no more than 500 items in web page
+        res.send(table.createSearchTable(500, data));
+    });
 });
 
 /* help page. */
