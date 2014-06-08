@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var util = require('util');
+var iconv = require('iconv-lite');
 
 // for debug
 var debug = require('debug')('route');
@@ -11,6 +12,7 @@ var table = require('./table');
 var auth = require('./auth');
 // access database
 var db = require('./db');
+
 // district Id and name
 var districtName = require('../config/districtId');
 // job type
@@ -66,6 +68,16 @@ function getAdminAreaName(districtId) {
     return '未定义';
     */
 }
+
+function createFilename() {
+    var t = new Date();
+    var name = t.getFullYear() + '-';
+    name += t.getMonth() + 1 + '-' + t.getDate() + '_';
+    name += t.getHours() + '-' + t.getMinutes() + '-' + t.getSeconds();
+    name += '.xls';
+    return name;
+}
+
 /* GET home page. */
 router.get('/', function(req, res) {
     debug("session: " + util.inspect(req.session));
@@ -665,7 +677,7 @@ router.post('/search', function(req, res) {
             continue;
         }
         if (sel[i] == 'districtId') {
-            bound.districtId = new RegExp(cond.districtId.toString());
+            bound.districtId = new RegExp(cond.districtId);
             debug('regexp: ' + bound.districtId);
             continue;
         }
@@ -683,6 +695,78 @@ router.post('/search', function(req, res) {
         // to show no more than 500 items in web page
         res.send(table.createSearchTable(500, data));
     });
+});
+
+/* download search results to xls file */
+router.get('/download', function(req, res) {
+    var sel = ['gender', 'nation', "districtId", 'censusRegisterType',
+        'education', 'employment', 'workplace', 'jobType'];
+    var bound = {};
+    var cond = req.query;
+    debug('req.query: ' + JSON.stringify(cond));
+
+    // check access rights
+    var area = req.session.user.area;
+    if (area != 0 && area.slice(0, 8) != cond.districtId.slice(0, 8)) {
+        return res.send('permissionDeny');
+    }
+
+    if (cond.username) {
+        bound.username = new RegExp(cond.username);
+    }
+
+    if (cond.ageMin || cond.ageMax) {
+        bound.age = {
+            $gte: cond.ageMin ? cond.ageMin : 0,
+            $lte: cond.ageMax ? cond.ageMax : 100
+        };
+    }
+
+    for (var i = 0; i < sel.length; i++) {
+        if (cond[sel[i]] == '0' || cond[sel[i]] == '不限') {
+            continue;
+        }
+        if (sel[i] == 'districtId') {
+            bound.districtId = new RegExp(cond.districtId);
+            debug('regexp: ' + bound.districtId);
+            continue;
+        }
+        bound[sel[i]] = cond[sel[i]];
+    }
+
+    debug('bound: ' + JSON.stringify(bound));
+    db.query(bound, function(err, data) {
+        if (err) {
+            console.error('error: ' + err);
+            return res.send('Database error');
+        }
+        //table.dataTranslate(data);
+        debug('data translated: ' + data.length);
+        // to show no more than 500 items in web page
+        //res.send(table.createSearchTable(500, data));
+        // download file and save as microsoft excel file (.xls)
+        var filename = createFilename();
+        res.setHeader('Content-disposition',
+                'attachment; filename=' + filename);
+        // download file and save as microsoft excel file (.xls)
+        var mimetype = 'application/vnd.ms-excel';
+        res.setHeader('Content-type', mimetype);
+        res.send(iconv.encode(table.prepareDownload('search', data), 'gbk'));
+        //res.send(data);
+    });
+
+    /*
+    var file = __dirname + '/../config/temp.xls';
+    var filename = 'temp.xls';
+    var mimetype = 'application/vnd.ms-excel';
+    res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+    res.setHeader('Content-type', mimetype);
+
+    //var filestream = fs.createReadStream(file);
+    var fileContent = fs.readFileSync(file);
+    res.send(fileContent);
+    //filestream.pipe(res);
+    */
 });
 
 /* help page. */

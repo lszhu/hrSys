@@ -141,7 +141,7 @@ function address(a) {
 }
 
 function createSearchTable(n, data) {
-    if (n > data.length) {
+    if (n < 0 || n > data.length) {
         n = data.length;
     }
     var html = '<table class="table table-condensed table-bordered table-' +
@@ -175,6 +175,41 @@ function createSearchTable(n, data) {
     return html;
 }
 
+function prepareSearchDownload(data) {
+    var fileContent = '序号';
+    var rowLength = tableColumns.search.length;
+    for (var j = 0; j < rowLength; j++) {
+        fileContent += '\t' + cnItemName[tableColumns.search[j]];
+    }
+    fileContent += '\r\n';
+    rowLength -= 2;
+    for (var i = 0, len = data.length; i < len; i++) {
+        fileContent += i + 1 + '\t';
+        for (j = 0; j < rowLength; j++) {
+            if (tableColumns.search[j] == 'address') {
+                fileContent += address(data[i].address) + '\t';
+                continue;
+            }
+            fileContent += data[i][tableColumns.search[j]] + '\t';
+        }
+        // insert workplace info from preferredWorkplace
+        if (data[i].employment == '已就业') {
+            fileContent += data[i].employmentInfo.workplace + '\t';
+            fileContent += data[i].employmentInfo.jobType + '\r\n';
+        } else {
+            fileContent += data[i].unemploymentInfo.preferredWorkplace + '\t';
+            fileContent +=
+                data[i].unemploymentInfo.preferredJobType.join(', ') + '\r\n';
+        }
+    }
+    return fileContent;
+}
+
+function prepareDownload(type, data) {
+    if (type == 'search') {
+        return prepareSearchDownload(data);
+    }
+}
 
 module.exports = {
     tableColumns: tableColumns,
@@ -187,7 +222,8 @@ module.exports = {
 //    cnworkplace: workplace,
     cnService: serviceType,
     cnInsurance: insurance,
-    createSearchTable: createSearchTable
+    createSearchTable: createSearchTable,
+    prepareDownload: prepareDownload
 };
 
 ///////////////////////////////////////////////////
