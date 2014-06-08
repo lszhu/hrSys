@@ -17,12 +17,13 @@ nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
           a.dropdown-toggle(href="#", data-toggle="dropdown") 信息维护
             b.caret
           ul.dropdown-menu
-            li
-              a(href="/item") 新增/修改人员信息
-            li.hidden
-              a(href="/update") 修改人员信息
-            li
-              a(href="/delete") 删除人员信息
+            if permission != '只读'
+              li
+                a(href="/item") 新增/修改人员信息
+              li.hidden
+                a(href="/update") 修改人员信息
+              li
+                a(href="/delete") 删除人员信息
             li.divider
             li
               a(href="/export") 导出数据到文件
@@ -61,7 +62,7 @@ nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
               p.text-center 账号管辖区域：
               p.text-center= "-- " + adminArea + " --"
             li.divider
-            if superuser
+            if permission == '管理员'
               li
                 a(href="/account") 独立账号管理
               li

@@ -68,12 +68,12 @@ var cnItemName = {
 var insurance = [
     '城镇职工养老保险',
     '城镇居民养老保险',
-    '新型农村养老保险',         // 新农保
+    '新农保',              // 新型农村养老保险
     '城镇职工医疗保险',
     '城镇居民医疗保险',
     '失业保险',
     '工伤保险',
-    '新型农村合作医疗保险'      // 新农合
+    '新农合'               // 新型农村合作医疗保险
 ];
 
 //现有技术等级
@@ -275,7 +275,7 @@ function itemTranslate(item) {
     }
 }
 
-module.exports.dataTranslate = function(data) {
+var dataTranslate = function(data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
         itemTranslate(data[i]);

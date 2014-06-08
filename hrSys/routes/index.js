@@ -84,7 +84,7 @@ router.get('/', function(req, res) {
     res.render('index', {
         title: '劳动力资源信息库',
         adminArea: getAdminAreaName(req.session.user.area),
-        superuser: req.session.user.permission == '管理员'
+        permission: req.session.user.permission
     });
 });
 
@@ -108,7 +108,7 @@ router.post('/login', function(req, res) {
         if (auth.auth(acc, account)) {
             if (acc.username == auth.builtinUser) {
                 acc.area = '0';
-                acc.permisssion = '管理员';
+                acc.permission = '管理员';
                 acc.type = 'independent'
             } else {
                 acc.area = account.area;
@@ -167,7 +167,7 @@ router.get('/account', function(req, res) {
                 'account',
                 {
                     adminArea: getAdminAreaName(req.session.user.area),
-                    superuser: req.session.user.permission == '管理员',
+                    permission: req.session.user.permission,
                     title: 'administration',
                     accounts: accounts,
                     builtinUser: auth.builtinUser,
@@ -254,7 +254,7 @@ router.get('/resetPassword', function(req, res) {
         {
             title: '重置密码',
             adminArea: getAdminAreaName(req.session.user.area),
-            superuser: req.session.user.permission == '管理员'
+            permission: req.session.user.permission
         }
     );
 });
@@ -286,12 +286,16 @@ router.post('/resetPassword', function(req, res) {
 
 /* batch account management page. */
 router.get('/batchAccount', function(req, res) {
+    if (req.session.user.permission != '管理员') {
+        console.error('permission denied');
+        return res.send('permission denied');
+    }
     res.render(
         'batchAccount',
         {
             title: 'batchAccount',
             adminArea: getAdminAreaName(req.session.user.area),
-            superuser: req.session.user.permission == '管理员'
+            permission: req.session.user.permission
         }
     );
 });
@@ -356,12 +360,16 @@ router.get('/workRegisterId', function(req, res) {
 
 /* add/modify item page. */
 router.get('/item', function(req, res) {
+    if (req.session.user.permission == '只读') {
+        console.error('permission denied');
+        return res.send('permission denied');
+    }
     debug('req.session.user.area: ' + JSON.stringify(req.session.user.area));
     //debug('jobType' + JSON.stringify(jobType));
     res.render('item', {
         title: '添加人力资源信息',
         adminArea: getAdminAreaName(req.session.user.area),
-        superuser: req.session.user.permission == '管理员',
+        permission: req.session.user.permission,
         nations: nations,
         insurance: table.cnInsurance,
         province: provinces,
@@ -376,6 +384,10 @@ router.get('/item', function(req, res) {
 
 /* add/modify page. */
 router.post('/item', function(req, res) {
+    if (req.session.user.permission == '只读') {
+        console.error('permission denied');
+        return res.send('permission denied');
+    }
     var insurance = [];
     for (var i = 0; i < table.cnInsurance.length; i++) {
         if (req.body['insurance' + i]) {
@@ -482,7 +494,7 @@ router.post('/item', function(req, res) {
     res.render('postItem', {
         title: '添加人力资源信息',
         adminArea: getAdminAreaName(req.session.user.area),
-        superuser: req.session.user.permission == '管理员'
+        permission: req.session.user.permission
     });
     //res.redirect('/item');
 });
@@ -534,18 +546,26 @@ router.post('/update', function(req, res) {
 
 /* delete person info page. */
 router.get('/delete', function(req, res) {
+    if (req.session.user.permission == '只读') {
+        console.error('permission denied');
+        return res.send('permission denied');
+    }
     res.render(
         'deletePerson',
         {
             title: '指定待删除人员',
             adminArea: getAdminAreaName(req.session.user.area),
-            superuser: req.session.user.permission == '管理员'
+            permission: req.session.user.permission
         }
     );
 });
 
 /* delete person info page. */
 router.post('/delete', function(req, res) {
+    if (req.session.user.permission == '只读') {
+        console.error('permission denied');
+        return res.send('permission denied');
+    }
     var area = req.session.user.area;
     var bound = req.body.condition;
     if (area != '0') {
@@ -571,7 +591,7 @@ router.get('/tables/:title', function(req, res) {
             tableName: req.param('title'),
             tables: table.cnTableName,
             adminArea: getAdminAreaName(req.session.user.area),
-            superuser: req.session.user.permission == '管理员'
+            permission: req.session.user.permission
         }
     );
 });
@@ -602,7 +622,7 @@ router.post('/tables', function(req, res) {
                 title: table.cnTableName[tableName],
                 data: data,
                 adminArea: getAdminAreaName(req.session.user.area),
-                superuser: req.session.user.permission == '管理员'
+                permission: req.session.user.permission
             }
         );
     });
@@ -615,7 +635,7 @@ router.get('/export', function(req, res) {
         {
             title: 'export',
             adminArea: getAdminAreaName(req.session.user.area),
-            superuser: req.session.user.permission == '管理员'
+            permission: req.session.user.permission
         }
     );
 });
@@ -627,7 +647,7 @@ router.post('/export', function(req, res) {
         {
             title: 'export',
             adminArea: getAdminAreaName(req.session.user.area),
-            superuser: req.session.user.permission == '管理员'
+            permission: req.session.user.permission
         }
     );
 });
@@ -639,7 +659,7 @@ router.get('/search', function(req, res) {
         {
             title: 'search',
             adminArea: getAdminAreaName(req.session.user.area),
-            superuser: req.session.user.permission == '管理员',
+            permission: req.session.user.permission,
             nations: nations,
             jobType: jobType,
             area: req.session.user.area,
@@ -776,7 +796,7 @@ router.get('/help', function(req, res) {
         {
             title: 'help',
             adminArea: getAdminAreaName(req.session.user.area),
-            superuser: req.session.user.permission == '管理员'
+            permission: req.session.user.permission
         }
     );
 });
