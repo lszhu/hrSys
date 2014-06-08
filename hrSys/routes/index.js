@@ -128,6 +128,10 @@ router.post('/login', function(req, res) {
 
 /* independent account management page. */
 router.get('/account', function(req, res) {
+    if (req.session.user.permission != '管理员') {
+        console.error('permission denied');
+        return res.send('permission denied');
+    }
     db.queryAccounts(
         {type: 'independent'},
         function(err, accounts) {
@@ -179,6 +183,10 @@ router.get('/account', function(req, res) {
 
 /* independent account management page. */
 router.post('/account', function(req, res) {
+    if (req.session.user.permission != '管理员') {
+        console.error('permission denied');
+        return res.send('permission denied');
+    }
     if (req.body.password != req.body.retryPassword) {
         console.log('password not match');
         res.render(
@@ -630,14 +638,46 @@ router.post('/tables', function(req, res) {
 
 /* export data page. */
 router.get('/export', function(req, res) {
-    res.render(
-        'export',
-        {
-            title: 'export',
-            adminArea: getAdminAreaName(req.session.user.area),
-            permission: req.session.user.permission
+    var area = req.session.user.area;
+    var districtId = req.query.districtId;
+    if (area == '0' && districtId == undefined) {
+        return res.render(
+            'export',
+            {
+                title: 'export',
+                adminArea: getAdminAreaName(req.session.user.area),
+                area: req.session.user.area,
+                districtName: districtName,
+                permission: req.session.user.permission
+            }
+        );
+    }
+    var bound = {};
+    if (area != 0) {
+        bound.districtId = area;
+    } else if (districtId.length == 10) {
+        bound.districtId = districtId;
+    } else if (districtId.length == 8) {
+        bound.districtId = new RegExp(districtId);
+    }
+    db.query(bound, function(err, data) {
+        if (err) {
+            console.error('error: ' + err);
+            return res.send('Database error');
         }
-    );
+        //table.dataTranslate(data);
+        debug('data translated: ' + data.length);
+        // to show no more than 500 items in web page
+        //res.send(table.createSearchTable(500, data));
+        // download file and save as microsoft excel file (.xls)
+        var filename = createFilename();
+        res.setHeader('Content-disposition',
+                'attachment; filename=' + filename);
+        // download file and save as microsoft excel file (.xls)
+        var mimetype = 'application/vnd.ms-excel';
+        res.setHeader('Content-type', mimetype);
+        res.send(iconv.encode(table.prepareDownload('search', data), 'gbk'));
+    });
 });
 
 /* export data page. */
