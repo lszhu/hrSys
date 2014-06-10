@@ -1,5 +1,6 @@
 $('button').click(function() {
     var districtId = '/export?districtId=';
     districtId += $('select[name=districtId]').val();
-    location.pathname = districtId;
+    var host = location.host;
+    location.href = 'http://' + host + districtId;
 });

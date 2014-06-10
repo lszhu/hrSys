@@ -21,14 +21,15 @@ $('button.query').click(function() {
 $('button.export').click(function() {
     var query = '/download?';
         query += 'username=' +
-            encodeURIComponent($('input[name=username]').val().trim());
+            ($('input[name=username]').val().trim());
         query += '&ageMin=' +
-            encodeURIComponent($('input[name=ageMin]').val().trim());
+            ($('input[name=ageMin]').val().trim());
         query += '&ageMax=' + $('input[name=ageMax]').val().trim();
     var tmp = '';
     for (var i = 0; i < sel.length; i++) {
         tmp = 'select[name=' + sel[i] + ']';
-        query += '&' + [sel[i]] + '=' + encodeURIComponent($(tmp).val());
+        query += '&' + [sel[i]] + '=' + ($(tmp).val());
     }
-    location.pathname = query;
+    var host = location.host;
+    location.href = 'http://' + host + query;
 });

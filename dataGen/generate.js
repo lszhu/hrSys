@@ -477,7 +477,7 @@ function addRandomData(n) {
     }
 }
 
-addRandomData(10000);
+addRandomData(100000);
 
 // only for basic function test
 //console.dir(createRandomDate());
