@@ -96,7 +96,7 @@ $(function() {
         $('input[name=gender]').val(getGender(value));
 
         // 动态获取并填入就业失业登记证号
-        $.get('/workRegisterId',
+        $.get('/data/workRegisterId',
             {idNumber: value.toUpperCase()},
             function(data) {
                 if (data == 'noRegister') {
@@ -104,8 +104,28 @@ $(function() {
                 }
                 $('input[name=workRegisterId]').val(data);
             });
-
     });
+
+    // 当管辖区域较大的用户登录时，行政区划代码需要手工输入，再由此代码获取地址信息
+    var  districtId = $('input[name=districtId]');
+    if (!districtId.prop('readonly')) {
+        districtId.blur(function(e) {
+            $.get('/data/address',
+                {districtId: $.trim(districtId.val())},
+            function(data) {
+                if (data == 'districtIdError' || data == 'permissionError') {
+                    $('input[name=address]').val('辖区内无相应地址');
+                    if (confirm('行政区划代码输入有误！')) {
+                        setTimeout(function() {
+                            $('input[name=districtId]').focus();
+                        }, 10);
+                    }
+                } else {
+                    $('input[name=address]').val(data);
+                }
+            })
+        });
+    }
 
     // 校验毕业时间
     $('input[name=graduateDate]').blur(function(e) {
@@ -226,7 +246,13 @@ $(function() {
         var idNumber = $('input[name=idNumber]');
         if (!validIdNumber($.trim(idNumber.val()))) {
             err.text('身份证号无效，请重新输入！');
-            setTimeout(function() {idNumber.focus();}, 1000);
+            setTimeout(function() {idNumber.focus();}, 600);
+            return false;
+        }
+        // 校验地址信息，用于乡镇或以上级别用户
+        if ($('input[name=address]').val() == '辖区内无相应地址') {
+            err.text('行政区划代码输入有误，请重新输入！');
+            setTimeout(function() {$('input[name=districtId]').focus();}, 600);
             return false;
         }
         // 校验毕业时间
@@ -235,12 +261,12 @@ $(function() {
         if (edu == '中专中技' || edu == '大专' || edu == '本科及以上') {
             if (!$.trim(graduateDate.val())) {
                 err.text('请输入毕业年份！');
-                setTimeout(function() {graduateDate.focus();}, 1000);
+                setTimeout(function() {graduateDate.focus();}, 600);
                 return false;
             }
             if (!validYear($.trim(graduateDate.val()))) {
                 err.text('毕业年份输入有误，请重新输入！');
-                setTimeout(function() {graduateDate.focus();}, 1000);
+                setTimeout(function() {graduateDate.focus();}, 600);
                 return false;
             }
         }
@@ -248,35 +274,35 @@ $(function() {
         var phone = $('input[name=phone]');
         if (!validPhone($.trim(phone.val()))) {
             err.text('联系电话输入有误，请重新输入！');
-            setTimeout(function() {phone.focus();}, 1000);
+            setTimeout(function() {phone.focus();}, 600);
             return false;
         }
         // 校验就业时间
         var startWorkDate = $('input[name=startWorkDate]');
         if (!validDate($.trim(startWorkDate.val()))) {
             err.text('就业时间输入有误，请重新输入！');
-            setTimeout(function() {startWorkDate.focus();}, 1000);
+            setTimeout(function() {startWorkDate.focus();}, 600);
             return false;
         }
         // 校验年收入
         var salary = $('input[name=salary]');
         if (!validSalary($.trim(salary.val()))) {
             err.text('年收入输入有误，请重新输入！');
-            setTimeout(function() {salary.focus();}, 1000);
+            setTimeout(function() {salary.focus();}, 600);
             return false;
         }
         // 校验失业时间
         var unemployedDate = $('input[name=unemployedDate]');
         if (!validDate($.trim(unemployedDate.val()))) {
             err.text('失业时间输入有误，请重新输入！');
-            setTimeout(function() {unemployedDate.focus();}, 1000);
+            setTimeout(function() {unemployedDate.focus();}, 600);
             return false;
         }
         // 校验工资收入期望
         var preferredSalary = $('input[name=preferredSalary]');
         if (!validSalary($.trim(preferredSalary.val()))) {
             err.text('工资收入期望输入有误，请重新输入！');
-            setTimeout(function() {preferredSalary.focus();}, 1000);
+            setTimeout(function() {preferredSalary.focus();}, 600);
             return false;
         }
         var radios = $('input[name=employment]');
@@ -285,20 +311,20 @@ $(function() {
             var employer = $('input[name=employer]');
             if (!$.trim(employer.val())) {
                 err.text('请输入就业单位！');
-                setTimeout(function() {employer.focus();}, 1000);
+                setTimeout(function() {employer.focus();}, 600);
                 return false;
             }
         } else {        // 未就业则必须填入工资收入期望
             if(!$.trim(preferredSalary.val())) {
                 err.text('请输入工资收入期望！');
-                setTimeout(function() {preferredSalary.focus();}, 1000);
+                setTimeout(function() {preferredSalary.focus();}, 600);
                 return false;
             }
         }
         var editor = $('input[name=editor]');
         if (!$.trim(editor.val())) {
             err.text('请输入填报人！');
-            setTimeout(function() {editor.focus();}, 1000);
+            setTimeout(function() {editor.focus();}, 600);
             return false;
         }
     });

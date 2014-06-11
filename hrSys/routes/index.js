@@ -45,7 +45,13 @@ function getAddress(districtId) {
     };
     if (districtId.length == 10) {
         address.county = districtName['4311']['431127'];
+        if (!districtName['431127'].hasOwnProperty(districtId.slice(0, 8))) {
+            return address;
+        }
         address.town = districtName['431127'][districtId.slice(0, 8)];
+        if (!districtName[districtId.slice(0, 8)].hasOwnProperty(districtId)) {
+            return address;
+        }
         address.village = districtName[districtId.slice(0, 8)][districtId];
     }
     return address;
@@ -358,12 +364,27 @@ router.post('/batchAccount', function(req, res) {
 });
 
 /* query for workRegisterId */
-router.get('/workRegisterId', function(req, res) {
+router.get('/data/workRegisterId', function(req, res) {
     var regId = workRegisterId[req.param('idNumber')];
     if (!regId || !regId.trim()) {
         regId = 'noRegister';
     }
     res.send(regId);
+});
+
+/* query for address */
+router.get('/data/address', function(req, res) {
+    var districtId = req.param('districtId');
+    var area = req.session.user.area;
+    if (area != 0 && area != districtId.slice(0, 8)) {
+        res.send('permissionError');
+    }
+    var address = getAddress(districtId);
+    if (!address.village) {
+        res.send('districtIdError');
+    } else {
+        res.send(address.county + ' ' + address.town + ' ' + address.village);
+    }
 });
 
 /* add/modify item page. */
