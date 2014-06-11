@@ -1,28 +1,29 @@
 extends layout
 
 block content
-  link(rel="stylesheet" href="/stylesheets/signin.css")
-  link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
+  //link(rel="stylesheet" href="/stylesheets/signin.css")
+  //link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
   //h1= title
   include nav.jade
-  div.container
-    form.form-signin(role="form", action="/tables", method="POST")
-      h2.form-signin-heading 请指定相关地区
-      br
-      input.form-control(type="text", name="area", placeholder="在此输入指定相关地区")
-      //- var tables = {farmerInCounty: '农村劳动力转移就业人员（县内）', farmerOutCounty: '农村劳动力转移就业人员（县外）', townsfolk: '城镇劳动力（居民）就业人员', graduate: '大、中专毕业生就业', annual: '劳动力资源登记台帐', summary: '劳动力资源统计汇总表'};
-      select.form-control(name="table")
-        each val, index in tables
-          if index != tableName
-            option(value=index)= val
-          else
-            option(value=index, selected="selected")= val
-      //select.form-control(name="tables")
-        option(value="farmerInCounty") 农村劳动力转移就业人员（县内）
-        option(value="farmerOutCounty") 农村劳动力转移就业人员（县外）
-        option(value="townsfolk", selected="selected") 城镇劳动力（居民）就业人员
-        option(value="graduate") 大、中专毕业生就业
-        option(value="annual") 劳动力资源登记台帐
-        option(value="summary") 劳动力资源统计汇总表
-      br
-      button.btn.btn-lg.btn-primary.btn-block(type="submit") 生成台账
+  .container
+    .col-sm-4.col-sm-offset-4
+      form.form-signin(role="form", action="/tables", method="POST")
+        h2.form-signin-heading 请指定相关地区
+        br
+        input.form-control(type="text", name="area", placeholder="在此输入指定相关地区")
+        //- var tables = {farmerInCounty: '农村劳动力转移就业人员（县内）', farmerOutCounty: '农村劳动力转移就业人员（县外）', townsfolk: '城镇劳动力（居民）就业人员', graduate: '大、中专毕业生就业', annual: '劳动力资源登记台帐', summary: '劳动力资源统计汇总表'};
+        select.form-control(name="table")
+          each val, index in tables
+            if index != tableName
+              option(value=index)= val
+            else
+              option(value=index, selected="selected")= val
+        //select.form-control(name="tables")
+          option(value="farmerInCounty") 农村劳动力转移就业人员（县内）
+          option(value="farmerOutCounty") 农村劳动力转移就业人员（县外）
+          option(value="townsfolk", selected="selected") 城镇劳动力（居民）就业人员
+          option(value="graduate") 大、中专毕业生就业
+          option(value="annual") 劳动力资源登记台帐
+          option(value="summary") 劳动力资源统计汇总表
+        br
+        button.btn.btn-lg.btn-primary.btn-block(type="submit") 生成台账

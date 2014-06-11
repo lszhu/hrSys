@@ -384,7 +384,7 @@ router.get('/item', function(req, res) {
         jobType: jobType,
         builtinService: table.cnService,
         districtId: req.session.user.area,
-        editor: req.session.user.username,
+        //editor: req.session.user.username,
         address: districtName['4311']['431127'] + ' ' +
             getAdminAreaName(req.session.user.area)
     });

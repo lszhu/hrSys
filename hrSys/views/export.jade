@@ -1,7 +1,7 @@
 extends layout
 block content
   //link(rel="stylesheet" href="/stylesheets/signin.css")
-  link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
+  //link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
   //h1= title
   include nav.jade
   .container
@@ -37,6 +37,6 @@ block content
         .col-sm-12
           br
         .col-sm-6.col-sm-offset-3
-          button.btn.btn-lg.btn-block.btn-success(type="submit", role="button") 导出文件并下载
+          button.btn.btn-lg.btn-block.btn-primary(type="submit", role="button") 导出文件并下载
 
   script(src="/javascripts/export.js")

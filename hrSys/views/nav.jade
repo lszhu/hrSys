@@ -1,4 +1,4 @@
-nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
+nav.navbar.navbar-default.navbar-static-top(role="navigation")
   // Brand and toggle get grouped for better mobile display
   .container
     .navbar-header
@@ -7,13 +7,20 @@ nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
         span.icon-bar
         span.icon-bar
         span.icon-bar
-      a.navbar-brand(href="#") Brand
+      //a.navbar-brand(href="#") Brand
+      a.navbar-brand(href="/") 首页
     // Collect the nav links, forms, and other content for toggling
     .collapse.navbar-collapse#bs-example-navbar-collapse-1
       ul.nav.navbar-nav
-        li.active
+        //li.active
           a(href="/") 首页
-        li.dropdown
+        li
+          a(href="/item") 新增/修改人员信息
+        li
+          a(href="/delete") 删除人员信息
+        li
+          a(href="/search") 检索
+        li.dropdown.hidden
           a.dropdown-toggle(href="#", data-toggle="dropdown") 信息维护
             b.caret
           ul.dropdown-menu
@@ -45,8 +52,10 @@ nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
               a(href="/tables/annual") 劳动力资源登记台帐
             li
               a(href="/tables/summary") 劳动力资源统计汇总表
-        li
-          a(href="/search") 检索
+            li.divider
+            li
+              a(href="/export") 导出数据到文件
+
       form.navbar-form.navbar-left(role="search").hidden
         .form-group
           input.form-control(type="text", name="search", placeholder="Search")
@@ -69,6 +78,7 @@ nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
                 a(href="/batchAccount") 关联账号管理
             li
               a(href="/resetPassword") 账号密码修改
+
         li
           a(href="/help") 帮助
         li

@@ -1,6 +1,6 @@
 extends layout
 block content
-  link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
+  //link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
   include nav.jade
   //h1.text-center= title
   //ul
@@ -21,29 +21,3 @@ block content
               td= row + 1
               each index in columns
                 td= item[index]
-      //thead
-        tr
-          th 序号
-          th 姓名
-          th 性别
-          th 年龄
-          th 文化程度
-          th 婚姻状况
-          th 户籍地址
-          th 就业单位地点
-          th 从事工种
-          th 参保情况
-          th 月收入
-      //tbody
-        tr
-          td 1
-          td Mark
-          td Otto
-          td @mdo
-          td 1
-          td Mark
-          td Otto
-          td @mdo
-          td Otto
-          td 1
-          td Mark

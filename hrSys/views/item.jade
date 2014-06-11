@@ -1,7 +1,7 @@
 extends layout
 block content
   //link(rel="stylesheet" href="/stylesheets/signin.css")
-  link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
+  //link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
   //h1= title
   include nav.jade
   .container
@@ -41,7 +41,7 @@ block content
             div(style="width: 55%; float: left;")
               .input-group
                 span.input-group-addon &nbsp;&nbsp;&nbsp;地 址&nbsp;&nbsp;&nbsp;
-                input.form-control(type="text", name="address", readonly="readonly", placeholder="县市与乡镇、乡镇与村社区间用空格分开", value=address, tabindex="-1")
+                input.form-control(type="text", name="address", readonly="readonly", value=address, tabindex="-1")
             div(style="width: 45%; float: left;")
               .input-group
                 span.input-group-addon &nbsp;&nbsp;&nbsp;行政区划代码&nbsp;&nbsp;&nbsp;&nbsp;
@@ -50,7 +50,7 @@ block content
             div(style="width: 55%; float: left;")
               .input-group
                 span.input-group-addon &nbsp;&nbsp;&nbsp;地 址&nbsp;&nbsp;&nbsp;
-                input.form-control(type="text", name="address", placeholder="县市与乡镇、乡镇与村社区间用空格分开")
+                input.form-control(type="text", name="address", readonly="readonly", tabindex="-1")
             div(style="width: 45%; float: left;")
               .input-group
                 span.input-group-addon &nbsp;&nbsp;&nbsp;行政区划代码&nbsp;&nbsp;&nbsp;&nbsp;
@@ -60,12 +60,12 @@ block content
             .input-group
               span.input-group-addon &nbsp;&nbsp;&nbsp;学 历&nbsp;&nbsp;&nbsp;
               select.form-control(name="education")
-                option(value="小学及以下") 小学及以下
-                option(value="初中") 初中
-                option(value="高中") 高中
-                option(value="中专中技") 中专中技
-                option(value="大专") 大专
-                option(value="本科及以上") 本科及以上
+                option 小学及以下
+                option 初中
+                option 高中
+                option 中专中技
+                option 大专
+                option 本科及以上
           div(style="width: 33%; float: left;")
             .input-group
               span.input-group-addon 毕业时间
@@ -114,7 +114,7 @@ block content
                     option 企业高技能人才培训
                   span.input-group-addon 培训项目
                   input.form-control(type="text", name="postTraining", readonly="readonly", list="courses", placeholder="输入培训名称")
-                  datalist#courses
+                  //datalist#courses
                     option 服装缝纫
                     option 制鞋
                     option 电子技术
@@ -175,7 +175,7 @@ block content
           .col-sm-3.col-sm-offset-1
             .input-group
               span.input-group-addon 填报人
-              input.form-control(type="text", name="editor", value=editor, readonly="readonly")
+              input.form-control(type="text", name="editor", required="required")
           .col-sm-2
           .col-sm-4
             .input-group
@@ -184,5 +184,10 @@ block content
           .col-sm-10
             br
           .col-sm-7.col-sm-offset-2
-              button.btn.btn-lg.btn-block.btn-success(type="submit", role="button") 保存登记表
+            button.btn.btn-lg.btn-block.btn-primary(type="submit", role="button") 保存登记表
+
+          .col-sm-12.text-center
+            br
+          .col-sm-11.text-center#errorMessage(style="color: red;")
+            p
   script(src="/javascripts/item.js")
