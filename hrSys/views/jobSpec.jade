@@ -21,6 +21,8 @@ br
             span.input-group-addon 主要从事工种
             select.form-control(name="jobType")
               each val, key in jobType
+                option(value=key)= val
+              //each val, key in jobType
                 optgroup(label=val[key])
                   each v, k in val
                     option(value=k)= v
@@ -126,6 +128,8 @@ br
                 span.input-group-addon 第一选择
                 select.form-control(name="jobType01")
                   each val, key in jobType
+                    option(value=key)= val
+                  //each val, key in jobType
                     optgroup(label=val[key])
                       each v, k in val
                         option(value=k)= v
@@ -134,6 +138,8 @@ br
                 span.input-group-addon 第二选择
                 select.form-control(name="jobType02")
                   each val, key in jobType
+                    option(value=key)= val
+                  //each val, key in jobType
                     optgroup(label=val[key])
                       each v, k in val
                         option(value=k)= v
@@ -184,35 +190,6 @@ br
                   input(type="checkbox", name="preferredService"+k)
             .col-sm-12
               br
-              .input-group
-                span.input-group-addon 其他服务需求
-                input.form-control(type="text", name="extraPreferredService", placeholder="输入服务名称，可输入多项，用逗号隔开")
-
-          //.panel-body
-            .col-sm-3
-              label.checkbox-inline 职业介绍
-                input(type="checkbox", name="preferredService0")
-            .col-sm-3
-              label.checkbox-inline 职业培训
-                input(type="checkbox", name="preferredService1")
-            .col-sm-3
-              label.checkbox-inline 职业技能鉴定
-                input(type="checkbox", name="preferredService2")
-            .col-sm-3
-              label.checkbox-inline 社会保险补贴
-                input(type="checkbox", name="preferredService3")
-            .col-sm-3
-              label.checkbox-inline 公益性岗位安置
-                input(type="checkbox", name="preferredService4")
-            .col-sm-3
-              label.checkbox-inline 小额担保贷款
-                input(type="checkbox", name="preferredService5")
-            .col-sm-3
-              label.checkbox-inline 就业见习
-                input(type="checkbox", name="preferredService6")
-            .col-sm-12
-              br
-            .col-sm-12
               .input-group
                 span.input-group-addon 其他服务需求
                 input.form-control(type="text", name="extraPreferredService", placeholder="输入服务名称，可输入多项，用逗号隔开")

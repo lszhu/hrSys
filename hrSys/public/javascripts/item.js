@@ -76,7 +76,7 @@ function validSalary(salary) {
 $(function() {
     // 校验身份证号，自动填入年龄性别
     $('input[name=idNumber]').blur(function(e) {
-        var value = e.target.value.trim();
+        var value = $.trim(e.target.value);
         // 校验身份证号
         if (!validIdNumber(value)) {
             if (confirm("身份证号码输入有误，需重新输入！")) {
@@ -106,7 +106,7 @@ $(function() {
 
     // 校验毕业时间
     $('input[name=graduateDate]').blur(function(e) {
-        var value = e.target.value.trim();
+        var value = $.trim(e.target.value);
         if (!validYear(value)) {
             if (confirm('毕业年份输入有误！')) {
                 setTimeout(function() {
@@ -118,7 +118,7 @@ $(function() {
 
     // 校验联系电话
     $('input[name=phone]').blur(function(e) {
-        var value = e.target.value.trim();
+        var value = $.trim(e.target.value);
         if (!validPhone(value)) {
             if (confirm('联系电话输入有误！')) {
                 setTimeout(function() {
@@ -130,7 +130,7 @@ $(function() {
 
     // 校验就业时间
     $('input[name=startWorkDate]').blur(function(e) {
-        var value = e.target.value.trim();
+        var value = $.trim(e.target.value);
         if (!validDate(value)) {
             if (confirm('就业时间输入有误！')) {
                 setTimeout(function() {
@@ -142,7 +142,7 @@ $(function() {
 
     // 校验年收入
     $('input[name=salary]').blur(function(e) {
-        var value = e.target.value.trim();
+        var value = $.trim(e.target.value);
         if (!validSalary(value)) {
             if (confirm('年收入输入有误！')) {
                 setTimeout(function() {
@@ -154,7 +154,7 @@ $(function() {
 
     // 校验失业时间
     $('input[name=unemployedDate]').blur(function(e) {
-        var value = e.target.value.trim();
+        var value = $.trim(e.target.value);
         if (!validDate(value)) {
             if (confirm('就业时间输入有误！')) {
                 setTimeout(function() {
@@ -165,7 +165,7 @@ $(function() {
     });
     // 校验工资收入期望
     $('input[name=preferredSalary]').blur(function(e) {
-        var value = e.target.value.trim();
+        var value = $.trim(e.target.value);
         if (!validSalary(value)) {
             if (confirm('工资收入期望输入有误！')) {
                 setTimeout(function() {

@@ -16,7 +16,7 @@ var db = require('./db');
 // district Id and name
 var districtName = require('../config/districtId');
 // job type
-var jobType = require('../config/jobType');
+var jobType = require('../config/jobType').local;
 // worker employment/unemployment register id
 var workRegisterId = require('../config/workRegisterId');
 // nations
