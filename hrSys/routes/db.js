@@ -203,12 +203,32 @@ function batchInitAccount(districts, callback) {
         if (!districts['431127'].hasOwnProperty(town)) {
             continue;
         }
+        // town level account
+        var account = {
+            username: town,
+            password: Date.now().toString(),
+            enabled: false,
+            area: town,
+            permission: '只读',
+            type: 'bound'
+        };
+        // used to count in doing update
+        count++;
+        Account.update(
+            {username: town},
+            account,
+            {upsert: true},
+            function(err) {
+                return err ? (error = err) : count--;
+            }
+        );
         for (var village in districts[town]) {
             debug('villageId: ' + village);
             if (!districts[town].hasOwnProperty(village)) {
                 continue;
             }
-            var account = {
+            // village level account
+            account = {
                 username: village,
                 password: Date.now().toString(),
                 enabled: false,
