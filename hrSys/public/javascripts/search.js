@@ -4,9 +4,9 @@ var sel = ['gender', 'nation', "districtId", 'censusRegisterType',
 $('button.query').click(function() {
     var condition = {};
 
-    condition.username = $('input[name=username]').val().trim();
-    condition.ageMin = $('input[name=ageMin]').val().trim();
-    condition.ageMax = $('input[name=ageMax]').val().trim();
+    condition.username = $.trim($('input[name=username]').val());
+    condition.ageMin = $.trim($('input[name=ageMin]').val());
+    condition.ageMax = $.trim($('input[name=ageMax]').val());
 
     var tmp = '';
     for (var i = 0; i < sel.length; i++) {
@@ -21,14 +21,14 @@ $('button.query').click(function() {
 $('button.export').click(function() {
     var query = '/download?';
         query += 'username=' +
-            ($('input[name=username]').val().trim());
+            $.trim($('input[name=username]').val());
         query += '&ageMin=' +
-            ($('input[name=ageMin]').val().trim());
-        query += '&ageMax=' + $('input[name=ageMax]').val().trim();
+            $.trim($('input[name=ageMin]').val());
+        query += '&ageMax=' + $.trim($('input[name=ageMax]').val());
     var tmp = '';
     for (var i = 0; i < sel.length; i++) {
         tmp = 'select[name=' + sel[i] + ']';
-        query += '&' + [sel[i]] + '=' + ($(tmp).val());
+        query += '&' + [sel[i]] + '=' + $.trim($(tmp).val());
     }
     var host = location.host;
     location.href = 'http://' + host + query;
