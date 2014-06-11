@@ -83,6 +83,7 @@ block content
                     option(value="0")= districtName["0"]
                   each item, key in districtName['431127']
                     optgroup(label=item)
+                      option(value=key)= item
                       each v, i in districtName[key]
                         option(value=i)= v
                     //option(value=key)= item

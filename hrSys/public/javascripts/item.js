@@ -114,7 +114,7 @@ $(function() {
                 {districtId: $.trim(districtId.val())},
             function(data) {
                 if (data == 'districtIdError' || data == 'permissionError') {
-                    $('input[name=address]').val('辖区内无相应地址');
+                    $('input[name=address]').val('不在管辖范围内');
                     if (confirm('行政区划代码输入有误！')) {
                         setTimeout(function() {
                             $('input[name=districtId]').focus();
@@ -250,7 +250,7 @@ $(function() {
             return false;
         }
         // 校验地址信息，用于乡镇或以上级别用户
-        if ($('input[name=address]').val() == '辖区内无相应地址') {
+        if ($('input[name=address]').val() == '不在管辖范围内') {
             err.text('行政区划代码输入有误，请重新输入！');
             setTimeout(function() {$('input[name=districtId]').focus();}, 600);
             return false;

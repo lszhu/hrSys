@@ -43,7 +43,7 @@ function getAddress(districtId) {
         town: '',
         village: ''
     };
-    if (districtId.length == 10) {
+    if (districtId.length >= 4) {
         address.county = districtName['4311']['431127'];
         if (!districtName['431127'].hasOwnProperty(districtId.slice(0, 8))) {
             return address;
@@ -164,11 +164,16 @@ router.get('/account', function(req, res) {
             for (var i = 0; i < accounts.length; i++) {
                 debug('districtId: ' + accounts[i].area);
                 // translate district ID to name
+                var address = getAddress(accounts[i].area);
+                accounts[i].area = address.county + address.town +
+                    address.village;
+                /*
                 var town = accounts[i].area.slice(0, 8);
                 if (districtName['431127'].hasOwnProperty(town)) {
                     accounts[i].area = districtName['431127'][town] +
                         districtName[town][accounts[i].area];
                 }
+                */
                 if (accounts[i].permission == '管理员') {
                     accounts[i].area = '';
                 }
@@ -378,6 +383,7 @@ router.get('/data/address', function(req, res) {
     var area = req.session.user.area;
     if (area != 0 && area != districtId.slice(0, 8)) {
         res.send('permissionError');
+        return;
     }
     var address = getAddress(districtId);
     if (!address.village) {
@@ -593,12 +599,12 @@ router.get('/delete', function(req, res) {
 router.post('/delete', function(req, res) {
     if (req.session.user.permission == '只读') {
         console.error('permission denied');
-        return res.send('permission denied');
+        return res.send('permissionDenied');
     }
     var area = req.session.user.area;
     var bound = req.body.condition;
     if (area != '0') {
-        bound.address = getAddress(area);
+        bound.districtId = new RegExp('^' + area);
     }
     debug('db.remove bound is: ' + JSON.stringify(bound));
     db.remove(bound, function(err) {
@@ -661,7 +667,8 @@ router.post('/tables', function(req, res) {
 router.get('/export', function(req, res) {
     var area = req.session.user.area;
     var districtId = req.query.districtId;
-    if (area == '0' && districtId == undefined) {
+    // super user or town level user
+    if (area.length < 10 && districtId == undefined) {
         return res.render(
             'export',
             {
@@ -673,14 +680,40 @@ router.get('/export', function(req, res) {
             }
         );
     }
+
     var bound = {};
+    if (districtId == undefined) {  // area.length >= 10
+        bound.districtId = area;
+    } else if (area == 0) {        // super user
+        if (districtId.length == 10) {
+            bound.districtId = districtId;
+        } else if (districtId.length == 8) {
+            bound.districtId = new RegExp('^' + districtId);
+        }
+    } else if (area == districtId.slice(0, 8)) {    // town level user
+        if (districtId.length == 10) {
+            bound.districtId = districtId;
+        } else if (districtId.length == 8) {
+            bound.districtId = new RegExp('^' + districtId);
+        } else {
+            res.send('permissionDeny');
+            return;
+        }
+    } else if (area.length == 10 && area == districtId) {   // village user
+        bound.districtId = districtId;
+    } else {
+        res.send('districtIdError');
+        return;
+    }
+    /*
     if (area != 0) {
         bound.districtId = area;
     } else if (districtId.length == 10) {
         bound.districtId = districtId;
     } else if (districtId.length == 8) {
-        bound.districtId = new RegExp(districtId);
+        bound.districtId = new RegExp('^' + districtId);
     }
+    */
     db.query(bound, function(err, data) {
         if (err) {
             console.error('error: ' + err);
