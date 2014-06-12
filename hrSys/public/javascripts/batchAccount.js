@@ -14,8 +14,14 @@ $('#initAccount').click(function() {
 
 $('#initPassword').find('button').click(function() {
     var dom =  $('#initPassword');
-    var password = dom.find('input[name=password]').val();
-    var retryPassword = dom.find('input[name=retryPassword]').val();
+    var password = $.trim(dom.find('input[name=password]').val());
+    var retryPassword = $.trim(dom.find('input[name=retryPassword]').val());
+    if (!password) {
+        $('<p>密码不能为空，请重新设定</p>')
+            .css({color: 'red'})
+            .appendTo('#initPasswordMsg');
+        return;
+    }
     if (password != retryPassword) {
         $('<p>两次输入的密码不一致，请重新输入</p>')
             .css({color: 'red'})

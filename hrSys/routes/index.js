@@ -295,11 +295,14 @@ router.post('/resetPassword', function(req, res) {
         return;
     }
     db.changeAccountPassword(username, password, function(err) {
+        res.send( err ? 'errDbOperation' : 'ok');
+        /*
         if (err) {
             res.send('errDbOperation');
         } else {
             res.send('ok');
         }
+        */
     });
 });
 
@@ -793,6 +796,21 @@ router.post('/search', function(req, res) {
         if (sel[i] == 'districtId') {
             bound.districtId = new RegExp(cond.districtId);
             debug('regexp: ' + bound.districtId);
+            continue;
+        }
+
+        if (sel[i] == 'workplace') {
+            bound['$or'] = [
+                {'employmentInfo.workplace': cond['workplace']},
+                {'unemploymentInfo.preferredWorkplace': cond['workplace']}
+            ];
+            continue;
+        }
+        if (sel[i] == 'jobType') {
+            bound['$or'] = [
+                {'employmentInfo.jobType': cond['jobType']},
+                {'unemploymentInfo.preferredJobType': cond['jobType']}
+            ];
             continue;
         }
         bound[sel[i]] = cond[sel[i]];
