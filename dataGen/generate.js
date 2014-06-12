@@ -74,7 +74,7 @@ function dateFmt(t) {
 }
 
 function birthday() {
-    var year = floor(25 * random() * random());
+    var year = 25 * random();
     var age = 40 + (random() < 0.5 ? year : -year);
     var yearMs = 1000 * 60 * 60 * 24 * 365;
     var time = new Date(Date.now() - age * yearMs);
@@ -86,7 +86,7 @@ function idNumber(birth) {
     var district = '432927';
     if (random() < 0.5) {
         district = '431127';
-    } else if (random() < 0.2) {
+    } else if (random() < 0.2) {    // 20% of other districtId
         district = floor(random() * 9) + 1 + '';
         for (i = 0; i < 5; i++) {
             district += floor(random() * 10);
