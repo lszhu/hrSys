@@ -2,7 +2,7 @@ var nameResource = require('./name');
 var staticData = require('./staticData');
 
 var district = require('../hrSys/config/districtId');
-var jobTypeList = require('../hrSys/config/jobType');
+var jobTypeList = require('../hrSys/config/jobType').local;
 var db = require('../hrSys/routes/db');
 
 // 速写方式
@@ -249,7 +249,7 @@ function employer(nameSrc) {
         postfix[floor(random() * postfix.length)];
 }
 
-function jobType(list) {
+function jobTypeStd(list) {
     var category = [];
     var types = [];
     for (var a in list) {
@@ -268,6 +268,17 @@ function jobType(list) {
         return category[floor(random() * category.length)];
     }
     return types[floor(random() * types.length)];
+}
+
+function jobTypeLocal(list) {
+    var ids = [];
+    for (var i in list) {
+        if (!list.hasOwnProperty(i)) {
+            continue;
+        }
+        ids.push(i);
+    }
+    return ids[floor(random() * ids.length)];
 }
 
 function industry(type) {
@@ -427,7 +438,7 @@ function createRandomDate(employed) {
 
     msg.employmentInfo = {
         employer: employer(nameResource.name),
-        jobType: jobType(jobTypeList),
+        jobType: jobTypeLocal(jobTypeList),
         industry: industry(staticData.industry),
         startWorkDate: startWorkDate(msg.age),
         salary: salary(),
@@ -443,7 +454,8 @@ function createRandomDate(employed) {
         unemployedDate: unemployedDate(msg.age),
         unemploymentCause: unemploymentCause(msg.age, msg.humanCategory),
         familyType: familyType(msg.age, msg.humanCategory),
-        preferredJobType: [jobType(jobTypeList), jobType(jobTypeList)],
+        preferredJobType: [jobTypeLocal(jobTypeList),
+            jobTypeLocal(jobTypeList)],
         preferredSalary: salary(),
         preferredIndustry: industry(staticData.industry),
         preferredWorkplace: workplace(staticData.workplace,
@@ -502,7 +514,7 @@ addRandomData(100000);
     //console.log(technicalGrade(staticData.technicalGrade));
     //console.dir(service(staticData.serviceType));
     //console.log(employer(nameResource.name));
-    //console.log(jobType(jobTypeList));
+    //console.log(jobTypeLocal(jobTypeList));
     //console.log(startWorkDate(40));
     //console.log(dateFmt(new Date(Date.now() - random() * 100000000000)));
     //console.dir(workplace(staticData.workplace, staticData.province));
