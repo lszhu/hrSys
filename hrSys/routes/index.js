@@ -384,6 +384,11 @@ router.get('/data/workRegisterId', function(req, res) {
 router.get('/data/address', function(req, res) {
     var districtId = req.param('districtId');
     var area = req.session.user.area;
+    debug('districtId: ' + districtId);
+    if (!districtId) {
+        res.send('emptyDistrictId');
+        return
+    }
     if (area != 0 && area != districtId.slice(0, 8)) {
         res.send('permissionError');
         return;
@@ -878,16 +883,42 @@ router.get('/download', function(req, res) {
         };
     }
 
-    for (var i = 0; i < sel.length; i++) {
+    // create search condition
+    for (var i = 0; i < sel.length - 2; i++) {
         if (cond[sel[i]] == '0' || cond[sel[i]] == '不限') {
             continue;
         }
+        // special process for districtId
         if (sel[i] == 'districtId') {
             bound.districtId = new RegExp(cond.districtId);
             debug('regexp: ' + bound.districtId);
             continue;
         }
         bound[sel[i]] = cond[sel[i]];
+    }
+
+    // search condition for filter of workplace or jobType
+    if (cond['workplace'] != '不限' && cond['jobType'] != '0') {
+        bound['$or'] = [
+            {
+                'employmentInfo.workplace': cond['workplace'],
+                'employmentInfo.jobType': cond['jobType']
+            },
+            {
+                'unemploymentInfo.preferredWorkplace': cond['workplace'],
+                'unemploymentInfo.preferredJobType': cond['jobType']
+            }
+        ];
+    } else if (cond['workplace'] != '不限') {
+        bound['$or'] = [
+            {'employmentInfo.workplace': cond['workplace']},
+            {'unemploymentInfo.preferredWorkplace': cond['workplace']}
+        ];
+    } else if (cond['jobType'] != '0') {
+        bound['$or'] = [
+            {'employmentInfo.jobType': cond['jobType']},
+            {'unemploymentInfo.preferredJobType': cond['jobType']}
+        ];
     }
 
     debug('bound: ' + JSON.stringify(bound));

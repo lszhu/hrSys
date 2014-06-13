@@ -120,6 +120,13 @@ $(function() {
                             $('input[name=districtId]').focus();
                         }, 10);
                     }
+                } else if (data == 'emptyDistrictId') {
+                    $('input[name=address]').val('');
+                    if (confirm('请输入行政区划代码！')) {
+                        setTimeout(function() {
+                            $('input[name=districtId]').focus();
+                        }, 10);
+                    }
                 } else {
                     $('input[name=address]').val(data);
                 }
