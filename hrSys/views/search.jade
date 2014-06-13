@@ -52,7 +52,7 @@ block content
                   option(value="0") 不限
                 each value, key in districtName['431127']
                   optgroup(label=value)
-                    option(value=key) 辖区所有范围
+                    option(value=key)= value
                     each v, k in districtName[key]
                       option(value=k)= v
           .input-group

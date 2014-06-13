@@ -1,3 +1,5 @@
+var cnJobTypeName = require('../config/jobType').local;
+
 var cnTableName = {
     farmerInCounty: '农村劳动力转移就业人员（县内）',
     farmerOutCounty: '农村劳动力转移就业人员（县外）',
@@ -281,3 +283,11 @@ var dataTranslate = function(data) {
         itemTranslate(data[i]);
     }
 };
+
+function msgTranslate(personalMsg) {
+    if (personalMsg.employment) {
+        personalMsg.employmentInfo.jobType = cnJobTypeName[personalMsg.jobType];
+    } else {
+        personalMsg.unemploymentInfo.jobType = cnJobTypeName[personalMsg.jobType];
+    }
+}

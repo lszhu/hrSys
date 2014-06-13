@@ -249,14 +249,15 @@ function employer(nameSrc) {
         postfix[floor(random() * postfix.length)];
 }
 
-function jobTypeStd(list) {
+function jobType(list) {
     var category = [];
     var types = [];
     for (var a in list) {
         if (!list.hasOwnProperty(a)) {
             continue;
         }
-        category.push(a);
+        // 保存大类信息
+        //category.push(a);
         for (var b in list[a]) {
             if (!list[a].hasOwnProperty(b)) {
                 continue;
@@ -264,12 +265,16 @@ function jobTypeStd(list) {
             types.push(b);
         }
     }
+    /*
+    // 20%选择粗略的大类
     if (random() < 0.2) {
         return category[floor(random() * category.length)];
     }
+    */
     return types[floor(random() * types.length)];
 }
 
+/*
 function jobTypeLocal(list) {
     var ids = [];
     for (var i in list) {
@@ -280,6 +285,7 @@ function jobTypeLocal(list) {
     }
     return ids[floor(random() * ids.length)];
 }
+*/
 
 function industry(type) {
     return type[floor(random() * type.length)];
@@ -438,7 +444,7 @@ function createRandomDate(employed) {
 
     msg.employmentInfo = {
         employer: employer(nameResource.name),
-        jobType: jobTypeLocal(jobTypeList),
+        jobType: jobType(jobTypeList),
         industry: industry(staticData.industry),
         startWorkDate: startWorkDate(msg.age),
         salary: salary(),
@@ -454,8 +460,8 @@ function createRandomDate(employed) {
         unemployedDate: unemployedDate(msg.age),
         unemploymentCause: unemploymentCause(msg.age, msg.humanCategory),
         familyType: familyType(msg.age, msg.humanCategory),
-        preferredJobType: [jobTypeLocal(jobTypeList),
-            jobTypeLocal(jobTypeList)],
+        preferredJobType: [jobType(jobTypeList),
+            jobType(jobTypeList)],
         preferredSalary: salary(),
         preferredIndustry: industry(staticData.industry),
         preferredWorkplace: workplace(staticData.workplace,
@@ -492,7 +498,7 @@ function addRandomData(n) {
 addRandomData(100000);
 
 // only for basic function test
-//console.dir(createRandomDate());
+//console.dir(createRandomDate('已就业'));
 //for (var i = 0; i < 20; i++) {
     //console.log(name(nameResource));
     //console.log(JSON.stringify(address(31, 43)));
@@ -514,7 +520,7 @@ addRandomData(100000);
     //console.log(technicalGrade(staticData.technicalGrade));
     //console.dir(service(staticData.serviceType));
     //console.log(employer(nameResource.name));
-    //console.log(jobTypeLocal(jobTypeList));
+    //console.log(jobType(jobTypeList));
     //console.log(startWorkDate(40));
     //console.log(dateFmt(new Date(Date.now() - random() * 100000000000)));
     //console.dir(workplace(staticData.workplace, staticData.province));

@@ -20,10 +20,10 @@ br
           .input-group
             span.input-group-addon 主要从事工种
             select.form-control(name="jobType")
-              each val, key in jobType
-                option(value=key)= val
               //each val, key in jobType
-                optgroup(label=val[key])
+                option(value=key)= val
+              each val, key in jobType
+                optgroup(label=key+'类')
                   each v, k in val
                     option(value=k)= v
       .col-sm-12
@@ -127,20 +127,20 @@ br
               .input-group
                 span.input-group-addon 第一选择
                 select.form-control(name="jobType01")
-                  each val, key in jobType
-                    option(value=key)= val
                   //each val, key in jobType
-                    optgroup(label=val[key])
+                    option(value=key)= val
+                  each val, key in jobType
+                    optgroup(label=key+'类')
                       each v, k in val
                         option(value=k)= v
             .div(style="width: 50%; float: left")
               .input-group
                 span.input-group-addon 第二选择
                 select.form-control(name="jobType02")
-                  each val, key in jobType
-                    option(value=key)= val
                   //each val, key in jobType
-                    optgroup(label=val[key])
+                    option(value=key)= val
+                  each val, key in jobType
+                    optgroup(label=key+'类')
                       each v, k in val
                         option(value=k)= v
       .col-sm-12
