@@ -684,6 +684,13 @@ router.get('/export', function(req, res) {
         );
     }
 
+    // check access rights
+    if (area.length == 8 && area != districtId.slice(0, 8) ||
+        area == 10 && area != districtId ||
+        area != '0' && area.length != 8 && area.length != 10) {
+        return res.send('permissionDeny');
+    }
+
     var bound = {};
     if (districtId == undefined) {  // area.length >= 10
         bound.districtId = area;
@@ -771,10 +778,13 @@ router.post('/search', function(req, res) {
         'education', 'employment', 'workplace', 'jobType'];
     var bound = {};
     var cond = req.body.condition;
+    debug('condition: ', JSON.stringify(cond));
 
     // check access rights
     var area = req.session.user.area;
-    if (area != 0 && area.slice(0, 8) != cond.districtId.slice(0, 8)) {
+    if (area.length == 8 && area != cond.districtId.slice(0, 8) ||
+        area == 10 && area != cond.districtId ||
+        area != '0' && area.length != 8 && area.length != 10) {
         return res.send('permissionDeny');
     }
 
@@ -851,7 +861,9 @@ router.get('/download', function(req, res) {
 
     // check access rights
     var area = req.session.user.area;
-    if (area != 0 && area.slice(0, 8) != cond.districtId.slice(0, 8)) {
+    if (area.length == 8 && area != cond.districtId.slice(0, 8) ||
+        area == 10 && area != cond.districtId ||
+        area != '0' && area.length != 8 && area.length != 10) {
         return res.send('permissionDeny');
     }
 

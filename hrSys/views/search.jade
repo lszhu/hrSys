@@ -36,7 +36,17 @@ block content
               each value, key in nations
                 option= value
           .input-group
-            if area != '0'
+            if area == '0'
+              span.input-group-addon 居住地点
+              select.form-control(name="districtId")
+                optgroup(label="不限区域")
+                  option(value="0") 不限
+                each value, key in districtName['431127']
+                  optgroup(label=value)
+                    option(value=key)= value
+                    each v, k in districtName[key]
+                      option(value=k)= v
+            if area.length == 8
               span.input-group-addon 居住地点
               select.form-control(name="districtId")
                 - var town = area.slice(0, 8)
@@ -45,7 +55,11 @@ block content
                 optgroup(label="特定村落社区范围")
                   each v, k in districtName[town]
                     option(value=k)= v
-            else
+            if area.length == 10
+              span.input-group-addon 居住地点
+              select.form-control(name="districtId")
+                option(value=area)= districtName[area.slice(0, 8)][area]
+            //else
               span.input-group-addon 居住地点
               select.form-control(name="districtId")
                 optgroup(label="不限区域")
@@ -90,10 +104,10 @@ block content
             span.input-group-addon 从事工种
             select.form-control(name="jobType")
               option(value='0') 不限
-              each val, key in jobType
-                option(value=key)= val
               //each val, key in jobType
-                optgroup(label=val[key])
+                option(value=key)= val
+              each val, key in jobType
+                optgroup(label=key+'类')
                   each v, k in val
                     option(value=k)= v
 
