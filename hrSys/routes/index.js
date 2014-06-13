@@ -648,7 +648,7 @@ router.post('/tables', function(req, res) {
             res.render('error', {title: 'Database error, try again later.'});
             return;
         }
-        //table.dataTranslate(data);
+        table.dataTranslate(data);
         debug('data translated: ' + data.length);
         // to show no more than 500 items in web page
         if (data.length > 500) {
@@ -729,7 +729,7 @@ router.get('/export', function(req, res) {
             console.error('error: ' + err);
             return res.send('Database error');
         }
-        //table.dataTranslate(data);
+        table.dataTranslate(data);
         debug('data translated: ' + data.length);
         // to show no more than 500 items in web page
         //res.send(table.createSearchTable(500, data));
@@ -844,7 +844,7 @@ router.post('/search', function(req, res) {
             console.error('error: ' + err);
             return res.send('Database error');
         }
-        //table.dataTranslate(data);
+        table.dataTranslate(data);
         debug('data translated: ' + data.length);
         // to show no more than 500 items in web page
         res.send(table.createSearchTable(500, data));
@@ -896,7 +896,7 @@ router.get('/download', function(req, res) {
             console.error('error: ' + err);
             return res.send('Database error');
         }
-        //table.dataTranslate(data);
+        table.dataTranslate(data);
         debug('data translated: ' + data.length);
         // to show no more than 500 items in web page
         //res.send(table.createSearchTable(500, data));

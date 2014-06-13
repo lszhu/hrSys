@@ -117,7 +117,7 @@ var serviceType = [
     '职业技能鉴定',
     '社会保险补贴',
     '公益性岗位安置',
-    '小额担保贷款贴息',
+    //'小额担保贷款贴息',
     '小额担保贷款',
     '就业见习'
 ];
@@ -142,6 +142,7 @@ function address(a) {
     return a.county + a.town + a.village;
 }
 
+// 生成显示数据的html表格dom
 function createSearchTable(n, data) {
     if (n < 0 || n > data.length) {
         n = data.length;
@@ -177,6 +178,7 @@ function createSearchTable(n, data) {
     return html;
 }
 
+// 生成以tab为栏目分隔符的，换行符为记录分隔符的数据，用于导出到excel
 function prepareSearchDownload(data) {
     var fileContent = '序号';
     var rowLength = tableColumns.search.length;
@@ -207,9 +209,35 @@ function prepareSearchDownload(data) {
     return fileContent;
 }
 
+// 根据不同的type参数选择合适的处理方式，对数据data进行预处理
 function prepareDownload(type, data) {
     if (type == 'search') {
         return prepareSearchDownload(data);
+    }
+}
+
+// 批量的处理，将一些实用符合或数字表示的栏目转换为文字
+function dataTranslate(data) {
+    var len = data.length;
+    for (var i = 0; i < len; i++) {
+        msgTranslate(data[i]);
+    }
+}
+
+// 将一些实用符合或数字表示的栏目转换为文字
+function msgTranslate(personalMsg) {
+    var item, temp;
+    if (personalMsg.employment == '已就业') {
+        item = personalMsg.employmentInfo.jobType;
+        personalMsg.employmentInfo.jobType = cnJobTypeName[item[0]][item];
+
+    } else {
+        item = personalMsg.unemploymentInfo.preferredJobType;
+        temp = [];
+        for (var i = 0; i < item.length; i++) {
+            temp.push(cnJobTypeName[item[i][0]][item[i]]);
+        }
+        personalMsg.unemploymentInfo.preferredJobType = temp;
     }
 }
 
@@ -225,7 +253,8 @@ module.exports = {
     cnService: serviceType,
     cnInsurance: insurance,
     createSearchTable: createSearchTable,
-    prepareDownload: prepareDownload
+    prepareDownload: prepareDownload,
+    dataTranslate: dataTranslate
 };
 
 ///////////////////////////////////////////////////
@@ -274,20 +303,5 @@ function itemTranslate(item) {
         if (recorders.hasOwnProperty(i)) {
             item[i] = translate(item[i], recorders[i]);
         }
-    }
-}
-
-var dataTranslate = function(data) {
-    var len = data.length;
-    for (var i = 0; i < len; i++) {
-        itemTranslate(data[i]);
-    }
-};
-
-function msgTranslate(personalMsg) {
-    if (personalMsg.employment) {
-        personalMsg.employmentInfo.jobType = cnJobTypeName[personalMsg.jobType];
-    } else {
-        personalMsg.unemploymentInfo.jobType = cnJobTypeName[personalMsg.jobType];
     }
 }
