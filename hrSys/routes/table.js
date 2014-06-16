@@ -90,26 +90,6 @@ var technicalGrade = [
 ];
 */
 
-//从事行业（多选）
-/*
-var industry = [
-    '采矿业',
-    '制造业',
-    '建筑业',
-    '金融业',
-    '房地产业',
-    '农林牧渔业',
-    '交通运输业',
-    '居民服务业',
-    '计算机和软件服务业',
-    '租赁和商业服务业',
-    '批发零售业',
-    '住宿餐饮业',
-    '电力燃气及水的生产供应业',
-    '仓储和邮政业'
-];
-*/
-
 // service type
 var serviceType = [
     '职业介绍',
@@ -179,6 +159,7 @@ function createSearchTable(n, data) {
 }
 
 // 生成以tab为栏目分隔符的，换行符为记录分隔符的数据，用于导出到excel
+// 返回内容适用于搜索页面的结果
 function prepareSearchDownload(data) {
     var fileContent = '序号';
     var rowLength = tableColumns.search.length;
@@ -209,10 +190,19 @@ function prepareSearchDownload(data) {
     return fileContent;
 }
 
+// 生成以tab为栏目分隔符的，换行符为记录分隔符的数据，用于导出到excel
+// 返回内容基本包含数据库中相应人员的所有登记信息
+function prepareExport(data) {
+
+}
+
 // 根据不同的type参数选择合适的处理方式，对数据data进行预处理
 function prepareDownload(type, data) {
     if (type == 'search') {
         return prepareSearchDownload(data);
+    }
+    if (type == 'export') {
+        return prepareExport(data);
     }
 }
 

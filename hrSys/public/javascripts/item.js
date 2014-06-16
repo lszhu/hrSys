@@ -109,7 +109,7 @@ $(function() {
     // 当管辖区域较大的用户登录时，行政区划代码需要手工输入，再由此代码获取地址信息
     var  districtId = $('input[name=districtId]');
     if (!districtId.prop('readonly')) {
-        districtId.blur(function(e) {
+        districtId.blur(function() {
             $.get('/data/address',
                 {districtId: $.trim(districtId.val())},
             function(data) {

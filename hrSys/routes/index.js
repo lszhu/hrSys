@@ -675,7 +675,7 @@ router.post('/tables', function(req, res) {
 router.get('/export', function(req, res) {
     var area = req.session.user.area;
     var districtId = req.query.districtId;
-    // super user or town level user
+    // a intermediate step for super user or town level user
     if (area.length < 10 && districtId == undefined) {
         return res.render(
             'export',
