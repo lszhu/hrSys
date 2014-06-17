@@ -148,6 +148,7 @@ br
           .input-group
             span.input-group-addon 工资收入期望(年)
             input.form-control(type="text", name="preferredSalary")
+            span.input-group-addon 万元
         div(style="width: 50%; float: left")
           .input-group
             span.input-group-addon 就业产业意向
@@ -187,7 +188,7 @@ br
             each v, k in builtinService
               .col-sm-3
                 label.checkbox-inline= v
-                  input(type="checkbox", name="preferredService"+k)
+                  input(type="checkbox", name='preferredService'+k)
             .col-sm-12
               br
               .input-group
