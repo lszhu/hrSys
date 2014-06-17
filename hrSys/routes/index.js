@@ -734,7 +734,7 @@ router.get('/export', function(req, res) {
             console.error('error: ' + err);
             return res.send('Database error');
         }
-        table.dataTranslate(data);
+        //table.dataTranslate(data);
         debug('data translated: ' + data.length);
         // to show no more than 500 items in web page
         //res.send(table.createSearchTable(500, data));
@@ -745,7 +745,7 @@ router.get('/export', function(req, res) {
         // download file and save as microsoft excel file (.xls)
         var mimetype = 'application/vnd.ms-excel';
         res.setHeader('Content-type', mimetype);
-        res.send(iconv.encode(table.prepareDownload('search', data), 'gbk'));
+        res.send(iconv.encode(table.prepareDownload('export', data), 'gbk'));
     });
 });
 

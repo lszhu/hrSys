@@ -193,7 +193,144 @@ function prepareSearchDownload(data) {
 // 生成以tab为栏目分隔符的，换行符为记录分隔符的数据，用于导出到excel
 // 返回内容基本包含数据库中相应人员的所有登记信息
 function prepareExport(data) {
+    var i, j, jobId;
+    var basicInfo = [
+        'districtId', 'county', 'town', 'village',
+        'username', 'idNumber', 'workRegisterId', 'gender',
+        'age', 'birthday', 'nation', 'politicalOutlook',
+        'education', 'censusRegisterType', 'marriage', 'phone'
+        ];
+    var skillInfo = [
+        'trained', 'trainingType', 'postTraining', 'certified',
+        'technicalGrade', 'postService'
+        ];
+    var employed = [
+        'employer', 'jobType', 'industry',
+        'startWorkDate', 'workplace', 'workProvince',
+        'salary', 'jobForm'
+        ];
+    var unemployed = [
+        'humanCategory', 'unemployedDate', 'unemploymentCause','familyType',
+        'preferredJobType', 'preferredIndustry', 'preferredSalary',
+        'preferredWorkplace', 'preferredJobForm', 'preferredService'
+    ];
+    var insuranceIndex = {
+        '城镇职工养老保险': 0,
+        '城镇居民养老保险': 1,
+        '新农保': 2,
+        '城镇职工医疗保险': 3,
+        '城镇居民医疗保险': 4,
+        '失业保险': 5,
+        '工伤保险': 6,
+        '新农合': 7
+    };
+    // 保存文件内容
+    var fileContent = '序号';
+    var basicInfoLength = basicInfo.length;
+    var skillInfoLength = skillInfo.length;
+    var employedLength = employed.length;
+    var unemployedLength = unemployed.length;
+    var insureLen = insurance.length;
+    var insureStatus = [];
 
+    for (j = 0; j < basicInfoLength; j++) {
+        fileContent += '\t' + cnItemName[basicInfo[j]];
+    }
+    for (j = 0; j < skillInfoLength; j++) {
+        fileContent += '\t' + cnItemName[skillInfo[j]];
+    }
+    for (j = 0; j < employedLength; j++) {
+        fileContent += '\t' + cnItemName[employed[j]];
+    }
+    for (j = 0; j < unemployedLength; j++) {
+        fileContent += '\t' + cnItemName[unemployed[j]];
+    }
+    for (j = 0; j < insureLen; j++) {
+        fileContent += '\t' + insurance[j];
+    }
+    fileContent += '\r\n';
+    for (i = 0, len = data.length; i < len; i++) {
+        fileContent += i + 1;
+        for (j = 0; j < basicInfoLength; j++) {
+            if (basicInfo[j] == 'county' || basicInfo[j] == 'town' ||
+                basicInfo[j] == 'village') {
+                fileContent += '\t' + data[i]['address'][basicInfo[j]];
+                continue;
+            }
+            if (basicInfo[j] == 'birthday') {
+                fileContent += '\t' + data[i]['idNumber'].slice(6, 14);
+                continue;
+            }
+            fileContent += '\t' + data[i][basicInfo[j]];
+        }
+        // 处理培训信息
+        if (data[i]['trainingType'] == '无') {
+            fileContent += '\t' + '否' + '\t\t';
+        } else {
+            fileContent += '\t' + '是' + '\t' + data[i]['trainingType'] +
+                '\t' + data[i]['postTraining'];
+        }
+        // 处理职业资格等级证书信息
+        if (data[i]['technicalGrade'] == '无') {
+            fileContent += '\t' + '否' + '\t';
+        } else {
+            fileContent += '\t' + '是' + '\t' + data[i]['technicalGrade'];
+        }
+        // 处理已享受就业服务
+        var service = data[i]['postService'].join(',');
+        // 如果享受过额外就业服务，在此加入，且并入已享受就业服务
+        if (data[i]['extraPostService']) {
+            service += (service ? ',' : '') + data[i]['extraPostService']
+        }
+        fileContent += '\t' + service;
+        // 处理以就业和暂未就业信息
+        if (data[i].employment == '已就业') {
+            for (j = 0; j < employedLength; j++) {
+                // 将工种代码转换为文字名称
+                if (employed[j] == 'jobType') {
+                    jobId = data[i].employmentInfo[employed[j]];
+                    fileContent += '\t' +
+                        cnJobTypeName[jobId[0]][jobId];
+                    continue;
+                }
+                fileContent += '\t' + data[i].employmentInfo[employed[j]];
+            }
+            for (j = 0; j < unemployedLength; j++) {
+                fileContent += '\t';
+            }
+        } else {
+            for (j = 0; j < employedLength; j++) {
+                fileContent += '\t';
+            }
+            for (j = 0; j < unemployedLength; j++) {
+                // 将工种代码转换为文字名称
+                if (unemployed[j] == 'preferredJobType') {
+                    jobId = data[i].unemploymentInfo[unemployed[j]][0];
+                    fileContent += '\t' + cnJobTypeName[jobId[0]][jobId];
+                    jobId = data[i].unemploymentInfo[unemployed[j]][1];
+                    fileContent += ',' + cnJobTypeName[jobId[0]][jobId];
+                    continue;
+                }
+                if (unemployed[j] == 'preferredService') {
+                    fileContent += '\t' +
+                        data[i].unemploymentInfo[unemployed[j]].join(',');
+                    continue;
+                }
+                fileContent += '\t' + data[i].unemploymentInfo[unemployed[j]];
+            }
+        }
+        // 处理参保信息
+        // 初始化参保情况
+        for (j = 0; j < insureLen; j++) {
+            insureStatus[j] = '未参保';
+        }
+        for (j = 0; j < data[i].insurance.length; j++) {
+            // 先需将保险名称转换为索引数字，然后找到相应栏目
+            insureStatus[insuranceIndex[data[i].insurance[j]]] = '参保';
+        }
+        fileContent += '\t' + insureStatus.join('\t') + '\r\n';
+    }
+    return fileContent;
 }
 
 // 根据不同的type参数选择合适的处理方式，对数据data进行预处理
