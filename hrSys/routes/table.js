@@ -102,6 +102,14 @@ var serviceType = [
     '就业见习'
 ];
 
+// name map
+var specialNameMap = {
+    startupTraining: '创业培训',
+    vocationalTraining: '职业培训',
+    securedLoan: '小额担保贷款',
+    skillVerification: '职业技能鉴定'
+};
+
 var tableColumns = {
     search: ['username', 'gender', 'age', 'nation', 'address', 'education',
         'censusRegisterType', 'employment', 'workplace', 'jobType'],
@@ -193,7 +201,7 @@ function prepareSearchDownload(data) {
 // 生成以tab为栏目分隔符的，换行符为记录分隔符的数据，用于导出到excel
 // 返回内容基本包含数据库中相应人员的所有登记信息
 function prepareExport(data) {
-    var i, j, jobId;
+    var i, j, jobId, len;
     var basicInfo = [
         'districtId', 'county', 'town', 'village',
         'username', 'idNumber', 'workRegisterId', 'gender',
