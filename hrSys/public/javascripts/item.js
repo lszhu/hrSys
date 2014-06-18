@@ -75,9 +75,53 @@ function validDate(d) {
 function validSalary(salary) {
     return !isNaN(salary);
 }
+
+// 由动态获取的数据设置页面DOM
+function autoFill(data) {
+    var dom;
+    var msg = JSON.parse(data);
+    if (msg.name) {
+        dom = $('input[name=username]');
+        if (!$.trim(dom.val())) {
+            dom.val(msg.name);
+        }
+    }
+    if (msg.workRegisterId) {
+        $('input[name=workRegisterId]').val(msg.workRegisterId);
+    }
+    if (msg.hasOwnProperty('vocationalTraining')) {
+        $('select[name=trainingType]').val('职业培训');
+        $('input[name=postTraining]')
+            .removeAttr('readonly')
+            .val(msg.vocationalTraining);
+        $('input[name=postService1]').prop('checked', true);
+    }
+    if (msg.hasOwnProperty('startupTraining')) {
+        $('select[name=trainingType]').val('创业培训');
+        $('input[name=postTraining]')
+            .removeAttr('readonly')
+            .val(msg.startupTraining);
+        $('input[name=postService1]').prop('checked', true);
+    }
+    if (msg.technicalGrade) {
+        dom = $('select[name=technicalGrade]');
+        if (msg.technicalGrade == '初级') {
+            dom.val('初级技工');
+        } else if (msg.technicalGrade == '中级') {
+            dom.val('中级技工');
+        } else if (msg.technicalGrade == '高级') {
+            dom.val('高级技工');
+        }
+        $('input[name=postService2]').prop('checked', true);
+    }
+    if (msg.hasOwnProperty('securedLoan')) {
+        $('input[name=postService5]').prop('checked', true);
+    }
+}
+
 // 页面装载完成后执行
 $(function() {
-    // 校验身份证号，自动填入年龄性别
+    // 校验身份证号，自动填入姓名、年龄、性别等等
     $('input[name=idNumber]').blur(function(e) {
         var value = $.trim(e.target.value);
         // 校验身份证号
@@ -95,15 +139,16 @@ $(function() {
         // 自动填入性别
         $('input[name=gender]').val(getGender(value));
 
-        // 动态获取并填入就业失业登记证号
-        $.get('/data/workRegisterId',
+        // 动态获取并填入姓名、就业失业登记证号、劳动技能信息、已享受就业服务等信息
+        $.get('/data/existMsg', {idNumber: value.toUpperCase()}, autoFill);
+        /*$.get('/data/workRegisterId',
             {idNumber: value.toUpperCase()},
             function(data) {
                 if (data == 'noRegister') {
                     data = '暂无'
                 }
                 $('input[name=workRegisterId]').val(data);
-            });
+            });*/
     });
 
     // 当管辖区域较大的用户登录时，行政区划代码需要手工输入，再由此代码获取地址信息
