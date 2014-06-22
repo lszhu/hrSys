@@ -80,6 +80,22 @@ function validSalary(salary) {
 function autoFill(data) {
     var dom;
     var msg = JSON.parse(data);
+    if (msg.status == 'dbError') {
+        if (confirm("系统访问故障，请稍后再试")) {
+            setTimeout(function() {
+                $('input[name=idNumber]').focus();
+            }, 10);
+        }
+        return;
+    }
+    if (msg.status == 'permissionDeny') {
+        if (confirm("该身份证号已在其他行政区登记，不能重复登记")) {
+            setTimeout(function() {
+                $('input[name=idNumber]').focus();
+            }, 10);
+        }
+        return;
+    }
     if (msg.name) {
         dom = $('input[name=username]');
         if (!$.trim(dom.val())) {

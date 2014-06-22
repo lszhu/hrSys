@@ -20,7 +20,8 @@ var jobType = require('../config/jobType').local;
 // import static data
 var staticData = require('../config/dataParse');
 // worker employment/unemployment register id
-var workRegisterId = staticData.workRegisterId; //require('../config/workRegisterId');
+//var workRegisterId = staticData.workRegisterId;
+//var workRegisterId = require('../config/workRegisterId');
 // nations
 var nations = [
     "汉族","蒙古族","回族","藏族","维吾尔族","苗族","彝族","壮族",
@@ -375,6 +376,7 @@ router.post('/batchAccount', function(req, res) {
 });
 
 /* query for workRegisterId */
+/*
 router.get('/data/workRegisterId', function(req, res) {
     var regId = workRegisterId[req.param('idNumber')];
     if (!regId || !regId.trim()) {
@@ -382,6 +384,7 @@ router.get('/data/workRegisterId', function(req, res) {
     }
     res.send(regId);
 });
+*/
 
 /* query for related message already exist in server */
 router.get('/data/existMsg', function(req, res) {
@@ -390,7 +393,27 @@ router.get('/data/existMsg', function(req, res) {
     var msg = staticData.getMsgById(idNumber, districtId, staticData);
 
     debug('msg: ' + JSON.stringify(msg));
-    res.send(JSON.stringify(msg));
+    db.query({idNumber: idNumber}, function(err, data) {
+        debug('data.length: ' + data.length);
+        if (err) {
+            console.log('db access error: ' + JSON.stringify(err));
+            return res.send(JSON.stringify({status: 'dbError'}));
+        }
+        if (data.length >= 1) {
+            debug('data[0].districtId: ' + data[0].districtId);
+            var area = req.session.user.area;
+            if (area == 0 || data[0].districtId.indexOf(area) != -1) {
+                debug('legal user');
+                return res.send(JSON.stringify(msg));
+            } else {
+                debug('illegal user');
+                return res.send(JSON.stringify({status: 'permissionDeny'}));
+            }
+        }
+        // new information not in db
+        debug('new info');
+        return res.send(JSON.stringify(msg));
+    });
 });
 
 /* query for address */
@@ -545,13 +568,32 @@ router.post('/item', function(req, res) {
         modifiedDate: new Date()
     };
 
-    db.preprocessUserMsg(userMessage);
-    db.save(userMessage);
-    res.render('postItem', {
-        title: '添加人力资源信息',
-        adminArea: getAdminAreaName(req.session.user.area),
-        permission: req.session.user.permission
+    // check the item with idNumber, if it's already in the db
+    db.query({idNumber: userMessage.idNumber}, function(err, data) {
+        debug('data.length: ' + data.length);
+        if (err) {
+            console.log('db access error: ' + err);
+            return res.send('db error');
+        } else if (data.length >= 1) {
+            var area = req.session.user.area;
+            if (area != 0 && data[0].districtId.indexOf(area) == -1) {
+                debug('permission deny');
+                return res.render('postItemError', {
+                    title: '添加人力资源信息',
+                    adminArea: getAdminAreaName(req.session.user.area),
+                    permission: req.session.user.permission
+                });
+            }
+        }
+        db.preprocessUserMsg(userMessage);
+        db.save(userMessage);
+        res.render('postItem', {
+            title: '添加人力资源信息',
+            adminArea: getAdminAreaName(req.session.user.area),
+            permission: req.session.user.permission
+        });
     });
+
     //res.redirect('/item');
 });
 
