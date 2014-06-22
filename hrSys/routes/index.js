@@ -88,6 +88,16 @@ function createFilename() {
     return name;
 }
 
+function birthday(age) {
+    // there are average 365.2422 days in a year
+    var yearMs = 365.2422 * 24 * 60 * 60 * 1000;
+    var birth = new Date(Date.now() - age * yearMs);
+    var year = birth.getFullYear();
+    var month = birth.getMonth() + 1;
+    var day = birth.getDate();
+    return year * 10000 + month * 100 + day;
+}
+
 /* GET home page. */
 router.get('/', function(req, res) {
     debug("session: " + util.inspect(req.session));
@@ -515,6 +525,8 @@ router.post('/item', function(req, res) {
         nation: req.body.nation,
         // readonly basic info
         age: req.body.age,
+        // + is used to change string to number
+        birthday: +req.body.idNumber.slice(6, 14),
         gender: req.body.gender,
         workRegisterId: workRegisterId,
         address: address,
@@ -853,10 +865,16 @@ router.post('/search', function(req, res) {
     }
 
     if (cond.ageMin || cond.ageMax) {
+        bound.birthday = {
+            $gte: birthday(cond.ageMax ? cond.ageMax : 100),
+            $lte: birthday(cond.ageMin ? cond.ageMin : 0)
+        };
+        /*
         bound.age = {
             $gte: cond.ageMin ? cond.ageMin : 0,
             $lte: cond.ageMax ? cond.ageMax : 100
         };
+        */
     }
 
     // create search condition
@@ -932,10 +950,16 @@ router.get('/download', function(req, res) {
     }
 
     if (cond.ageMin || cond.ageMax) {
-        bound.age = {
-            $gte: cond.ageMin ? cond.ageMin : 0,
-            $lte: cond.ageMax ? cond.ageMax : 100
+        bound.birthday = {
+            $gte: birthday(cond.ageMax ? cond.ageMax : 100),
+            $lte: birthday(cond.ageMin ? cond.ageMin : 0)
         };
+        /*
+         bound.age = {
+         $gte: cond.ageMin ? cond.ageMin : 0,
+         $lte: cond.ageMax ? cond.ageMax : 100
+         };
+         */
     }
 
     // create search condition

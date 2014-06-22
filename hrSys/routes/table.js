@@ -130,6 +130,20 @@ function address(a) {
     return a.county + a.town + a.village;
 }
 
+function getAge(birthday) {
+    var birth = birthday.toString();
+    var now = new Date();
+    var age = now.getFullYear() - birth.slice(0, 4);
+    if (now.getMonth() >= +birth.slice(4, 6)) {
+        return age;
+    } else if (now.getMonth() < birth.slice(4, 6) - 1) {
+        age--;
+    } else if (now.getDate() < birth.slice(6, 8)) {
+        age--;
+    }
+    return age;
+}
+
 // 生成显示数据的html表格dom
 function createSearchTable(n, data) {
     if (n < 0 || n > data.length) {
@@ -146,6 +160,10 @@ function createSearchTable(n, data) {
         for (j = 0; j < tableColumns.search.length - 2; j++) {
             if (tableColumns.search[j] == 'address') {
                 html += '<td>' + address(data[i].address) + '</td>';
+                continue;
+            }
+            if (tableColumns.search[j] == 'age') {
+                html += '<td>' + getAge(data[i]['birthday']) + '</td>';
                 continue;
             }
             html += '<td>' + data[i][tableColumns.search[j]] +'</td>';
@@ -181,6 +199,10 @@ function prepareSearchDownload(data) {
         for (j = 0; j < rowLength; j++) {
             if (tableColumns.search[j] == 'address') {
                 fileContent += address(data[i].address) + '\t';
+                continue;
+            }
+            if (tableColumns.search[j] == 'age') {
+                fileContent += getAge(data[i]['birthday']) + '\t';
                 continue;
             }
             fileContent += data[i][tableColumns.search[j]] + '\t';
@@ -265,8 +287,8 @@ function prepareExport(data) {
                 fileContent += '\t' + data[i]['address'][basicInfo[j]];
                 continue;
             }
-            if (basicInfo[j] == 'birthday') {
-                fileContent += '\t' + data[i]['idNumber'].slice(6, 14);
+            if (basicInfo[j] == 'age') {
+                fileContent += '\t' + getAge(data[i]['birthday']);
                 continue;
             }
             fileContent += '\t' + data[i][basicInfo[j]];
@@ -359,7 +381,7 @@ function dataTranslate(data) {
     }
 }
 
-// 将一些实用符合或数字表示的栏目转换为文字
+// 将一些使用符合或数字表示的栏目转换为文字
 function msgTranslate(personalMsg) {
     var item, temp;
     if (personalMsg.employment == '已就业') {

@@ -427,6 +427,7 @@ function createRandomDate(employed) {
         postService: service(staticData.serviceType),
         extraPostService: service(staticData.extraService).join(',')
     };
+    msg.birthday = +msg.idNumber.slice(6, 14);
     var tmp = msg.idNumber;
     msg.age = age(tmp);
     msg.gender = gender(tmp);

@@ -35,6 +35,7 @@ var personSchema = new Schema({
     nation: String,
     // readonly basic info
     age: Number,
+    birthday: Number,
     gender: String,
     workRegisterId: String,
     address: {
