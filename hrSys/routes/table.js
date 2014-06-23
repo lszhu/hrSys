@@ -113,6 +113,8 @@ var specialNameMap = {
 var tableColumns = {
     search: ['username', 'gender', 'age', 'nation', 'address', 'education',
         'censusRegisterType', 'employment', 'workplace', 'jobType'],
+    download: ['username', 'gender', 'age', 'nation', 'address', 'education',
+        'censusRegisterType', 'employment', 'workplace', 'jobType', 'phone'],
     farmerInCounty: ['username', 'gender', 'age', 'education', 'marriage',
         'address', 'employer', 'workplace', 'jobType', 'insurance', 'salary'],
     farmerOutCounty: ['username', 'gender', 'age', 'education', 'marriage',
@@ -187,35 +189,38 @@ function createSearchTable(n, data) {
 // 生成以tab为栏目分隔符的，换行符为记录分隔符的数据，用于导出到excel
 // 返回内容适用于搜索页面的结果
 function prepareSearchDownload(data) {
+    var download = tableColumns['download'];
     var fileContent = '序号';
-    var rowLength = tableColumns.search.length;
+    var rowLength = download.length;
     for (var j = 0; j < rowLength; j++) {
-        fileContent += '\t' + cnItemName[tableColumns.search[j]];
+        fileContent += '\t' + cnItemName[download[j]];
     }
     fileContent += '\r\n';
-    rowLength -= 2;
+    rowLength -= 3;
     for (var i = 0, len = data.length; i < len; i++) {
         fileContent += i + 1 + '\t';
         for (j = 0; j < rowLength; j++) {
-            if (tableColumns.search[j] == 'address') {
+            if (download[j] == 'address') {
                 fileContent += address(data[i].address) + '\t';
                 continue;
             }
-            if (tableColumns.search[j] == 'age') {
+            if (download[j] == 'age') {
                 fileContent += getAge(data[i]['birthday']) + '\t';
                 continue;
             }
-            fileContent += data[i][tableColumns.search[j]] + '\t';
+            fileContent += data[i][download[j]] + '\t';
         }
         // insert workplace info from preferredWorkplace
         if (data[i].employment == '已就业') {
             fileContent += data[i].employmentInfo.workplace + '\t';
-            fileContent += data[i].employmentInfo.jobType + '\r\n';
+            fileContent += data[i].employmentInfo.jobType + '\t';
         } else {
             fileContent += data[i].unemploymentInfo.preferredWorkplace + '\t';
             fileContent +=
-                data[i].unemploymentInfo.preferredJobType.join(', ') + '\r\n';
+                data[i].unemploymentInfo.preferredJobType.join(', ') + '\t';
         }
+        // add telephone
+        fileContent += data[i]['phone'] + '\r\n';
     }
     return fileContent;
 }
