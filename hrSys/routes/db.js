@@ -23,6 +23,11 @@ var dbConnection = mongoose.connection;
 
 dbConnection.on('error', function(err) {
     console.error('connection error:', err);
+    // if connection failed, retry after 10s
+    setTimeout(function() {
+        mongoose.connect('mongodb://' + db.server.address + ':' +
+            db.server.port + '/' + db.server.dbName, db.parameter);
+    }, 10000);
 });
 dbConnection.once('open', function() {
     console.log('database connected.');
