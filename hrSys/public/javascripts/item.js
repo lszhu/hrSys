@@ -101,9 +101,12 @@ function autoFill(data) {
         if (!$.trim(dom.val())) {
             dom.val(msg.name);
         }
+        $('input[name=insurance2]').prop('checked', true);
+        $('input[name=insurance7]').prop('checked', true);
     }
     if (msg.workRegisterId) {
         $('input[name=workRegisterId]').val(msg.workRegisterId);
+        $('input[name=insurance5]').prop('checked', true);
     }
     if (msg.hasOwnProperty('vocationalTraining')) {
         $('select[name=trainingType]').val('职业培训');
