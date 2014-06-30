@@ -313,6 +313,11 @@ $(function() {
     // 提交前进行栏目的校验
     $('button[type=submit]').click(function() {
         var err = $('#errorMessage');
+        if ($.trim($('input[name=username]').val()) == '') {
+            err.text('请输入姓名！');
+            setTimeout(function() {$('input[name=username]').focus();}, 600);
+            return false;
+        }
         // 校验身份证号
         var idNumber = $('input[name=idNumber]');
         if (!validIdNumber($.trim(idNumber.val()))) {

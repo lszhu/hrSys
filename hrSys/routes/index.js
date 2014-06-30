@@ -580,6 +580,12 @@ router.post('/item', function(req, res) {
         modifiedDate: new Date()
     };
 
+    // if username or idNumber is empty, skip saving operation
+    if (userMessage.username.trim() == '' ||
+        userMessage.idNumber.trim() == '') {
+        res.send('illegal user message, ignored!');
+        return;
+    }
     // check the item with idNumber, if it's already in the db
     db.query({idNumber: userMessage.idNumber}, function(err, data) {
         debug('data.length: ' + data.length);
