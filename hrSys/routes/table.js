@@ -18,7 +18,7 @@ var cnItemName = {
     village: '社区（村）',
     username: '姓名',
     idNumber: '身份证号码',
-    workRegisterId:'就业失业登记证号',
+    workRegisterId: '就业失业登记证号',
     gender: '性别',
     age: '年龄',
     birthday: '出生日期',
@@ -225,6 +225,18 @@ function prepareSearchDownload(data) {
     return fileContent;
 }
 
+// 由于内部直接保存保险对应编号，该定义仅用于参考，
+var insuranceIndex = {
+    '城镇职工养老保险': 0,
+    '城镇居民养老保险': 1,
+    '新农保': 2,
+    '城镇职工医疗保险': 3,
+    '城镇居民医疗保险': 4,
+    '失业保险': 5,
+    '工伤保险': 6,
+    '新农合': 7
+};
+
 // 生成以tab为栏目分隔符的，换行符为记录分隔符的数据，用于导出到excel
 // 返回内容基本包含数据库中相应人员的所有登记信息
 function prepareExport(data) {
@@ -249,16 +261,7 @@ function prepareExport(data) {
         'preferredJobType', 'preferredIndustry', 'preferredSalary',
         'preferredWorkplace', 'preferredJobForm', 'preferredService'
     ];
-    var insuranceIndex = {
-        '城镇职工养老保险': 0,
-        '城镇居民养老保险': 1,
-        '新农保': 2,
-        '城镇职工医疗保险': 3,
-        '城镇居民医疗保险': 4,
-        '失业保险': 5,
-        '工伤保险': 6,
-        '新农合': 7
-    };
+
     // 保存文件内容
     var fileContent = '序号';
     var basicInfoLength = basicInfo.length;
@@ -296,6 +299,12 @@ function prepareExport(data) {
                 fileContent += '\t' + getAge(data[i]['birthday']);
                 continue;
             }
+            // 过滤掉不正确的就业失业登记证号
+            if (basicInfo[j] == 'workRegisterId' &&
+                data[i][basicInfo[j]].length == 10) {
+                fileContent += '\t';
+                continue;
+            }
             fileContent += '\t' + data[i][basicInfo[j]];
         }
         // 处理培训信息
@@ -328,6 +337,12 @@ function prepareExport(data) {
                         cnJobTypeName[jobId[0]][jobId];
                     continue;
                 }
+                // 如果收入没有填写，输出为空白
+                if (employed[j] == 'salary' &&
+                    !data[i].employmentInfo['salary']) {
+                    fileContent += '\t';
+                    continue;
+                }
                 fileContent += '\t' + data[i].employmentInfo[employed[j]];
             }
             for (j = 0; j < unemployedLength; j++) {
@@ -338,6 +353,12 @@ function prepareExport(data) {
                 fileContent += '\t';
             }
             for (j = 0; j < unemployedLength; j++) {
+                // 如果收入期望没有填写，输出为空白
+                if (unemployed[j] == 'preferredSalary' &&
+                    !data[i].unemploymentInfo['PreferredSalary']) {
+                    fileContent += '\t';
+                    continue;
+                }
                 // 将工种代码转换为文字名称
                 if (unemployed[j] == 'preferredJobType') {
                     jobId = data[i].unemploymentInfo[unemployed[j]][0];
@@ -360,8 +381,8 @@ function prepareExport(data) {
             insureStatus[j] = '未参保';
         }
         for (j = 0; j < data[i].insurance.length; j++) {
-            // 先需将保险名称转换为索引数字，然后找到相应栏目
-            insureStatus[insuranceIndex[data[i].insurance[j]]] = '参保';
+            // 由保险名对应索引数字找到相应栏目
+            insureStatus[data[i].insurance[j]] = '参保';
         }
         fileContent += '\t' + insureStatus.join('\t') + '\r\n';
     }

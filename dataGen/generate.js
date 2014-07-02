@@ -250,7 +250,7 @@ function employer(nameSrc) {
 }
 
 function jobType(list) {
-    var category = [];
+    //var category = [];
     var types = [];
     for (var a in list) {
         if (!list.hasOwnProperty(a)) {

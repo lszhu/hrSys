@@ -478,6 +478,7 @@ router.post('/item', function(req, res) {
         return res.send('permission denied');
     }
     var insurance = [];
+    // insurance type name are translated to digital ID
     for (var i = 0; i < table.cnInsurance.length; i++) {
         if (req.body['insurance' + i]) {
             insurance.push(i);
@@ -508,7 +509,7 @@ router.post('/item', function(req, res) {
         address = getAddress(req.session.user.area);
     }
 
-    var workRegisterId = req.body.districtId;
+    var workRegisterId = req.body.workRegisterId;
     if (workRegisterId == '暂无') {
         workRegisterId = '';
     }
