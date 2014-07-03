@@ -243,6 +243,12 @@ $(function() {
                     $('input[name=salary]').focus();
                 }, 10);
             }
+        } else if (value > 100) {   // 限定年收入不超过100万元，以避免输入错误
+            if (confirm('注意以万元为单位，可以有小数，但不得超过100（万元）')) {
+                setTimeout(function() {
+                    $('input[name=salary]').focus();
+                }, 10);
+            }
         }
     });
 
@@ -262,6 +268,12 @@ $(function() {
         var value = $.trim(e.target.value);
         if (!validSalary(value)) {
             if (confirm('工资收入期望输入有误！')) {
+                setTimeout(function() {
+                    $('input[name=preferredSalary]').focus();
+                }, 10);
+            }
+        } else if (value > 100) {   // 限定年收入期望不超过100万元，以避免输入错误
+            if (confirm('注意以万元为单位，可以有小数，但不得超过100（万元）')) {
                 setTimeout(function() {
                     $('input[name=preferredSalary]').focus();
                 }, 10);

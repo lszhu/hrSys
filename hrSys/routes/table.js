@@ -337,11 +337,18 @@ function prepareExport(data) {
                         cnJobTypeName[jobId[0]][jobId];
                     continue;
                 }
-                // 如果收入没有填写，输出为空白
-                if (employed[j] == 'salary' &&
-                    !data[i].employmentInfo['salary']) {
-                    fileContent += '\t';
-                    continue;
+                // 对收入数据进行预处理
+                if (employed[j] == 'salary') {
+                    // 如果收入没有填写，输出为空白
+                    if (!data[i].employmentInfo['salary']) {
+                        fileContent += '\t';
+                        continue;
+                    // 如果收入大于100，则认为单位是元，故除以10000以转化为万元
+                    } else if (data[i].employmentInfo['salary'] > 100) {
+                        fileContent += '\t' +
+                            data[i].employmentInfo['salary'] / 10000;
+                        continue;
+                    }
                 }
                 fileContent += '\t' + data[i].employmentInfo[employed[j]];
             }
@@ -353,11 +360,19 @@ function prepareExport(data) {
                 fileContent += '\t';
             }
             for (j = 0; j < unemployedLength; j++) {
-                // 如果收入期望没有填写，输出为空白
-                if (unemployed[j] == 'preferredSalary' &&
-                    !data[i].unemploymentInfo['PreferredSalary']) {
-                    fileContent += '\t';
-                    continue;
+                // 对收入期望数据进行预处理
+                if (unemployed[j] == 'preferredSalary') {
+                    // 如果收入期望没有填写，输出为空白
+                    if (!data[i].unemploymentInfo['PreferredSalary']) {
+                        fileContent += '\t';
+                        continue;
+                    // 如果收入大于100，则认为单位是元，故除以10000以转化为万元
+                    } else if (
+                        data[i].unemploymentInfo['PreferredSalary'] > 100) {
+                        fileContent += '\t' +
+                            data[i].unemploymentInfo['PreferredSalary'] / 10000;
+                        continue;
+                    }
                 }
                 // 将工种代码转换为文字名称
                 if (unemployed[j] == 'preferredJobType') {
