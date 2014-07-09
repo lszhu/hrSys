@@ -79,12 +79,12 @@ function getAdminAreaName(districtId) {
     */
 }
 
-function createFilename() {
+function createFilename(ext) {
     var t = new Date();
     var name = t.getFullYear() + '-';
     name += t.getMonth() + 1 + '-' + t.getDate() + '_';
     name += t.getHours() + '-' + t.getMinutes() + '-' + t.getSeconds();
-    name += '.xls';
+    name += '.' + ext;
     return name;
 }
 
@@ -813,13 +813,23 @@ router.get('/export', function(req, res) {
         // to show no more than 500 items in web page
         //res.send(table.createSearchTable(500, data));
         // download file and save as microsoft excel file (.xls)
-        var filename = createFilename();
+        var filename = createFilename('xlsx');
         res.setHeader('Content-disposition',
                 'attachment; filename=' + filename);
         // download file and save as microsoft excel file (.xls)
-        var mimetype = 'application/vnd.ms-excel';
+        //var mimetype = 'application/vnd.ms-excel';
+        // download file and save as microsoft excel file (.xlsx)
+        var mimetype = 'application/vnd.openxmlformats-' +
+            'officedocument.spreadsheetml.sheet';
         res.setHeader('Content-type', mimetype);
-        res.send(iconv.encode(table.prepareDownload('export', data), 'gbk'));
+        //res.send(iconv.encode(table.prepareDownload('export', data), 'gbk'));
+        /*table.createXls(data, function(content) {
+            res.send(content);
+        });*/
+        res.send(table.createXlsx(data));
+        /*table.createXlsx(data, function(content) {
+            res.send(content);
+        });*/
     });
 });
 

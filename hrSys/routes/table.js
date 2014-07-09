@@ -1,4 +1,7 @@
 var cnJobTypeName = require('../config/jobType').local;
+// 用于导出xlsx文件
+var xlsx = require('xlsx');
+//var fs = require('fs');
 
 var cnTableName = {
     farmerInCounty: '农村劳动力转移就业人员（县内）',
@@ -57,7 +60,7 @@ var cnItemName = {
     preferredWorkplace: '就业区域意向',
     preferredJobForm: '就业形式意向',
     preferredService: '就业服务需求',     // 从extraPreferredService获得未列出服务
-    preferredTraining: '培训需求类型',
+    preferredTraining: '培训意向需求',
     // 多选参保信息
     insurance: '参保情况',
     // 其他制表信息
@@ -259,7 +262,8 @@ function prepareExport(data) {
     var unemployed = [
         'humanCategory', 'unemployedDate', 'unemploymentCause','familyType',
         'preferredJobType', 'preferredIndustry', 'preferredSalary',
-        'preferredWorkplace', 'preferredJobForm', 'preferredService'
+        'preferredWorkplace', 'preferredJobForm', 'preferredService',
+        'preferredTraining'
     ];
 
     // 保存文件内容
@@ -404,6 +408,295 @@ function prepareExport(data) {
     return fileContent;
 }
 
+// 生成标准的excel数据（xlsx格式）用于导出
+function createXlsx(data, callback) {
+    // 导入xlsx的模板文件
+    var workbook = xlsx.readFile(__dirname + '/../config/template.xlsx');
+    var sheet = workbook.Sheets[workbook.SheetNames[0]];
+    for (var i = 0, len = data.length; i < len; i++) {
+        addXlsxRow(data[i], sheet, i + 2);
+    }
+    // 指定xlsx文件的表格范围，左上到右下。
+    sheet['!ref'] = 'A1:AW' + (i + 2);
+    // 返回nodejs方式的buf，内容包含xlsx文件的所有内容
+    return xlsx.write(workbook, {type:'buffer'});
+
+    /*// 创建一个临时的excel文件，以创建时的时间命名，使用后会自动被删除。
+    var xlsxName = Date.now() + '.xlsx';
+    xlsx.writeFile(workbook, __dirname + '/../temp/' + xlsxName);
+    var content = fs.readFileSync(__dirname + '/../temp/' + xlsxName);
+    callback(content);*/
+}
+
+// 写入一行xlsx文件数据
+function addXlsxRow(recorder, sheet, lineNo) {
+    var i, tmp, info;
+
+    // 以下处理个人基本信息
+    sheet['A' + lineNo] = {v: lineNo - 1};
+    sheet['B' + lineNo] = {v: recorder.districtId, t: 's'};
+    sheet['C' + lineNo] = {v: recorder.address.county, t: 's'};
+    sheet['D' + lineNo] = {v: recorder.address.town, t: 's'};
+    sheet['E' + lineNo] = {v: recorder.address.village, t: 's'};
+    sheet['F' + lineNo] = {v: recorder.username, t: 's'};
+    sheet['G' + lineNo] = {v: recorder.idNumber, t: 's'};
+    sheet['H' + lineNo] = {v: recorder.workRegisterId, t: 's'};
+    sheet['I' + lineNo] = {v: recorder.gender, t: 's'};
+    sheet['J' + lineNo] = {v: getAge(recorder.birthday)};
+    sheet['K' + lineNo] = {v: recorder.birthday, t: 's'};
+    sheet['L' + lineNo] = {v: recorder.nation, t: 's'};
+    sheet['M' + lineNo] = {v: recorder.politicalOutlook, t: 's'};
+    sheet['N' + lineNo] = {v: recorder.education, t: 's'};
+    sheet['O' + lineNo] = {v: recorder.censusRegisterType, t: 's'};
+    sheet['P' + lineNo] = {v: recorder.marriage, t: 's'};
+    sheet['Q' + lineNo] = {v: recorder.phone, t: 's'};
+    // skillInfo
+    if (recorder.trainingType == '无') {
+        sheet['R' + lineNo] = {v: '否', t: 's'};
+    } else {
+        sheet['R' + lineNo] = {v: '是', t: 's'};
+        sheet['S' + lineNo] = {v: recorder.trainingType, t: 's'};
+        sheet['T' + lineNo] = {v: recorder.postTraining, t: 's'};
+    }
+    if (recorder.technicalGrade == '无') {
+        sheet['U' + lineNo] = {v: '否', t: 's'};
+    } else {
+        sheet['U' + lineNo] = {v: '是', t: 's'};
+        sheet['V' + lineNo] = {v: recorder.technicalGrade, t: 's'};
+    }
+    // 凡是由序号表示的服务类型，统一加1，即从1开始，内部保存为从0开始
+    tmp = [];
+    for (i = 0, len = recorder.postService.length; i < len; i++) {
+        if (isNaN(recorder.postService[i])) {
+            tmp.push(recorder.postService[i]);
+        } else {
+            tmp.push(+recorder.postService[i] + 1);
+        }
+    }
+    if (tmp) {
+        sheet['W' + lineNo] = {v: tmp.join(','), t: 's'};
+    }
+
+    // 以下处理就业信息
+    if (recorder.employment == '已就业') {
+         // employed
+        info = recorder.employmentInfo;
+        sheet['X' + lineNo] = {v: info.employer, t: 's'};
+        tmp = info.jobType;
+        sheet['Y' + lineNo] = {v: cnJobTypeName[tmp[0]][tmp], t: 's'};
+        sheet['Z' + lineNo] = {v: info.industry, t: 's'};
+        sheet['AA' + lineNo] = {v: info.startWorkDate, t: 's'};
+        sheet['AB' + lineNo] = {v: info.workplace, t: 's'};
+        sheet['AC' + lineNo] = {v: info.workProvince, t: 's'};
+        tmp = info.salary;
+        // 如果收入没有填写，输出为空白
+        if (tmp) {
+            // 如果收入大于100，则认为单位是元，故除以10000以转化为万元
+            if (tmp > 100) {
+                sheet['AD' + lineNo] = {v: tmp / 10000};
+            } else {
+                sheet['AD' + lineNo] = {v: tmp};
+            }
+        }
+        sheet['AE' + lineNo] = {v: info.jobForm, t: 's'};
+    } else {
+         // unemployed
+        info = recorder.unemploymentInfo;
+        sheet['AF' + lineNo] = {v: info.humanCategory, t: 's'};
+        sheet['AG' + lineNo] = {v: info.unemployedDate, t: 's'};
+        sheet['AH' + lineNo] = {v: info.unemploymentCause, t: 's'};
+        sheet['AI' + lineNo] = {v: info.familyType, t: 's'};
+
+        tmp = info.preferredJobType[0];
+        var jobs = cnJobTypeName[tmp[0]][tmp];
+        tmp = info.preferredJobType[1];
+        jobs += ',' + cnJobTypeName[tmp[0]][tmp];
+        sheet['AJ' + lineNo] = {v: jobs, t: 's'};
+        sheet['AK' + lineNo] = {v: info.preferredIndustry, t: 's'};
+        tmp = info.preferredSalary;
+        // 如果收入没有填写，输出为空白
+        if (tmp) {
+            // 如果收入大于100，则认为单位是元，故除以10000以转化为万元
+            if (tmp > 100) {
+                sheet['AL' + lineNo] = {v: tmp / 10000};
+            } else {
+                sheet['AL' + lineNo] = {v: tmp};
+            }
+        }
+        sheet['AM' + lineNo] = {v: info.preferredWorkplace, t: 's'};
+        sheet['AN' + lineNo] = {v: info.preferredJobForm, t: 's'};
+        // 凡是由序号表示的服务类型，统一加1，即从1开始，内部保存为从0开始
+        tmp = [];
+        for (i = 0, len = info.preferredService.length; i < len; i++) {
+            if (isNaN(info.preferredService[i])) {
+                tmp.push(info.preferredService[i]);
+            } else {
+                tmp.push(+info.preferredService[i] + 1);
+            }
+        }
+        sheet['AO' + lineNo] = {v: tmp.join(','), t: 's'};
+        tmp = info.preferredTraining;
+        if (tmp && tmp != '无') {
+            sheet['AP' + lineNo] = {v: tmp, t: 's'};
+        }
+    }
+}
+
+/*
+// 生成标准的excel文件再准备下载
+function createXls(data, callback) {
+    // used to create xls file
+    var xl = require('xlgen');
+
+    var i, len;
+    var exportColumn = [
+        // basicInfo
+        'sn', 'districtId', 'county', 'town', 'village',
+        'username', 'idNumber', 'workRegisterId', 'gender',
+        'age', 'birthday', 'nation', 'politicalOutlook',
+        'education', 'censusRegisterType', 'marriage', 'phone',
+        // skillInfo
+        'trained', 'trainingType', 'postTraining', 'certified',
+        'technicalGrade', 'postService',
+        // employed
+        'employer', 'jobType', 'industry',
+        'startWorkDate', 'workplace', 'workProvince',
+        'salary', 'jobForm',
+        // unemployed
+        'humanCategory', 'unemployedDate', 'unemploymentCause','familyType',
+        'preferredJobType', 'preferredIndustry', 'preferredSalary',
+        'preferredWorkplace', 'preferredJobForm', 'preferredService',
+        'preferredTraining'
+    ];
+    // 创建一个临时的excel文件，以创建时的时间命名，使用后会自动被删除。
+    var xlsName = Date.now() + '.xls';
+    var xlg = xl.createXLGen(__dirname + '/../temp/' + xlsName);
+    // 注册单元格的格式，此处仅特别指定字符串格式
+    //var strFmt = xlg.addFormat(xl.formatStrings.string);
+    // 创建sheet
+    var sht = xlg.addSheet('个人台账');
+    try {
+        // 添加表头
+        sht.cell(0, 0, '序号');
+        for (i = 1, len = exportColumn.length; i <= len; i++) {
+            sht.cell(0, i, cnItemName[exportColumn[i]]);
+        }
+        // 添加纪录行
+        for (i = 0, len = data.length; i < len; i++) {
+            addXlsLine(data[i], sht, i);
+        }
+    } catch (e) {
+        console.log(e.name, e.message);
+    }
+    xlg.end(function(err) {
+        if (err) {
+            console.log(err.name, err.message);
+        } else {
+            var content = fs.readFileSync(__dirname + '/../temp/' + xlsName);
+            callback(content);
+        }
+    });
+}
+
+// 注意这个函数和相应的依赖库有很多问题
+function addXlsLine(recorder, sheet, index) {
+    var c = sheet.cell;
+    var r = recorder;
+    var i = index + 1;
+    var j, len, tmp;
+
+    // 以下处理个人基本信息
+    // basicInfo
+    c(i, 0, i);
+    c(i, 1, r.districtId);
+    c(i, 2, r.address.county);
+    c(i, 3, r.address.town);
+    c(i, 4, r.address.village);
+    c(i, 5, r.username);
+    c(i, 6, r.idNumber);
+    c(i, 7, r.workRegisterId);
+    c(i, 8, r.gender);
+    c(i, 9, getAge(r.birthday));
+    c(i, 10, r.birthday);
+    c(i, 11, r.nation);
+    c(i, 12, r.politicalOutlook);
+    c(i, 13, r.education);
+    c(i, 14, r.censusRegisterType);
+    c(i, 15, r.marriage);
+    c(i, 16, r.phone);
+
+     // skillInfo
+    if (r.trainingType == '无') {
+        c(i, 17, '否');
+    } else {
+        c(i, 17, '是');
+        c(i, 18, r.trainingType);
+        c(i, 19, r.postTraining);
+    }
+    if (r.technicalGrade == '无') {
+        c(i, 20, '否');
+    } else {
+        c(i, 20, '是');
+        c(i, 21, r.technicalGrade);
+    }
+    // 凡是由序号表示的服务类型，统一加1，即从1开始，内部保存为从0开始
+    tmp = [];
+    for (j = 0, len = r.postService.length; j < len; j++) {
+        if (isNaN(r.postService[j])) {
+            tmp.push(r.postService[j]);
+        } else {
+            tmp.push(+r.postService[j] + 1);
+        }
+    }
+    //console.log(i + ' postService: ' + JSON.stringify(r.postService));
+    //console.log('length: ' + len);
+    tmp = tmp.join(',');
+    console.log(i + ' tmp ' + tmp);
+    tmp ? c(i, 22, tmp) : '';
+
+    // 以下处理就业信息
+    if (r.employment == '已就业') {
+        // employed
+        c(i, 23, r.employmentInfo.employer);
+        tmp = r.employmentInfo.jobType;
+        c(i, 24, cnJobTypeName[tmp[0]][tmp]);
+        c(i, 25, r.employmentInfo.industry);
+        c(i, 26, r.employmentInfo.startWorkDate);
+        c(i, 27, r.employmentInfo.workplace);
+        c(i, 28, r.employmentInfo.workProvince);
+        tmp = r.employmentInfo.salary;
+        // 如果收入没有填写，输出为空白
+        if (tmp) {
+            // 如果收入大于100，则认为单位是元，故除以10000以转化为万元
+            tmp > 100 ? c(i, 29, tmp / 10000) : c(i, 29, tmp);
+        }
+        c(i, 30, r.jobForm);
+    } else {
+        // unemployed
+        c(i, 31, r.unemploymentInfo.humanCategory);
+        c(i, 32, r.unemploymentInfo.unemployedDate);
+        c(i, 33, r.unemploymentInfo.unemploymentCause);
+        c(i, 34, r.unemploymentInfo.familyType);
+        tmp = r.unemploymentInfo.preferredJobType[0];
+        var jobs = cnJobTypeName[tmp[0]][tmp];
+        tmp = r.unemploymentInfo.preferredJobType[1];
+        jobs += ',' + cnJobTypeName[tmp[0]][tmp];
+        c(i, 35, jobs);
+        c(i, 36, r.unemploymentInfo.preferredIndustry);
+        tmp = r.unemploymentInfo.preferredSalary;
+        // 如果收入没有填写，输出为空白
+        if (tmp) {
+            // 如果收入大于100，则认为单位是元，故除以10000以转化为万元
+            tmp > 100 ? c(i, 37, tmp / 10000) : c(i, 37, tmp);
+        }
+        c(i, 38, r.unemploymentInfo.preferredWorkplace);
+        c(i, 39, r.unemploymentInfo.preferredJobForm);
+        c(i, 40, r.unemploymentInfo.preferredService);
+        c(i, 41, r.unemploymentInfo.preferredTraining);
+    }
+}
+*/
+
 // 根据不同的type参数选择合适的处理方式，对数据data进行预处理
 function prepareDownload(type, data) {
     if (type == 'search') {
@@ -452,7 +745,9 @@ module.exports = {
     cnInsurance: insurance,
     createSearchTable: createSearchTable,
     prepareDownload: prepareDownload,
-    dataTranslate: dataTranslate
+    dataTranslate: dataTranslate,
+    createXlsx: createXlsx
+//    createXls: createXls
 };
 
 ///////////////////////////////////////////////////
