@@ -337,6 +337,13 @@ $(function() {
             setTimeout(function() {idNumber.focus();}, 600);
             return false;
         }
+        // 校验行政区划代码是否已输入
+        var districtId = $('input[name=districtId]');
+        if (!$.trim(districtId.val())) {
+            err.text('请输入行政区划代码');
+            setTimeout(function() {districtId.focus();}, 600);
+            return false;
+        }
         // 校验地址信息，用于乡镇或以上级别用户
         if ($('input[name=address]').val() == '不在管辖范围内') {
             err.text('行政区划代码输入有误，请重新输入！');
