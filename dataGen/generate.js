@@ -388,7 +388,7 @@ function familyType(age, humanCate) {
 
 // 参保情况
 function insurance(censusReg) {
-    var ins = staticData.insurance;
+    //var ins = staticData.insurance;
     var list = [4, 1, 0, 3, 5, 6];
     if (censusReg == '农业户口') {
         list = [7, 2 , 5, 6];
@@ -396,15 +396,15 @@ function insurance(censusReg) {
     var insurs = [];
     if (random() < 0.8) {
         if (random() < 0.5) {
-            insurs.push(ins[list[0]]);
+            insurs.push(list[0]);
         }
         if (random() < 0.5) {
-            insurs.push(ins[list[1]]);
+            insurs.push(list[1]);
         }
     }
     for (var i = 2; i < list.length; i++) {
         if (random() < 0.1) {
-            insurs.push(ins[list[i]]);
+            insurs.push(list[i]);
         }
     }
     return insurs;
