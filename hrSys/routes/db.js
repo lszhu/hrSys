@@ -201,12 +201,12 @@ function getAccount(username, callback) {
 }
 
 // batch initiate bound account with district ID
-function batchInitAccount(districts, callback) {
+function batchInitAccount(districts, countyId, callback) {
     var error = false;
     var count = 0;
-    for (var town in districts['431127']) {
+    for (var town in districts[countyId]) {
         debug('townId: ' + town);
-        if (!districts['431127'].hasOwnProperty(town)) {
+        if (!districts[countyId].hasOwnProperty(town)) {
             continue;
         }
         // town level account

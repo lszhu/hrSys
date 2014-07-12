@@ -79,21 +79,14 @@ block content
               .input-group
                 span.input-group-addon 访问区域
                 select.form-control(name="area")
-                  optgroup(label=districtName["0"])
+                  optgroup(label="不限区域")
                     option(value="0")= districtName["0"]
-                  each item, key in districtName['431127']
+                  each item, key in districtName[countyId]
                     optgroup(label=item)
-                      option(value=key)= item
+                      option(value=key)= item + '整个乡镇'
                       each v, i in districtName[key]
                         option(value=i)= v
-                    //option(value=key)= item
-                  //
-                    option(value="43112701") 塔峰镇
-                    option(value="43112702") 竹管寺镇
-                    option(value="43112703") 总市办事处
-                    option(value="43112704") 祠堂圩乡
-                    option(value="43112705") 蓝屏办事处
-                    option(value="43112706") 楠市镇
+
           .col-sm-6.col-sm-offset-3
             br
             button.btn.btn-block.btn-lg.btn-default.btn-primary(type="submit") 新增/更新账号

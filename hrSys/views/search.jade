@@ -41,7 +41,7 @@ block content
               select.form-control(name="districtId")
                 optgroup(label="不限区域")
                   option(value="0") 不限
-                each value, key in districtName['431127']
+                each value, key in districtName[countyId]
                   optgroup(label=value)
                     option(value=key)= value
                     each v, k in districtName[key]
@@ -51,7 +51,7 @@ block content
               select.form-control(name="districtId")
                 - var town = area.slice(0, 8)
                 optgroup(label="所属乡镇范围")
-                  option(value=town)= districtName['431127'][town]
+                  option(value=town)= districtName[countyId][town]
                 optgroup(label="特定村落社区范围")
                   each v, k in districtName[town]
                     option(value=k)= v
@@ -64,7 +64,7 @@ block content
               select.form-control(name="districtId")
                 optgroup(label="不限区域")
                   option(value="0") 不限
-                each value, key in districtName['431127']
+                each value, key in districtName[countyId]
                   optgroup(label=value)
                     option(value=key)= value
                     each v, k in districtName[key]

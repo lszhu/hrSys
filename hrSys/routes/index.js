@@ -22,6 +22,8 @@ var staticData = require('../config/dataParse');
 // worker employment/unemployment register id
 //var workRegisterId = staticData.workRegisterId;
 //var workRegisterId = require('../config/workRegisterId');
+// county Id
+var countyId = getCountyId();
 // nations
 var nations = [
     "汉族","蒙古族","回族","藏族","维吾尔族","苗族","彝族","壮族",
@@ -41,6 +43,18 @@ var provinces = ['北京市', '天津市', '河北省', '山西省', '内蒙古�
     '甘肃省', '青海省', '宁夏回族自治区', '新疆维吾尔自治区'
 ];
 
+// get county Id from imported district Id
+function getCountyId() {
+    var city = districtName['4311'];
+    for (var county in city) {
+        if (city.hasOwnProperty(county)) {
+            return county;
+        }
+    }
+    // can not find exact county Id, return 0 indicate no bound
+    return '0';
+}
+
 function getAddress(districtId) {
     var address = {
         county: districtName['0'],
@@ -48,11 +62,11 @@ function getAddress(districtId) {
         village: ''
     };
     if (districtId.length >= 4) {
-        address.county = districtName['4311']['431127'];
-        if (!districtName['431127'].hasOwnProperty(districtId.slice(0, 8))) {
+        address.county = districtName['4311'][countyId];
+        if (!districtName[countyId].hasOwnProperty(districtId.slice(0, 8))) {
             return address;
         }
-        address.town = districtName['431127'][districtId.slice(0, 8)];
+        address.town = districtName[countyId][districtId.slice(0, 8)];
         if (!districtName[districtId.slice(0, 8)].hasOwnProperty(districtId)) {
             return address;
         }
@@ -72,7 +86,7 @@ function getAdminAreaName(districtId) {
         return districtName['0'];
     }
     if (districtId.length == 10) {
-        return districtName['431127'][districtId.slice(0, 8)] + ' ' +
+        return districtName[countyId][districtId.slice(0, 8)] + ' ' +
             districtName[districtId.slice(0, 8)][districtId];
     }
     return '未定义';
@@ -183,8 +197,8 @@ router.get('/account', function(req, res) {
                     address.village;
                 /*
                 var town = accounts[i].area.slice(0, 8);
-                if (districtName['431127'].hasOwnProperty(town)) {
-                    accounts[i].area = districtName['431127'][town] +
+                if (districtName[countyId].hasOwnProperty(town)) {
+                    accounts[i].area = districtName[countyId][town] +
                         districtName[town][accounts[i].area];
                 }
                 */
@@ -195,6 +209,7 @@ router.get('/account', function(req, res) {
             res.render(
                 'account',
                 {
+                    countyId: countyId,
                     adminArea: getAdminAreaName(req.session.user.area),
                     permission: req.session.user.permission,
                     title: 'administration',
@@ -345,7 +360,7 @@ router.post('/batchAccount', function(req, res) {
     }
     debug('command: ' + req.body.command);
     if (req.body.command == 'initAccount') {
-        db.batchInitAccount(districtName, function(err) {
+        db.batchInitAccount(districtName, countyId, function(err) {
             if (err) {
                 console.error('save error: \n%o', err);
                 res.send('err');
@@ -466,7 +481,7 @@ router.get('/item', function(req, res) {
         builtinService: table.cnService,
         districtId: req.session.user.area,
         //editor: req.session.user.username,
-        address: districtName['4311']['431127'] + ' ' +
+        address: districtName['4311'][countyId] + ' ' +
             getAdminAreaName(req.session.user.area)
     });
 });
@@ -651,7 +666,7 @@ router.post('/update', function(req, res) {
                     nations: nations,
                     districtId: req.session.user.area,
                     editor: req.session.user.username,
-                    address: districtName['4311']['431127'] + ' ' +
+                    address: districtName['4311'][countyId] + ' ' +
                         getAdminAreaName(req.session.user.area)
                 }
             )
@@ -755,6 +770,7 @@ router.get('/export', function(req, res) {
             'export',
             {
                 title: 'export',
+                countyId: countyId,
                 adminArea: getAdminAreaName(req.session.user.area),
                 area: req.session.user.area,
                 districtName: districtName,
@@ -851,6 +867,7 @@ router.get('/search', function(req, res) {
         'search',
         {
             title: 'search',
+            countyId: countyId,
             adminArea: getAdminAreaName(req.session.user.area),
             permission: req.session.user.permission,
             nations: nations,

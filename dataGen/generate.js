@@ -8,6 +8,18 @@ var db = require('../hrSys/routes/db');
 // 速写方式
 var random = Math.random;
 var floor = Math.floor;
+var countyId = getCountyId();
+// get county Id from imported district Id
+function getCountyId() {
+    var city = districtName['4311'];
+    for (var county in city) {
+        if (city.hasOwnProperty(county)) {
+            return county;
+        }
+    }
+    // can not find exact county Id, return 0 indicate no bound
+    return '0';
+}
 // 随机生成姓名
 function name(nameSrc) {
     var name = '';
@@ -38,8 +50,8 @@ function address(townN, villageN) {
     var townIndex = random() * townN;
     // 让生成的随机数更集中在索引的靠前位置，以引用人口更多的区域
     townIndex = floor(random() * random() * townIndex);
-    townIndex = 43112701 + townIndex;
-    address.town = district['431127'][townIndex.toString()];
+    townIndex = countyId * 100 + 1 + townIndex;
+    address.town = district[countyId][townIndex.toString()];
 
     var town = district[townIndex.toString()];
     var villageIndex = floor(random() * villageN);
@@ -82,10 +94,10 @@ function birthday() {
 }
 
 function idNumber(birth) {
-    //create district id
-    var district = '432927';
+    //create district id, the reason of adding 1800 is 431127 + 1800 = 432927
+    var district = +countyId + 1800;
     if (random() < 0.5) {
-        district = '431127';
+        district = countyId;
     } else if (random() < 0.2) {    // 20% of other districtId
         district = floor(random() * 9) + 1 + '';
         for (i = 0; i < 5; i++) {
@@ -121,7 +133,7 @@ function workRegisterId() {
     for (var i = 0; i < 10; i++) {
         serial += floor(random() * 10);
     }
-    return random() < 0.5 ? '' : '431127' + serial;
+    return random() < 0.5 ? '' : countyId + serial;
 }
 
 // 由身份证号得到年龄
