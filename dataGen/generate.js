@@ -11,7 +11,7 @@ var floor = Math.floor;
 var countyId = getCountyId();
 // get county Id from imported district Id
 function getCountyId() {
-    var city = districtName['4311'];
+    var city = district['4311'];
     for (var county in city) {
         if (city.hasOwnProperty(county)) {
             return county;
@@ -20,6 +20,21 @@ function getCountyId() {
     // can not find exact county Id, return 0 indicate no bound
     return '0';
 }
+// count administrative region in certain district
+function countRegion(districtId) {
+    if (!district.hasOwnProperty(districtId)) {
+        return 0;
+    }
+    var area = district[districtId];
+    var counter = 0;
+    for (var i in area) {
+        if (area.hasOwnProperty(i)) {
+            counter++;
+        }
+    }
+    return counter;
+}
+
 // 随机生成姓名
 function name(nameSrc) {
     var name = '';
@@ -44,9 +59,23 @@ function name(nameSrc) {
 }
 
 // 随机生成地址，包括districtId, county, town, village，依赖于外部district数据
-// 有31个乡镇级区域，每个区域有不同村落和社区，最大的区域有43个村落或社区
-function address(townN, villageN) {
-    var address = {county: '永州市蓝山县'};
+function address() {
+    var townN = countRegion(countyId);
+    // 让生成的随机数更集中在索引的靠前位置，以引用人口更多的区域，并转换为字符串
+    var townId = countyId * 100 + floor(random() * random() * townN) + 1 + '';
+    var villageN = countRegion(townId);
+    var villageId = townId * 100 + floor(random() * villageN) + 1 + '';
+    return {
+        county: district['4311'][countyId],
+        town: district[countyId][townId],
+        village: district[townId][villageId],
+        districtId: villageId
+    };
+}
+
+// 最多可能有99个乡镇级区域，每个区域有不同村落和社区，最大的区域有最多99个村落或社区
+function address_old(townN, villageN) {
+    var address = {county: district['4311'][countyId]};
     var townIndex = random() * townN;
     // 让生成的随机数更集中在索引的靠前位置，以引用人口更多的区域
     townIndex = floor(random() * random() * townIndex);
@@ -443,7 +472,8 @@ function createRandomDate(employed) {
     var tmp = msg.idNumber;
     msg.age = age(tmp);
     msg.gender = gender(tmp);
-    tmp = address(31, 43);
+    //tmp = address_old(31, 99);
+    tmp = address();
     msg.address = tmp;
     msg.districtId = tmp['districtId'];
     tmp = graduation(msg.age, staticData.education);
@@ -507,15 +537,25 @@ function addRandomData(n) {
         db.save(createRandomDate(employed));
     }
 }
-
-addRandomData(100000);
+console.log(new Date());
+addRandomData(200000);
+console.log(new Date());
 
 // only for basic function test
 //console.dir(createRandomDate('已就业'));
+//console.log('countyId: ' + countyId);
+//console.log(countRegion('431126'));
+//console.log(countRegion('43112601'));
+//console.log(countRegion('43112603'));
+//console.log(countRegion('43112610'));
+//console.log(countRegion('43112622'));
+//for (var i = 0; i < 20; i++) {
+//    console.log('address: ' + address());
+//}
 //for (var i = 0; i < 20; i++) {
     //console.log(name(nameResource));
-    //console.log(JSON.stringify(address(31, 43)));
-    //console.dir(address(31, 43));
+    //console.log(JSON.stringify(address_old(31, 43)));
+    //console.dir(address_old(31, 43));
     //console.log(birthday());
     //console.log(idNumber(birthday()));
     //console.log(nation(staticData.nation));
@@ -524,7 +564,7 @@ addRandomData(100000);
     console.dir(graduation(ages, staticData.education));
     */
     //console.log('phone: ' + phone());
-    //var area = address(31, 43)['districtId'];
+    //var area = address_old(31, 43)['districtId'];
     //console.log(district[area.slice(0, 8)][area]);
     //console.log(censusRegisterType(area.toString()));
     //console.log(politicalOutlook(staticData.politicalOutlook));
