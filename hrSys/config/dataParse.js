@@ -46,8 +46,8 @@ function getMsgById(idNumber, districtId, staticData) {
     var msg = {};
     var value;
     var msgItem = [
-        'workRegisterId', 'technicalGrade',
-        'startupTraining', 'vocationalTraining'
+        'workRegisterId', 'technicalGrade', 'publicWelfare',
+        'socialSubsidy', 'startupTraining', 'vocationalTraining'
     ];
     for (var i = 0; i < msgItem.length; i++) {
         value = staticData[msgItem[i]][idNumber];
@@ -76,6 +76,8 @@ module.exports = {
     securedLoan: parseIdMap(__dirname + '/securedLoan.csv'),
     workRegisterId: parseIdMap(__dirname + '/workRegisterId.csv'),
     technicalGrade: parseIdMap(__dirname + '/technicalGrade.csv'),
+    publicWelfare: parseIdMap(__dirname + '/publicWelfare'),
+    socialSubsidy: parseIdMap(__dirname + '/socialSubsidy.csv'),
     startupTraining: parseIdMap(__dirname + '/startupTraining.csv'),
     vocationalTraining: parseIdMap(__dirname + '/vocationalTraining.csv'),
     getMsgById: getMsgById
