@@ -1,8 +1,8 @@
 var nameResource = require('./name');
 var staticData = require('./staticData');
 
-var district = require('../hrSys/config/districtId');
-var jobTypeList = require('../hrSys/config/jobType').local;
+var district = require('../hrSys/config/dataParse').districtName;
+var jobTypeList = require('../hrSys/config/dataParse').jobType.local;
 var db = require('../hrSys/routes/db');
 
 // 速写方式
@@ -538,7 +538,7 @@ function addRandomData(n) {
     }
 }
 console.log(new Date());
-addRandomData(200000);
+addRandomData(20000);
 console.log(new Date());
 
 // only for basic function test
