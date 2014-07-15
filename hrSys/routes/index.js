@@ -1046,7 +1046,7 @@ router.get('/download', function(req, res) {
         // to show no more than 500 items in web page
         //res.send(table.createSearchTable(500, data));
         // download file and save as microsoft excel file (.xls)
-        var filename = createFilename();
+        var filename = createFilename('xls');
         res.setHeader('Content-disposition',
                 'attachment; filename=' + filename);
         // download file and save as microsoft excel file (.xls)
