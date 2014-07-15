@@ -49,8 +49,8 @@ function getMsgById(idNumber, districtId, staticData) {
     var msg = {};
     var value;
     var msgItem = [
-        'workRegisterId', 'technicalGrade', 'publicWelfare',
-        'socialSubsidy', 'startupTraining', 'vocationalTraining'
+        'workRegisterId', 'technicalGrade',
+        'startupTraining', 'vocationalTraining'
     ];
     for (var i = 0; i < msgItem.length; i++) {
         value = staticData[msgItem[i]][idNumber];
@@ -59,6 +59,13 @@ function getMsgById(idNumber, districtId, staticData) {
         }
     }
 
+    // 将没有具体值的属性设置为空字符串
+    if (staticData.publicWelfare.hasOwnProperty(idNumber)) {
+        msg[ 'publicWelfare'] = '';
+    }
+    if (staticData.socialSubsidy.hasOwnProperty(idNumber)) {
+        msg['socialSubsidy'] = '';
+    }
     if (staticData.securedLoan.hasOwnProperty(idNumber)) {
         msg['securedLoan'] = '';
     }
@@ -81,7 +88,7 @@ module.exports = {
     securedLoan: parseIdMap(dataPath + '/securedLoan.csv'),
     workRegisterId: parseIdMap(dataPath + '/workRegisterId.csv'),
     technicalGrade: parseIdMap(dataPath + '/technicalGrade.csv'),
-    publicWelfare: parseIdMap(dataPath + '/publicWelfare'),
+    publicWelfare: parseIdMap(dataPath + '/publicWelfare.csv'),
     socialSubsidy: parseIdMap(dataPath + '/socialSubsidy.csv'),
     startupTraining: parseIdMap(dataPath + '/startupTraining.csv'),
     vocationalTraining: parseIdMap(dataPath + '/vocationalTraining.csv'),

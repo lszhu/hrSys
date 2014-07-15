@@ -133,6 +133,12 @@ function autoFill(data) {
         }
         $('input[name=postService2]').prop('checked', true);
     }
+    if (msg.hasOwnProperty('socialSubsidy')) {
+        $('input[name=postService3]').prop('checked', true);
+    }
+    if (msg.hasOwnProperty('publicWelfare')) {
+        $('input[name=postService4]').prop('checked', true);
+    }
     if (msg.hasOwnProperty('securedLoan')) {
         $('input[name=postService5]').prop('checked', true);
     }
