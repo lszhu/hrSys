@@ -1,6 +1,9 @@
 var fs = require('fs');
+var county = require('./configCounty');
+var dataPath = __dirname + '/staticData/' + county;
+var districtId = require(dataPath + '/districtId');
+var jobType = require(dataPath + '/jobType');
 
-//var path = __dirname + '/workRegisterId.csv';
 function parseIdMap(path) {
     var idMap = {};
     var raw;
@@ -28,7 +31,7 @@ function idMapName() {
     var idMap = {};
     var files;
     try {
-        files = fs.readdirSync(__dirname + '/idMapName', 'utf8');
+        files = fs.readdirSync(dataPath + '/idMapName', 'utf8');
     } catch (e) {
         console.log('cannot get idMapName message. error: ' + e);
         return {};
@@ -36,7 +39,7 @@ function idMapName() {
 
     for (var i = 0; i < files.length; i++) {
         idMap[files[i].slice(0, 8)] =
-            parseIdMap(__dirname + '/idMapName/' + files[i]);
+            parseIdMap(dataPath + '/idMapName/' + files[i]);
     }
 
     return idMap;
@@ -72,20 +75,22 @@ function getMsgById(idNumber, districtId, staticData) {
 }
 
 module.exports = {
+    districtName: districtId,
+    jobType: jobType,
     idMapName: idMapName(),
-    securedLoan: parseIdMap(__dirname + '/securedLoan.csv'),
-    workRegisterId: parseIdMap(__dirname + '/workRegisterId.csv'),
-    technicalGrade: parseIdMap(__dirname + '/technicalGrade.csv'),
-    publicWelfare: parseIdMap(__dirname + '/publicWelfare'),
-    socialSubsidy: parseIdMap(__dirname + '/socialSubsidy.csv'),
-    startupTraining: parseIdMap(__dirname + '/startupTraining.csv'),
-    vocationalTraining: parseIdMap(__dirname + '/vocationalTraining.csv'),
+    securedLoan: parseIdMap(dataPath + '/securedLoan.csv'),
+    workRegisterId: parseIdMap(dataPath + '/workRegisterId.csv'),
+    technicalGrade: parseIdMap(dataPath + '/technicalGrade.csv'),
+    publicWelfare: parseIdMap(dataPath + '/publicWelfare'),
+    socialSubsidy: parseIdMap(dataPath + '/socialSubsidy.csv'),
+    startupTraining: parseIdMap(dataPath + '/startupTraining.csv'),
+    vocationalTraining: parseIdMap(dataPath + '/vocationalTraining.csv'),
     getMsgById: getMsgById
 };
 
 // only for test
 /*
-var loan = parseIdMap(__dirname + '/securedLoan.csv');
+var loan = parseIdMap(dataPath + '/securedLoan.csv');
 var keys = Object.keys(loan).slice(-5, -1);
 console.log(keys[3] + ':' + (loan[keys[0]] == ''));
 

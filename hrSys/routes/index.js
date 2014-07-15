@@ -13,12 +13,13 @@ var auth = require('./auth');
 // access database
 var db = require('./db');
 
-// district Id and name
-var districtName = require('../config/districtId');
-// job type
-var jobType = require('../config/jobType').local;
 // import static data
 var staticData = require('../config/dataParse');
+// district Id and name
+var districtName = staticData.districtName;
+// job type
+var jobType = staticData.jobType.local;
+
 // worker employment/unemployment register id
 //var workRegisterId = staticData.workRegisterId;
 //var workRegisterId = require('../config/workRegisterId');

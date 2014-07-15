@@ -9,17 +9,23 @@ var builtinAccount = {
 
 // 此处设定mongodb数据库服务器的参数：链接地址、端口、数据库
 // 蓝山县数据库
-//var dbServer = {
-//    address: 'localhost:',
-//    port: '27017',
-//    dbName: 'hrsys'
-//};
-// 宁远县数据库
 var dbServer = {
     address: 'localhost:',
     port: '27017',
-    dbName: 'ningyuan'
+    dbName: 'hrsys'
 };
+// 宁远县数据库
+//var dbServer = {
+//    address: 'localhost:',
+//    port: '27017',
+//    dbName: 'ningyuan'
+//};
+//// 新田县数据库
+//var dbServer = {
+//    address: 'localhost:',
+//    port: '27017',
+//    dbName: 'xintian'
+//};
 
 // 此处设定连接mongodb数据库的参数
 var dbParameters = {

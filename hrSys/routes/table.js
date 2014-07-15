@@ -1,4 +1,9 @@
-var cnJobTypeName = require('../config/jobType').local;
+// get current county
+var countyName = require('../config/configCounty');
+// static data path
+var staticDataPath = __dirname + '/../config/staticData/' + countyName;
+// 以工种编号索引工种名称，只导入local类型
+var cnJobTypeName = require(staticDataPath + '/jobType').local;
 // 用于导出xlsx文件
 var xlsx = require('xlsx');
 //var fs = require('fs');
