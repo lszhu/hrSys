@@ -1,3 +1,16 @@
+// 此处设置web服务的端口号
+var httpPort = 3000;
+
+// 此处设置web服务使用环境，可以是开发环境或生产环境
+//var runningEnv = 'development';
+var runningEnvironment = 'productivity';
+
+// 此处设置系统读取的静态数据
+// 'lanShan' 表示蓝山县
+// 'ningYuan' 表示宁远县
+// 'xinTian' 表示新田县
+var county =  'lanShan';
+
 // 此处修改内置管理员账号的名称和密码等信息
 var builtinAccount = {
     username: 'admin',            // 管理员名称
@@ -35,6 +48,9 @@ var dbParameters = {
 };
 
 module.exports = {
+    port: httpPort,
+    runningEnv: runningEnvironment,
+    county: county,
     builtinAccount: builtinAccount,
     db: {
         server: dbServer,

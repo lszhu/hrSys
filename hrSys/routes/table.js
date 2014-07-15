@@ -1,5 +1,5 @@
 // get current county
-var countyName = require('../config/configCounty');
+var countyName = require('../config/config').county;
 // static data path
 var staticDataPath = __dirname + '/../config/staticData/' + countyName;
 // 以工种编号索引工种名称，只导入local类型

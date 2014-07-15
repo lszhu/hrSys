@@ -1,5 +1,5 @@
 var fs = require('fs');
-var county = require('./configCounty');
+var county = require('./config').county;
 var dataPath = __dirname + '/staticData/' + county;
 var districtId = require(dataPath + '/districtId');
 var jobType = require(dataPath + '/jobType');

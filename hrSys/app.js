@@ -7,13 +7,16 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var debug = require('debug')('app');
 
+// get running environment selection from configuration file
+var runningEnvironment = require('./config/config').runningEnv;
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
 
-// set the env to 'productivity' in productive environment
-// app.set('env', 'productivity');
+// set running environment
+app.set('env', runningEnvironment);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

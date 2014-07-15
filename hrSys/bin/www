@@ -2,6 +2,7 @@
 var debug = require('debug')('hrSys');
 var app = require('../app');
 
+process.env.PORT = require('../config/config').port;
 app.set('port', process.env.PORT || 3000);
 
 var server = app.listen(app.get('port'), function() {
