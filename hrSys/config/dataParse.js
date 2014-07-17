@@ -69,6 +69,9 @@ function getMsgById(idNumber, districtId, staticData) {
     if (staticData.securedLoan.hasOwnProperty(idNumber)) {
         msg['securedLoan'] = '';
     }
+    if (staticData.workInjuryInsurance.hasOwnProperty(idNumber)) {
+        msg['workInjuryInsurance'] = '';
+    }
 
     var town = districtId.slice(0, 8);
     if (staticData.idMapName.hasOwnProperty(town)) {
@@ -92,6 +95,7 @@ module.exports = {
     socialSubsidy: parseIdMap(dataPath + '/socialSubsidy.csv'),
     startupTraining: parseIdMap(dataPath + '/startupTraining.csv'),
     vocationalTraining: parseIdMap(dataPath + '/vocationalTraining.csv'),
+    workInjuryInsurance: parseIdMap(dataPath + '/workInjuryInsurance.csv'),
     getMsgById: getMsgById
 };
 

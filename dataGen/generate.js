@@ -1,9 +1,12 @@
+// 指定生成数据的原始数据目录
+var path = '../hrSys.ningYuan/';
+
 var nameResource = require('./name');
 var staticData = require('./staticData');
 
-var district = require('../hrSys/config/dataParse').districtName;
-var jobTypeList = require('../hrSys/config/dataParse').jobType.local;
-var db = require('../hrSys/routes/db');
+var district = require(path + 'config/dataParse').districtName;
+var jobTypeList = require(path + 'config/dataParse').jobType.local;
+var db = require(path + 'routes/db');
 
 // 速写方式
 var random = Math.random;
