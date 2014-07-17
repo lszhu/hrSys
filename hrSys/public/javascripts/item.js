@@ -111,6 +111,9 @@ function autoFill(data) {
     if (msg.hasOwnProperty('workInjuryInsurance')) {
         $('input[name=insurance6]').prop('checked', true);
     }
+    if (msg.hasOwnProperty('orgMedicalInsurance')) {
+        $('input[name=insurance3]').prop('checked', true);
+    }
     if (msg.hasOwnProperty('vocationalTraining')) {
         $('select[name=trainingType]').val('职业培训');
         $('input[name=postTraining]')

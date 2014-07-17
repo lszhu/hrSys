@@ -72,6 +72,9 @@ function getMsgById(idNumber, districtId, staticData) {
     if (staticData.workInjuryInsurance.hasOwnProperty(idNumber)) {
         msg['workInjuryInsurance'] = '';
     }
+    if (staticData.orgMedicalInsurance.hasOwnProperty(idNumber)) {
+        msg['orgMedicalInsurance'] = '';
+    }
 
     var town = districtId.slice(0, 8);
     if (staticData.idMapName.hasOwnProperty(town)) {
@@ -96,11 +99,13 @@ module.exports = {
     startupTraining: parseIdMap(dataPath + '/startupTraining.csv'),
     vocationalTraining: parseIdMap(dataPath + '/vocationalTraining.csv'),
     workInjuryInsurance: parseIdMap(dataPath + '/workInjuryInsurance.csv'),
+    orgMedicalInsurance: parseIdMap(dataPath + '/orgMedicalInsurance.csv'),
     getMsgById: getMsgById
 };
 
 // only for test
 /*
+ console.log(parseIdMap(dataPath + '/orgMedicalInsurance.csv'));
 var loan = parseIdMap(dataPath + '/securedLoan.csv');
 var keys = Object.keys(loan).slice(-5, -1);
 console.log(keys[3] + ':' + (loan[keys[0]] == ''));
