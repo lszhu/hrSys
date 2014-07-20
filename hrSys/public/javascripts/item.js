@@ -198,6 +198,18 @@ $(function() {
             });*/
     });
 
+    // 就业失业登记证号必须是长度为16个字符，且为数字
+    $('input[name=workRegisterId]').blur(function() {
+        var value = $(this).val();
+        if (value.length != 16 || isNaN(value)) {
+            if (confirm("就业失业登记证号码输入有误，需重新输入！")) {
+                setTimeout(function() {
+                    $('input[name=workRegisterId]').focus();
+                }, 10);
+            }
+        }
+    });
+
     // 当管辖区域较大的用户登录时，行政区划代码需要手工输入，
     // 再由此代码获取地址信息，并设置户口性质的默认值，以及设置参保情况
     var  districtId = $('input[name=districtId]');
@@ -382,6 +394,13 @@ $(function() {
         if (!validIdNumber($.trim(idNumber.val()))) {
             err.text('身份证号无效，请重新输入！');
             setTimeout(function() {idNumber.focus();}, 600);
+            return false;
+        }
+        // 校验就业失业登记证号
+        var workRegisterId = $('input[name=workRegisterId]');
+        if (!validIdNumber($.trim(workRegisterId.val()))) {
+            err.text('就业失业登记证号无效，请重新输入！');
+            setTimeout(function() {workRegisterId.focus();}, 600);
             return false;
         }
         // 校验行政区划代码是否已输入

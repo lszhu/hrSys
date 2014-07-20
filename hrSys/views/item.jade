@@ -36,7 +36,7 @@ block content
           div(style="width: 45%; float: left;")
             .input-group
               span.input-group-addon 就业失业登记证号
-              input.form-control(type="text", name="workRegisterId")
+              input.form-control(type="text", name="workRegisterId", placeholder="输入16位证号")
           if districtId.length == 10
             div(style="width: 55%; float: left;")
               .input-group
@@ -175,7 +175,7 @@ block content
           .col-sm-3.col-sm-offset-1
             .input-group
               span.input-group-addon 填报人
-              input.form-control(type="text", name="editor", required="required")
+              input.form-control(type="text", name="editor", required="required", placeholder="姓名")
           .col-sm-2
           .col-sm-4
             .input-group
