@@ -417,6 +417,7 @@ $(function() {
             return false;
         }
         // 校验毕业时间
+        /*
         var graduateDate = $('input[name=graduateDate]');
         var edu = $('select[name=education]').val();
         if (edu == '中专中技' || edu == '大专' || edu == '本科及以上') {
@@ -431,6 +432,7 @@ $(function() {
                 return false;
             }
         }
+        */
         // 校验联系电话
         var phone = $('input[name=phone]');
         if (!validPhone($.trim(phone.val()))) {
