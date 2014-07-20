@@ -418,6 +418,14 @@ router.get('/data/existMsg', function(req, res) {
     var districtId = req.session.user.area;
     var msg = staticData.getMsgById(idNumber, districtId, staticData);
 
+    if (districtId.length == 10) {
+        if (getAddress(districtId)['village'].slice(-1) == '村') {
+            msg['censusRegisterType'] = '农业户口';
+        } else {
+            msg['censusRegisterType'] =  '非农业户口';
+        }
+    }
+
     debug('msg: ' + JSON.stringify(msg));
     db.query({idNumber: idNumber}, function(err, data) {
         debug('data.length: ' + data.length);

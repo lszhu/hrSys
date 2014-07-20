@@ -101,8 +101,17 @@ function autoFill(data) {
         if (!$.trim(dom.val())) {
             dom.val(msg.name);
         }
-        $('input[name=insurance2]').prop('checked', true);
-        $('input[name=insurance7]').prop('checked', true);
+    }
+    // 设定户口性质，同时根据户口性质设置参保情况
+    if (msg.hasOwnProperty('censusRegisterType')) {
+        $('select[name=censusRegisterType]').val(msg.censusRegisterType);
+        if (msg.censusRegisterType == '农业户口') {
+            $('input[name=insurance2]').prop('checked', true);
+            $('input[name=insurance7]').prop('checked', true);
+        } else {
+            $('input[name=insurance1]').prop('checked', true);
+            $('input[name=insurance4]').prop('checked', true);
+        }
     }
     if (msg.workRegisterId) {
         $('input[name=workRegisterId]').val(msg.workRegisterId);
@@ -162,13 +171,20 @@ $(function() {
                     $('input[name=idNumber]').focus();
                 }, 10);
             }
+            return;
         }
         // 如果身份证末尾为'x'，改为大写字母
         $('input[name=idNumber]').val(value.toUpperCase());
         // 自动填入年龄
-        $('input[name=age]').val(getAge(value));
+        var age = getAge(value);
+        $('input[name=age]').val(age);
         // 自动填入性别
-        $('input[name=gender]').val(getGender(value));
+        var gender = getGender(value);
+        $('input[name=gender]').val(gender);
+        // 如果是小于25岁男性或小于23岁女性，婚姻状况默认设为未婚
+        if (age < 25 && gender == '男' || age < 23 && gender == '女') {
+            $('select[name=marriage]').val('未婚');
+        }
 
         // 动态获取并填入姓名、就业失业登记证号、劳动技能信息、已享受就业服务等信息
         $.get('/data/existMsg', {idNumber: value.toUpperCase()}, autoFill);
@@ -182,7 +198,8 @@ $(function() {
             });*/
     });
 
-    // 当管辖区域较大的用户登录时，行政区划代码需要手工输入，再由此代码获取地址信息
+    // 当管辖区域较大的用户登录时，行政区划代码需要手工输入，
+    // 再由此代码获取地址信息，并设置户口性质的默认值，以及设置参保情况
     var  districtId = $('input[name=districtId]');
     if (!districtId.prop('readonly')) {
         districtId.blur(function() {
@@ -204,9 +221,27 @@ $(function() {
                         }, 10);
                     }
                 } else {
+                    // 设置地址信息
                     $('input[name=address]').val(data);
+                    // 设置户口性质及参保情况
+                    if (data.slice(-1) == '村') {
+                        // 以村结尾的地址，默认为农业户口
+                        $('select[name=censusRegisterType]').val('农业户口');
+                        // 选中新农保和新农合
+                        $('input[name=insurance2]').prop('checked', true);
+                        $('input[name=insurance7]').prop('checked', true);
+                        $('input[name=insurance1]').prop('checked', false);
+                        $('input[name=insurance4]').prop('checked', false);
+                    } else {
+                        // 非农业户口情况
+                        $('select[name=censusRegisterType]').val('非农业户口');
+                        $('input[name=insurance2]').prop('checked', false);
+                        $('input[name=insurance7]').prop('checked', false);
+                        $('input[name=insurance1]').prop('checked', true);
+                        $('input[name=insurance4]').prop('checked', true);
+                    }
                 }
-            })
+            });
         });
     }
 
