@@ -1,7 +1,7 @@
 $('#submit').click(function() {
-    var username = $('input[name=username]').val().trim();
-    var password = $('input[name=password]').val().trim();
-    var retryPassword = $('input[name=retryPassword]').val().trim();
+    var username = $.trim($('input[name=username]').val());
+    var password = $.trim($('input[name=password]').val());
+    var retryPassword = $.trim($('input[name=retryPassword]').val());
     var msgDom = $('#message');
     if (!username || !password) {
         msgDom.text('账号名和密码不能为空，请重新输入！');

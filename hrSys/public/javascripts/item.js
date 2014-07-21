@@ -201,7 +201,7 @@ $(function() {
     // 就业失业登记证号必须是长度为16个字符，且为数字
     $('input[name=workRegisterId]').blur(function() {
         var value = $(this).val();
-        if (value.length != 16 || isNaN(value)) {
+        if (value && (value.length != 16 || isNaN(value))) {
             if (confirm("就业失业登记证号码输入有误，需重新输入！")) {
                 setTimeout(function() {
                     $('input[name=workRegisterId]').focus();
@@ -398,7 +398,8 @@ $(function() {
         }
         // 校验就业失业登记证号
         var workRegisterId = $('input[name=workRegisterId]');
-        if (!validIdNumber($.trim(workRegisterId.val()))) {
+        var value = $.trim(workRegisterId.val());
+        if (value && (value.length != 16 || isNaN(value))) {
             err.text('就业失业登记证号无效，请重新输入！');
             setTimeout(function() {workRegisterId.focus();}, 600);
             return false;
