@@ -315,7 +315,7 @@ $(function() {
     $('input[name=unemployedDate]').blur(function(e) {
         var value = $.trim(e.target.value);
         if (!validDate(value)) {
-            if (confirm('就业时间输入有误！')) {
+            if (confirm('失业时间输入有误！')) {
                 setTimeout(function() {
                     $('input[name=unemployedDate]').focus();
                 }, 10);
@@ -441,13 +441,6 @@ $(function() {
             setTimeout(function() {phone.focus();}, 600);
             return false;
         }
-        // 校验就业时间
-        var startWorkDate = $('input[name=startWorkDate]');
-        if (!validDate($.trim(startWorkDate.val()))) {
-            err.text('就业时间输入有误，请重新输入！');
-            setTimeout(function() {startWorkDate.focus();}, 600);
-            return false;
-        }
         // 校验年收入
         var salary = $('input[name=salary]');
         if (!validSalary($.trim(salary.val()))) {
@@ -470,12 +463,26 @@ $(function() {
             return false;
         }
         var radios = $('input[name=employment]');
-        // 已就业则必须填入就业单位
+        // 已就业则必须填入就业单位及就业时间
         if (radios.filter('[value=已就业]').prop('checked')) {
+            // 校验就业单位
             var employer = $('input[name=employer]');
             if (!$.trim(employer.val())) {
                 err.text('请输入就业单位！');
                 setTimeout(function() {employer.focus();}, 600);
+                return false;
+            }
+            // 校验就业时间
+            var startWorkDate = $('input[name=startWorkDate]');
+            var dateValue = $.trim(startWorkDate.val());
+            if (!dateValue) {
+                err.text('请输入就业时间！');
+                setTimeout(function() {startWorkDate.focus();}, 600);
+                return false;
+            }
+            if (!validDate(dateValue)) {
+                err.text('就业时间输入有误，请按yyyymmdd的格式重新输入！');
+                setTimeout(function() {startWorkDate.focus();}, 600);
                 return false;
             }
         } else {        // 未就业则必须填入工资收入期望
