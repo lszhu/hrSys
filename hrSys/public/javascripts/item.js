@@ -451,7 +451,7 @@ $(function() {
         // 校验失业时间
         var unemployedDate = $('input[name=unemployedDate]');
         if (!validDate($.trim(unemployedDate.val()))) {
-            err.text('失业时间输入有误，请重新输入！');
+            err.text('失业时间输入有误，请按照yyyymmdd的格式重新输入！');
             setTimeout(function() {unemployedDate.focus();}, 600);
             return false;
         }
