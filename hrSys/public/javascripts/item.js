@@ -104,6 +104,10 @@ function autoFill(data) {
     }
     // 设定户口性质，同时根据户口性质设置参保情况
     if (msg.hasOwnProperty('censusRegisterType')) {
+        if (msg.hasOwnProperty('orgMedicalInsurance') ||
+            msg.hasOwnProperty('orgRetireInsurance')) {
+            msg.censusRegisterType = '非农业户口';
+        }
         $('select[name=censusRegisterType]').val(msg.censusRegisterType);
         if (msg.censusRegisterType == '农业户口') {
             $('input[name=insurance2]').prop('checked', true);
@@ -115,13 +119,29 @@ function autoFill(data) {
     }
     if (msg.workRegisterId) {
         $('input[name=workRegisterId]').val(msg.workRegisterId);
+        // 如果办理了就业失业登记证，也认为参加了失业保险
+        $('input[name=insurance5]').prop('checked', true);
+    }
+    if (msg.hasOwnProperty('unemployedInsurance')) {
         $('input[name=insurance5]').prop('checked', true);
     }
     if (msg.hasOwnProperty('workInjuryInsurance')) {
         $('input[name=insurance6]').prop('checked', true);
     }
+    if (msg.hasOwnProperty('orgRetireInsurance')) {
+        $('input[name=insurance0]').prop('checked', true);
+        // 参加了城镇职工养老保险，则取消新农合及新农保
+        $('input[name=insurance2]').prop('checked', false);
+        $('input[name=insurance7]').prop('checked', false);
+    }
     if (msg.hasOwnProperty('orgMedicalInsurance')) {
         $('input[name=insurance3]').prop('checked', true);
+        // 参加了城镇职工医疗保险，则取消新农合及新农保
+        $('input[name=insurance2]').prop('checked', false);
+        $('input[name=insurance7]').prop('checked', false);
+    }
+    if (msg.hasOwnProperty('workRecommend')) {
+        $('input[name=postService0]').prop('checked', true);
     }
     if (msg.hasOwnProperty('vocationalTraining')) {
         $('select[name=trainingType]').val('职业培训');
@@ -146,6 +166,7 @@ function autoFill(data) {
         } else if (msg.technicalGrade == '高级') {
             dom.val('高级技工');
         }
+        // 设定为享受职业技能鉴定服务
         $('input[name=postService2]').prop('checked', true);
     }
     if (msg.hasOwnProperty('socialSubsidy')) {
@@ -156,6 +177,9 @@ function autoFill(data) {
     }
     if (msg.hasOwnProperty('securedLoan')) {
         $('input[name=postService5]').prop('checked', true);
+    }
+    if (msg.hasOwnProperty('internship')) {
+        $('input[name=postService6]').prop('checked', true);
     }
 }
 
@@ -289,6 +313,9 @@ $(function() {
             $('input[name=insurance7]').prop('checked', true);
             $('input[name=insurance1]').prop('checked', false);
             $('input[name=insurance4]').prop('checked', false);
+            // 取消城镇职工养老保险和职工医疗保险
+            $('input[name=insurance0]').prop('checked', false);
+            $('input[name=insurance3]').prop('checked', false);
         } else {
             // 取消新农保和新农合，选中城镇居民医保和养老保险
             $('input[name=insurance2]').prop('checked', false);

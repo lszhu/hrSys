@@ -47,35 +47,49 @@ function idMapName() {
 
 function getMsgById(idNumber, districtId, staticData) {
     var msg = {};
-    var value;
+    var value, i;
+    // 含有属性值的参数
     var msgItem = [
         'workRegisterId', 'technicalGrade',
         'startupTraining', 'vocationalTraining'
     ];
-    for (var i = 0; i < msgItem.length; i++) {
+    for (i = 0; i < msgItem.length; i++) {
         value = staticData[msgItem[i]][idNumber];
         if (value && value.trim()) {
             msg[msgItem[i]] = value.trim();
         }
     }
 
+    // 不含属性值的参数
+    msgItem = [
+        'publicWelfare', 'socialSubsidy', 'securedLoan', 'workRecommend',
+        'orgMedicalInsurance', 'orgRetireInsurance', 'workInjuryInsurance',
+        'unemployedInsurance', 'internship'
+    ];
     // 将没有具体值的属性设置为空字符串
-    if (staticData.publicWelfare.hasOwnProperty(idNumber)) {
-        msg[ 'publicWelfare'] = '';
+    for (i = 0; i < msgItem.length; i++) {
+        value = msgItem[i];
+        if (staticData[value].hasOwnProperty(idNumber)) {
+            msg[value] = '';
+        }
     }
-    if (staticData.socialSubsidy.hasOwnProperty(idNumber)) {
-        msg['socialSubsidy'] = '';
-    }
-    if (staticData.securedLoan.hasOwnProperty(idNumber)) {
-        msg['securedLoan'] = '';
-    }
-    if (staticData.workInjuryInsurance.hasOwnProperty(idNumber)) {
-        msg['workInjuryInsurance'] = '';
-    }
-    if (staticData.orgMedicalInsurance.hasOwnProperty(idNumber)) {
-        msg['orgMedicalInsurance'] = '';
-    }
+//    if (staticData.publicWelfare.hasOwnProperty(idNumber)) {
+//        msg[ 'publicWelfare'] = '';
+//    }
+//    if (staticData.socialSubsidy.hasOwnProperty(idNumber)) {
+//        msg['socialSubsidy'] = '';
+//    }
+//    if (staticData.securedLoan.hasOwnProperty(idNumber)) {
+//        msg['securedLoan'] = '';
+//    }
+//    if (staticData.workInjuryInsurance.hasOwnProperty(idNumber)) {
+//        msg['workInjuryInsurance'] = '';
+//    }
+//    if (staticData.orgMedicalInsurance.hasOwnProperty(idNumber)) {
+//        msg['orgMedicalInsurance'] = '';
+//    }
 
+    // 从相应数据文件由身份证号查询获取姓名
     var town = districtId.slice(0, 8);
     if (staticData.idMapName.hasOwnProperty(town)) {
         value = staticData.idMapName[town][idNumber];
@@ -96,10 +110,14 @@ module.exports = {
     technicalGrade: parseIdMap(dataPath + '/technicalGrade.csv'),
     publicWelfare: parseIdMap(dataPath + '/publicWelfare.csv'),
     socialSubsidy: parseIdMap(dataPath + '/socialSubsidy.csv'),
+    workRecommend: parseIdMap(dataPath + '/workRecommend.csv'),
+    internship: parseIdMap(dataPath + '/internship.csv'),
     startupTraining: parseIdMap(dataPath + '/startupTraining.csv'),
     vocationalTraining: parseIdMap(dataPath + '/vocationalTraining.csv'),
     workInjuryInsurance: parseIdMap(dataPath + '/workInjuryInsurance.csv'),
+    unemployedInsurance: parseIdMap(dataPath + '/unemployedInsurance.csv'),
     orgMedicalInsurance: parseIdMap(dataPath + '/orgMedicalInsurance.csv'),
+    orgRetireInsurance: parseIdMap(dataPath + '/orgRetireInsurance.csv'),
     getMsgById: getMsgById
 };
 
