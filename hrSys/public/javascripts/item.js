@@ -281,6 +281,22 @@ $(function() {
         }
     });
 
+    // 根据户口性质调整参保的默认情况
+    $('select[name=censusRegisterType]').change(function() {
+        if ($('select[name=censusRegisterType]').val() == '农业户口') {
+            // 选中新农保和新农合，取消城镇居民医保和养老保险
+            $('input[name=insurance2]').prop('checked', true);
+            $('input[name=insurance7]').prop('checked', true);
+            $('input[name=insurance1]').prop('checked', false);
+            $('input[name=insurance4]').prop('checked', false);
+        } else {
+            // 取消新农保和新农合，选中城镇居民医保和养老保险
+            $('input[name=insurance2]').prop('checked', false);
+            $('input[name=insurance7]').prop('checked', false);
+            $('input[name=insurance1]').prop('checked', true);
+            $('input[name=insurance4]').prop('checked', true);
+        }
+    });
     // 校验就业时间
     $('input[name=startWorkDate]').blur(function(e) {
         var value = $.trim(e.target.value);
