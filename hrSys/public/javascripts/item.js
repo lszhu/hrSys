@@ -133,12 +133,18 @@ function autoFill(data) {
         // 参加了城镇职工养老保险，则取消新农合及新农保
         $('input[name=insurance2]').prop('checked', false);
         $('input[name=insurance7]').prop('checked', false);
+        // 同时取消城镇居民养老保险和城镇居民医疗保险
+        $('input[name=insurance1]').prop('checked', false);
+        $('input[name=insurance4]').prop('checked', false);
     }
     if (msg.hasOwnProperty('orgMedicalInsurance')) {
         $('input[name=insurance3]').prop('checked', true);
         // 参加了城镇职工医疗保险，则取消新农合及新农保
         $('input[name=insurance2]').prop('checked', false);
         $('input[name=insurance7]').prop('checked', false);
+        // 同时取消城镇居民养老保险和城镇居民医疗保险
+        $('input[name=insurance1]').prop('checked', false);
+        $('input[name=insurance4]').prop('checked', false);
     }
     if (msg.hasOwnProperty('workRecommend')) {
         $('input[name=postService0]').prop('checked', true);
@@ -260,8 +266,15 @@ $(function() {
                     // 设置地址信息
                     $('input[name=address]').val(data);
                     // 设置户口性质及参保情况
-                    if (data.slice(-1) == '村') {
-                        // 以村结尾的地址，默认为农业户口
+                    // 如果城镇职工养老保险或城镇职工医疗保险未勾选，
+                    // 且对应行政区以“村”结尾则默认为农业户口
+                    var orgMedicalInsurance =
+                        $('input[name=insurance0]').prop('checked');
+                    var orgRetireInsurance =
+                        $('input[name=insurance3]').prop('checked');
+                    if (!orgMedicalInsurance && !orgRetireInsurance &&
+                        data.slice(-1) == '村') {
+                        // 农业户口
                         $('select[name=censusRegisterType]').val('农业户口');
                         // 选中新农保和新农合
                         $('input[name=insurance2]').prop('checked', true);
