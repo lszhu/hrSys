@@ -120,7 +120,7 @@ function autoFill(data) {
     if (msg.workRegisterId) {
         $('input[name=workRegisterId]').val(msg.workRegisterId);
         // 如果办理了就业失业登记证，也认为参加了失业保险
-        $('input[name=insurance5]').prop('checked', true);
+        //$('input[name=insurance5]').prop('checked', true);
     }
     if (msg.hasOwnProperty('unemployedInsurance')) {
         $('input[name=insurance5]').prop('checked', true);
@@ -337,6 +337,7 @@ $(function() {
             $('input[name=insurance4]').prop('checked', true);
         }
     });
+
     // 校验就业时间
     $('input[name=startWorkDate]').blur(function(e) {
         var value = $.trim(e.target.value);
@@ -348,6 +349,9 @@ $(function() {
             }
         }
     });
+
+    // 默认情况下将主要从事工种或就业工种意向设置为空值
+    $('select[name^=jobType]').val('');
 
     // 校验年收入
     $('input[name=salary]').blur(function(e) {
@@ -420,11 +424,15 @@ $(function() {
         $('#unemployment').css({display: 'none'});
     }
 
-    // 控制“外出省份”表单栏的可用状态
+    // 默认情况下将外出省份设置为空值
+    var workProvince = $('select[name=workProvince]');
+    workProvince.val('');
     var workplace = $('select[name=workplace]');
-    if (workplace.val() == '外省') {
-        $('select[name=workProvince]').removeAttr('disabled');
-    }
+    workplace.val('');
+    //if (workplace.val() == '外省') {
+    //    workProvince.removeAttr('disabled');
+    //}
+    // 控制“外出省份”表单栏的可用状态
     workplace.change(function(e) {
         //$('select[name=workProvince]').prop('disabled', true);
         if ($(e.target).val() != '外省') {
@@ -433,6 +441,13 @@ $(function() {
             $('select[name=workProvince]').removeAttr('disabled');
         }
     });
+
+    // 默认情况下从事产业或就业产业意向设置为空值
+    $('select[name$=ndustry]').val('');
+    // 默认情况下就业形式设置为空值
+    $('select[name$=obForm]').val('');
+    // 默认情况下就业形式设置为空值
+    $('select[name=preferredWorkplace]').val('');
 
     // 自动填入填报时间
     $('input[name=registerDate]').val(getDate());
@@ -528,6 +543,16 @@ $(function() {
                 setTimeout(function() {employer.focus();}, 600);
                 return false;
             }
+            // 主要从事工种不能为空
+            if (!$('select[name=jobType]').val()) {
+                err.text('请选择主要从事工种！');
+                return false;
+            }
+            // 从事产业类型不能为空
+            if (!$('select[name=industry]').val()) {
+                err.text('请选择从事产业类型！');
+                return false;
+            }
             // 校验就业时间
             var startWorkDate = $('input[name=startWorkDate]');
             var dateValue = $.trim(startWorkDate.val());
@@ -539,6 +564,21 @@ $(function() {
             if (!validDate(dateValue)) {
                 err.text('就业时间输入有误，请按yyyymmdd的格式重新输入！');
                 setTimeout(function() {startWorkDate.focus();}, 600);
+                return false;
+            }
+            // 就业地点不能为空
+            var workplace = $('select[name=workplace]').val();
+            if (!workplace) {
+                err.text('请选择就业地点！');
+                return false;
+            }
+            if (workplace == '外省' && !$('select[name=workProvince]').val()) {
+                err.text('请选择外出就业省份！');
+                return false;
+            }
+            // 就业形式不能为空
+            if (!$('select[name=jobForm]').val()) {
+                err.text('请选择就业形式 ！');
                 return false;
             }
         } else {        // 未就业则必须填入工资收入期望
