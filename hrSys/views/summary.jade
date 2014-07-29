@@ -1,0 +1,40 @@
+extends layout
+block content
+  //link(rel="stylesheet" href="/stylesheets/signin.css")
+  //link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
+  //h1= title
+  include nav.jade
+  .container
+    .panel.panel-info
+      .panel-heading
+        //.container
+        h1.text-center 辖区内数据统计
+      .panel-body
+        .col-sm-8.col-sm-offset-2
+          h3 导出范围设定：
+        .col-sm-8.col-sm-offset-2
+          .input-group
+            if area != '0'
+              span.input-group-addon 导出范围选择
+              select.form-control(name="districtId")
+                - var town = area.slice(0, 8)
+                optgroup(label="所属乡镇范围")
+                  option(value=town)= districtName[countyId][town]
+                optgroup(label="特定村落社区范围")
+                  each v, k in districtName[town]
+                    option(value=k)= v
+            else
+              span.input-group-addon 导出范围选择
+              select.form-control(name="districtId")
+                optgroup(label="不限区域")
+                  option(value="0") 不限
+                each value, key in districtName[countyId]
+                  optgroup(label=value)
+                    option(value=key)= value + '整个乡镇'
+                    each v, k in districtName[key]
+                      option(value=k)= v
+        .col-sm-12
+          br
+        .col-sm-6.col-sm-offset-3
+          button.btn.btn-lg.btn-block.btn-primary(role="button") 导出文件并下载
+  script(src="/javascripts/summary.js")

@@ -1,13 +1,12 @@
 /*
- 至少请修改三个参数：
- 1. web服务端口号httpPort
- 2. 静态数据目录（为对应区县拼音）county
- 3. 数据库名称（对应区县拼音，除蓝山为hrsys外）dbServer.dbName
- */
+至少请修改三个参数：
+1. web服务端口号httpPort
+2. 静态数据目录（为对应区县拼音）county
+3. 数据库名称（对应区县拼音，除蓝山为hrsys外）dbServer.dbName
+*/
 // 此处设置web服务的端口号
-//var httpPort = 88;         // 蓝山所用端口号
+var httpPort = 88;         // 蓝山所用端口号
 //var httpPort = 13188;      // 宁远所用端口号
- var httpPort = 13288;     // 新田所用端口号
 
 // 此处设置web服务使用环境，可以是开发环境或生产环境
 //var runningEnv = 'development';
@@ -18,8 +17,7 @@ var runningEnvironment = 'productivity';
 // 'ningYuan' 表示宁远县
 // 'xinTian' 表示新田县
 //var county =  'ningYuan';
-//var county = 'lanShan';
-var county = 'xinTian';
+var county = 'lanShan';
 
 // 此处修改内置管理员账号的名称和密码等信息
 var builtinAccount = {
@@ -34,9 +32,9 @@ var builtinAccount = {
 var dbServer = {
     address: 'localhost:',
     port: '27017',
-//    dbName: 'hrsys'           // 蓝山县数据库名称
+    dbName: 'hrsys'           // 蓝山县数据库名称
 //    dbName: 'ningyuan'        // 宁远县数据库名称
-    dbName: 'xintian'         // 新田县数据库名称
+//    dbName: 'xintian'         // 新田县数据库名称
 };
 
 // 此处设定连接mongodb数据库的参数

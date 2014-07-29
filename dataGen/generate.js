@@ -1,5 +1,5 @@
 // 指定生成数据的原始数据目录
-var path = '../hrSys.ningYuan/';
+var path = '../hrSys/';
 
 var nameResource = require('./name');
 var staticData = require('./staticData');
