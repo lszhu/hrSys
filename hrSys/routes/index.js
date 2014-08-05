@@ -56,6 +56,61 @@ function getCountyId() {
     return '0';
 }
 
+// put all village ID in a array
+function getVillages() {
+    var towns = districtName[getCountyId()];
+    var list = [];
+    for (var i in towns) {
+        if (!towns.hasOwnProperty(i)) {
+            continue;
+        }
+        for (var j in districtName[i]) {
+            if (!districtName[i].hasOwnProperty(j)) {
+                continue;
+            }
+            list.push(j);
+        }
+    }
+    return list;
+}
+
+// format multiCount result to an 2-d array, for example:
+// [
+//     ['43112701', '塔峰镇', '/', 654321],
+//     ['4311270101', '塔峰镇', '早禾村', 123],
+//     ['4311270102', '塔峰镇', '新民村', 234],
+//     ['4311270101', '塔峰镇', '早禾村', 123],
+//     ['4311270102', '塔峰镇', '新民村', 234],
+//     ['43112701', '竹市镇', '/', 654321],
+//     ["4311270201, '塔峰镇', "新街居委会", 123],
+//     ["4311270202, '塔峰镇', "老街居委会", 234],
+//     ["4311270203, '塔峰镇', "成家村", 123],
+// ];
+function formatCountList(counts) {
+    var towns = districtName[getCountyId()];
+    var list = [];
+    // save index of row which record town info
+    var townIndex;
+    for (var i in towns) {
+        if (!towns.hasOwnProperty(i)) {
+            continue;
+        }
+        // initiate town row info, set count to 0
+        list.push([i, towns[i], '-', 0]);
+        townIndex = list.length - 1;
+        for (var j in districtName[i]) {
+            if (!districtName[i].hasOwnProperty(j)) {
+                continue;
+            }
+            // fill village info, village row info
+            list.push([j, towns[i], districtName[i][j], counts[j]]);
+            // add the count of village to count of town
+            list[townIndex][3] += counts[j];
+        }
+    }
+    return list;
+}
+
 function getAddress(districtId) {
     var address = {
         county: districtName['0'],
@@ -543,6 +598,25 @@ router.post('/item', function(req, res) {
         workProvince = '';
     }
 
+    var unemploymentDate = req.body.unemploymentDate ?
+        req.body.unemploymentDate : '';
+    //var preferredJobType1 = req.body.jobType01 ? req.body.jobType01 : '';
+    //var preferredJobType2 = req.body.jobType02 ? req.body.jobType02 : '';
+    var preferredJobType = [];
+    if (req.body.jobType01) {
+        preferredJobType.push(req.body.jobType01);
+    }
+    if (req.body.jobType02) {
+        preferredJobType.push(req.body.jobType02);
+    }
+    var preferredIndustry = req.body.preferredIndustry ?
+        req.body.preferredIndustry : '';
+    var preferredWorkplace = req.body.preferredWorkplace ?
+        req.body.preferredWorkplace : '';
+    var preferredJobForm = req.body.preferredJobForm ?
+        req.body.preferredJobForm : '';
+
+
     var userMessage = {
         // basic info
         username: req.body.username,
@@ -585,15 +659,16 @@ router.post('/item', function(req, res) {
         // unemployment info
         unemploymentInfo: {
             humanCategory: req.body.humanCategory,
-            unemployedDate: req.body.unemployedDate,
+            //unemployedDate: req.body.unemployedDate,
+            unemployedDate: unemploymentDate,
             unemploymentCause: req.body.unemploymentCause,
             familyType: req.body.familyType,
-            preferredJobType: [req.body.jobType01, req.body.jobType02],
+            preferredJobType: preferredJobType,
             //extraPreferredJobType: req.body.extraPreferredJobType,
             preferredSalary: req.body.preferredSalary,
-            preferredIndustry: req.body.preferredIndustry,
-            preferredWorkplace: req.body.preferredWorkplace,
-            preferredJobForm: req.body.preferredJobForm,
+            preferredIndustry: preferredIndustry,
+            preferredWorkplace: preferredWorkplace,
+            preferredJobForm: preferredJobForm,
             preferredService: preferredService,
             extraPreferredService: req.body.extraPreferredService,
             preferredTraining: req.body.preferredTraining
@@ -1076,6 +1151,51 @@ router.get('/download', function(req, res) {
     res.send(fileContent);
     //filestream.pipe(res);
     */
+});
+
+/* show statistics according to district ID */
+router.get('/summary', function(req, res) {
+    // check access rights
+    var area = req.session.user.area;
+    if (area != '0') {
+        res.send('permission deny');
+    }
+    var county = {name: '', total: 0};
+    var list = getVillages();
+    db.multiCount(list, function(result) {
+        var countList = formatCountList(result);
+        var county = {
+            name: districtName['4311'][getCountyId()],
+            total: 0
+        };
+        // calculate total items of a county
+        for (var i = 0; i < countList.length; i++) {
+            if (countList[i][0].length == 8) {
+                county['total'] += countList[i][3];
+            }
+        }
+        debug('county: ' + county);
+        res.render(
+            'summary',
+            {
+                title: 'summary',
+                county: county,
+                adminArea: getAdminAreaName(req.session.user.area),
+                permission: req.session.user.permission,
+                statistics: countList
+            }
+        );
+    });
+//    res.render(
+//        'summary',
+//        {
+//            title: 'summary',
+//            county: county,
+//            adminArea: getAdminAreaName(req.session.user.area),
+//            permission: req.session.user.permission,
+//            statistics: statistics
+//        }
+//    );
 });
 
 /* help page. */

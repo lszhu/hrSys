@@ -44,6 +44,9 @@ var dbParameters = {
     server: {socketOptions: {keepAlive: 1}}
 };
 
+// 对查询数据库结果数目作出限制，以保证系统性能，避免假死
+var queryLimit = 50000;
+
 module.exports = {
     port: httpPort,
     runningEnv: runningEnvironment,
@@ -52,5 +55,6 @@ module.exports = {
     db: {
         server: dbServer,
         parameter: dbParameters
-    }
+    },
+    queryLimit: queryLimit
 };

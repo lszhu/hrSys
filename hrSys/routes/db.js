@@ -1,6 +1,8 @@
 var debug = require('debug')('db');
 // mongodb server parameters
 var db = require('../config/config').db;
+// Specifies the maximum number of documents the query will return
+var maxReturnedDoc = require('../config/config').queryLimit;
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema,
@@ -99,6 +101,7 @@ var personSchema = new Schema({
 });
 
 var PersonMsg = mongoose.model('hrmsg', personSchema);
+
 function save(hrMsg) {
     PersonMsg.update(
         {idNumber: hrMsg.idNumber},
@@ -114,6 +117,7 @@ function save(hrMsg) {
 function query(condition, callback) {
     PersonMsg.find(condition)
         .lean()         // make return value changeable
+        .limit(maxReturnedDoc)  // limit returned documents
         //.sort({districtId: 1, username: 1})
         .exec(callback);
 }
@@ -122,6 +126,7 @@ function search(condition, district, callback) {
     var query = PersonMsg.find(condition).read('primary');
     query.where(district)
         .lean()         // make return value changeable
+        .limit(maxReturnedDoc)  // limit returned documents
         //.sort({districtId: 1, username: 1})
         .exec(callback);
 }
@@ -136,6 +141,43 @@ function preprocessUserMsg(userMsg) {
         userMsg.unemploymentInfo = null;
     } else {
         userMsg.employmentInfo = null;
+    }
+}
+
+function count(districtId, callback) {
+    PersonMsg.count({districtId: districtId}, function(e, c) {
+        if (e) {
+            console.log('DataBase access error.');
+            callback(districtId, 0);
+            return;
+        }
+        callback(districtId, c);
+    });
+}
+
+function multiCount(list, callback) {
+    var result = {};
+    // to count the running count processes
+    var counting = 0;
+//    function recurse() {
+//        if (!list) {
+//            return [];
+//        }
+//        districtId = list.shift();
+//        counting++;
+//        count(districtId, function(e, c) {
+//            result.push([districtId, c]);
+//        });
+//    }
+    for (var i = 0; i < list.length; i++) {
+        counting++;
+        count(list[i], function(districtId, c) {
+            counting--;
+            result[districtId] = c;
+            if (counting == 0) {
+                callback(result);
+            }
+        });
     }
 }
 
@@ -303,6 +345,8 @@ module.exports = {
     save: save,
     query: query,
     remove: remove,
+    count: count,
+    multiCount: multiCount,
     preprocessUserMsg: preprocessUserMsg,
     saveAccount: saveAccount,
     changeAccountStatus: changeAccountStatus,

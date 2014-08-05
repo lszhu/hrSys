@@ -435,7 +435,7 @@ function createXlsx(data, callback) {
 
 // 写入一行xlsx文件数据
 function addXlsxRow(recorder, sheet, lineNo) {
-    var i, tmp, info;
+    var i, tmp, info, len;
 
     // 以下处理个人基本信息
     sheet['A' + lineNo] = {v: lineNo - 1};
@@ -512,10 +512,19 @@ function addXlsxRow(recorder, sheet, lineNo) {
         sheet['AH' + lineNo] = {v: info.unemploymentCause, t: 's'};
         sheet['AI' + lineNo] = {v: info.familyType, t: 's'};
 
-        tmp = info.preferredJobType[0];
-        var jobs = cnJobTypeName[tmp[0]][tmp];
-        tmp = info.preferredJobType[1];
-        jobs += ',' + cnJobTypeName[tmp[0]][tmp];
+        tmp = info.preferredJobType;//[0];
+        var jobs = '';//cnJobTypeName[tmp[0]][tmp];
+        if (tmp) {
+            if (tmp[0]) {
+                jobs += cnJobTypeName[tmp[0][0]][tmp[0]];
+            }
+            if (tmp[1]) {
+                jobs += cnJobTypeName[tmp[1][0]][tmp[1]];
+            }
+        }
+        //tmp = info.preferredJobType[1];
+        //jobs += ',' + cnJobTypeName[tmp[0]][tmp];
+
         sheet['AJ' + lineNo] = {v: jobs, t: 's'};
         sheet['AK' + lineNo] = {v: info.preferredIndustry, t: 's'};
         tmp = info.preferredSalary;

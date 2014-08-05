@@ -79,7 +79,12 @@ nav.navbar.navbar-default.navbar-static-top(role="navigation")
               p.text-center 账号管辖区域：
               p.text-center= "-- " + adminArea + " --"
             li.divider
+            if adminArea == '不限区域'
+              li
+                a(href="/summary") 人数统计
+              li.divider
             if permission == '管理员'
+
               li
                 a(href="/account") 独立账号管理
               li
