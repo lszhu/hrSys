@@ -443,7 +443,9 @@ function addXlsxRow(recorder, sheet, lineNo) {
     sheet['C' + lineNo] = {v: recorder.address.county, t: 's'};
     sheet['D' + lineNo] = {v: recorder.address.town, t: 's'};
     sheet['E' + lineNo] = {v: recorder.address.village, t: 's'};
-    sheet['F' + lineNo] = {v: recorder.username, t: 's'};
+    // 如果姓名为空，则设为'某某'
+    tmp = (recorder.username ? recorder.username: '某某');
+    sheet['F' + lineNo] = {v: tmp, t: 's'};
     sheet['G' + lineNo] = {v: recorder.idNumber, t: 's'};
     sheet['H' + lineNo] = {v: recorder.workRegisterId, t: 's'};
     sheet['I' + lineNo] = {v: recorder.gender, t: 's'};

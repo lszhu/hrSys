@@ -131,6 +131,10 @@ function search(condition, district, callback) {
         .exec(callback);
 }
 
+function update(condition, value, callback) {
+    PersonMsg.update(condition, value, {multi: true}, callback);
+}
+
 function remove(condition, callback) {
     PersonMsg.remove(condition, callback);
 }
@@ -345,6 +349,7 @@ module.exports = {
     save: save,
     query: query,
     remove: remove,
+    update: update,
     count: count,
     multiCount: multiCount,
     preprocessUserMsg: preprocessUserMsg,
