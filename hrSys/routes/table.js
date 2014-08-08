@@ -491,7 +491,9 @@ function addXlsxRow(recorder, sheet, lineNo) {
         sheet['Y' + lineNo] = {v: cnJobTypeName[tmp[0]][tmp], t: 's'};
         sheet['Z' + lineNo] = {v: info.industry, t: 's'};
         sheet['AA' + lineNo] = {v: info.startWorkDate, t: 's'};
-        sheet['AB' + lineNo] = {v: info.workplace, t: 's'};
+        // change '外省' to '省外'
+        tmp = (info.workplace == '外省' ? '省外' : info.workplace);
+        sheet['AB' + lineNo] = {v: tmp, t: 's'};
         sheet['AC' + lineNo] = {v: info.workProvince, t: 's'};
         tmp = info.salary;
         // 如果收入没有填写，输出为空白
@@ -503,11 +505,15 @@ function addXlsxRow(recorder, sheet, lineNo) {
                 sheet['AD' + lineNo] = {v: tmp};
             }
         }
-        sheet['AE' + lineNo] = {v: info.jobForm, t: 's'};
+        // 如果'就业形式'为空，或为'其他'则设为'其它'
+        tmp = (info.jobForm && info.jobForm != '其他' ? info.jobForm : '其它');
+        sheet['AE' + lineNo] = {v: tmp, t: 's'};
     } else {
          // unemployed
         info = recorder.unemploymentInfo;
-        sheet['AF' + lineNo] = {v: info.humanCategory, t: 's'};
+        // 如果'人员身份'为空，则设为'其他'
+        tmp = (info.humanCategory ? info.humanCategory : '其他');
+        sheet['AF' + lineNo] = {v: tmp, t: 's'};
         sheet['AG' + lineNo] = {v: info.unemployedDate, t: 's'};
         sheet['AH' + lineNo] = {v: info.unemploymentCause, t: 's'};
         sheet['AI' + lineNo] = {v: info.familyType, t: 's'};
@@ -518,7 +524,7 @@ function addXlsxRow(recorder, sheet, lineNo) {
             if (tmp[0]) {
                 jobs += cnJobTypeName[tmp[0][0]][tmp[0]];
             }
-            if (tmp[1]) {
+            if (tmp[1] && tmp[0] != tmp[1]) {
                 jobs += cnJobTypeName[tmp[1][0]][tmp[1]];
             }
         }
@@ -538,7 +544,9 @@ function addXlsxRow(recorder, sheet, lineNo) {
             }
         }
         sheet['AM' + lineNo] = {v: info.preferredWorkplace, t: 's'};
-        sheet['AN' + lineNo] = {v: info.preferredJobForm, t: 's'};
+        // 如果就业形式意向为'其他'，则改为'其它'
+        tmp = (info.preferredJobForm == '其他' ? '其它': info.preferredJobForm);
+        sheet['AN' + lineNo] = {v: tmp, t: 's'};
         // 凡是由序号表示的服务类型，统一加1，即从1开始，内部保存为从0开始
         tmp = [];
         for (i = 0, len = info.preferredService.length; i < len; i++) {
