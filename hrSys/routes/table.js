@@ -548,11 +548,21 @@ function addXlsxRow(recorder, sheet, lineNo) {
                 tmp.push(+info.preferredService[i] + 1);
             }
         }
+        // 培训意向需求
         sheet['AO' + lineNo] = {v: tmp.join(','), t: 's'};
         tmp = info.preferredTraining;
-        if (tmp && tmp != '无') {
-            sheet['AP' + lineNo] = {v: tmp, t: 's'};
+        if (tmp && tmp == '职业培训') {
+            sheet['AP' + lineNo] = {v: 1, t: 's'};
+        } else if (tmp && tmp == '创业培训') {
+            sheet['AP' + lineNo] = {v: 2, t: 's'};
+        } else if (tmp && tmp == '企业高技能人才培训') {
+            sheet['AP' + lineNo] = {v: 3, t: 's'};
         }
+    }
+    tmp = recorder.insurance;
+    var cols = ['AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX'];
+    for (i = 0; i < tmp.length; i++) {
+        sheet[cols[tmp[i]] + lineNo] = {v: '参保', t: 's'};
     }
 }
 

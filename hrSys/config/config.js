@@ -9,7 +9,7 @@ var httpPort = 88;         // 蓝山所用端口号
 //var httpPort = 13188;      // 宁远所用端口号
 
 // 此处设置web服务使用环境，可以是开发环境或生产环境
-//var runningEnv = 'development';
+//var runningEnvironment = 'development';
 var runningEnvironment = 'productivity';
 
 // 此处设置系统读取的静态数据
