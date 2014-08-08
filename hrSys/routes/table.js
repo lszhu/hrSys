@@ -422,7 +422,7 @@ function createXlsx(data, callback) {
         addXlsxRow(data[i], sheet, i + 2);
     }
     // 指定xlsx文件的表格范围，左上到右下。
-    sheet['!ref'] = 'A1:AW' + (i + 2);
+    sheet['!ref'] = 'A1:AX' + (i + 2);
     // 返回nodejs方式的buf，内容包含xlsx文件的所有内容
     return xlsx.write(workbook, {type:'buffer'});
 
