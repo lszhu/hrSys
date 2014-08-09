@@ -433,6 +433,32 @@ function createXlsx(data, callback) {
     callback(content);*/
 }
 
+// 将生成excel的批量密集运算分散到多个事件循环，以提升程序的响应能力
+function asyncCreateXlsx(data, callback) {
+    // 导入xlsx的模板文件
+    var workbook = xlsx.readFile(__dirname + '/../config/template.xlsx');
+    var sheet = workbook.Sheets[workbook.SheetNames[0]];
+    var batch = 1000;
+    var length = data.length;
+    function partialCreateXlsx(first) {
+        var last =  first + batch;
+        if (last >= length) {
+            last = length;
+        }
+        for (var i = first; i < last; i++) {
+            addXlsxRow(data[i], sheet, i + 2);
+        }
+        if (last == length) {
+            // 指定xlsx文件的表格范围，左上到右下。
+            sheet['!ref'] = 'A1:AX' + (last + 2);
+            callback(xlsx.write(workbook, {type: 'buffer'}));
+        } else {
+            setImmediate(partialCreateXlsx, last);
+        }
+    }
+    partialCreateXlsx(0);
+}
+
 // 写入一行xlsx文件数据
 function addXlsxRow(recorder, sheet, lineNo) {
     var i, tmp, info, len;
@@ -780,7 +806,8 @@ module.exports = {
     createSearchTable: createSearchTable,
     prepareDownload: prepareDownload,
     dataTranslate: dataTranslate,
-    createXlsx: createXlsx
+    createXlsx: createXlsx,
+    asyncCreateXlsx: asyncCreateXlsx
 //    createXls: createXls
 };
 

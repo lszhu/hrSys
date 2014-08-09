@@ -894,15 +894,15 @@ router.get('/export', function(req, res) {
         res.send('districtIdError');
         return;
     }
-    /*
-    if (area != 0) {
-        bound.districtId = area;
-    } else if (districtId.length == 10) {
-        bound.districtId = districtId;
-    } else if (districtId.length == 8) {
-        bound.districtId = new RegExp('^' + districtId);
-    }
-    */
+
+//    if (area != 0) {
+//        bound.districtId = area;
+//    } else if (districtId.length == 10) {
+//        bound.districtId = districtId;
+//    } else if (districtId.length == 8) {
+//        bound.districtId = new RegExp('^' + districtId);
+//    }
+
     db.query(bound, function(err, data) {
         if (err) {
             console.error('error: ' + err);
@@ -923,13 +923,18 @@ router.get('/export', function(req, res) {
             'officedocument.spreadsheetml.sheet';
         res.setHeader('Content-type', mimetype);
         //res.send(iconv.encode(table.prepareDownload('export', data), 'gbk'));
-        /*table.createXls(data, function(content) {
-            res.send(content);
-        });*/
-        res.send(table.createXlsx(data));
-        /*table.createXlsx(data, function(content) {
-            res.send(content);
-        });*/
+//        table.createXls(data, function(content) {
+//            res.send(content);
+//        });
+        // 同步方式生成整个excel文件，有性能问题，会导致服务器失去响应
+        //res.send(table.createXlsx(data));
+        // 通过异步方式生成excel文件
+        table.asyncCreateXlsx(data, function(d) {
+            res.send(d);
+        });
+//        table.createXlsx(data, function(content) {
+//            res.send(content);
+//        });
     });
 });
 
