@@ -13,6 +13,11 @@ var auth = require('./auth');
 // access database
 var db = require('./db');
 
+// maximum concurrent export clients
+var MAX_CONCURRENT_EXPORT_CLIENT = 1;
+// export switch, if it decreased to 0, export is disabled temporarily
+var canExportXlsxFile = MAX_CONCURRENT_EXPORT_CLIENT;
+
 // import static data
 var staticData = require('../config/dataParse');
 // district Id and name
@@ -443,6 +448,9 @@ router.post('/batchAccount', function(req, res) {
             res.send('ok');
         });
     } else if (req.body.command == 'changeStatus') {
+        // reset canExportXlsxFile parameter to default value
+        // can be used to recovery export busy error
+        canExportXlsxFile = MAX_CONCURRENT_EXPORT_CLIENT;
         db.batchChangeStatus(req.body.status, function(err) {
             if (err) {
                 console.error('save error: \n%o', err);
@@ -903,6 +911,16 @@ router.get('/export', function(req, res) {
 //        bound.districtId = new RegExp('^' + districtId);
 //    }
 
+    // disable export function when canExportXlsxFile is 0
+    if (canExportXlsxFile == 0) {
+        res.send('<h3>系统忙，请稍后再行导出</h3>');
+        return;
+    }
+    // decrease the export counter by 1
+    canExportXlsxFile--;
+    console.log('canExportXlsxFile: ' + canExportXlsxFile);
+    console.log('time: ' + Date.now());
+
     db.query(bound, function(err, data) {
         if (err) {
             console.error('error: ' + err);
@@ -926,15 +944,19 @@ router.get('/export', function(req, res) {
 //        table.createXls(data, function(content) {
 //            res.send(content);
 //        });
-        // 同步方式生成整个excel文件，有性能问题，会导致服务器失去响应
+        // synchronous style to create excel file, bad performance
         //res.send(table.createXlsx(data));
-        // 通过异步方式生成excel文件
+        // asynchronous style to create excel file
         table.asyncCreateXlsx(data, function(d) {
             res.send(d);
         });
 //        table.createXlsx(data, function(content) {
 //            res.send(content);
 //        });
+        // export finished, increase export counter by 1 within the limitation
+        if (canExportXlsxFile < MAX_CONCURRENT_EXPORT_CLIENT) {
+            canExportXlsxFile++;
+        }
     });
 });
 

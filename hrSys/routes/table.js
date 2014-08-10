@@ -451,6 +451,7 @@ function asyncCreateXlsx(data, callback) {
         if (last == length) {
             // 指定xlsx文件的表格范围，左上到右下。
             sheet['!ref'] = 'A1:AX' + (last + 2);
+            //console.log('time: ' + Date.now());
             callback(xlsx.write(workbook, {type: 'buffer'}));
         } else {
             setImmediate(partialCreateXlsx, last);
