@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var util = require('util');
 var iconv = require('iconv-lite');
+var childProcess = require('child_process');
 
 // for debug
 var debug = require('debug')('route');
@@ -921,6 +922,53 @@ router.get('/export', function(req, res) {
     console.log('canExportXlsxFile: ' + canExportXlsxFile);
     console.log('time: ' + Date.now());
 
+    // spawn a child process being used to export excel file
+    //var exportProcess = childProcess.spawn('node', ['../bin/exportProcess.js']);
+    var exportProcess = childProcess.fork(__dirname +
+        '/../bin/exportProcess.js', {silent: true});
+
+
+    exportProcess.stdout.once('readable', function() {
+        var tmp;
+        while (null != (tmp = exportProcess.stdout.read())) {
+            debug('rubish data: ' + tmp);
+        }
+        exportProcess.send({districtId: districtId});
+    });
+
+    // download file and save as microsoft excel file (.xlsx)
+    var filename = createFilename('xlsx');
+    res.setHeader('Content-disposition',
+            'attachment; filename=' + filename);
+    var mimetype = 'application/vnd.openxmlformats-' +
+        'officedocument.spreadsheetml.sheet';
+    res.setHeader('Content-type', mimetype);
+
+    var xlsxHexData = '';
+    exportProcess.on('message', function(m) {
+        if (m.hasOwnProperty('error')) {
+            res.send(m.error);
+        } else if (m.hasOwnProperty('processing')) {
+            debug('in processing');
+            exportProcess.stdout.on('readable', function() {
+                var hexData;
+                while (null != (hexData = exportProcess.stdout.read())) {
+                    debug('data received.');
+                    //debug('xlsx file data: ' + hexData);
+                    xlsxHexData += hexData;
+                }
+                res.send(new Buffer(xlsxHexData, 'hex'));
+                // increase export counter by 1 within the limitation
+                if (canExportXlsxFile < MAX_CONCURRENT_EXPORT_CLIENT) {
+                    canExportXlsxFile++;
+                    debug('process export');
+                    exportProcess.send({exit: true});
+                }
+            });
+        }
+    });
+
+    /*
     db.query(bound, function(err, data) {
         if (err) {
             console.error('error: ' + err);
@@ -930,7 +978,7 @@ router.get('/export', function(req, res) {
         debug('data translated: ' + data.length);
         // to show no more than 500 items in web page
         //res.send(table.createSearchTable(500, data));
-        // download file and save as microsoft excel file (.xls)
+        // download file and save as microsoft excel file (.xlsx)
         var filename = createFilename('xlsx');
         res.setHeader('Content-disposition',
                 'attachment; filename=' + filename);
@@ -949,15 +997,16 @@ router.get('/export', function(req, res) {
         // asynchronous style to create excel file
         table.asyncCreateXlsx(data, function(d) {
             res.send(d);
+            // increase export counter by 1 within the limitation after export
+            if (canExportXlsxFile < MAX_CONCURRENT_EXPORT_CLIENT) {
+                canExportXlsxFile++;
+            }
         });
 //        table.createXlsx(data, function(content) {
 //            res.send(content);
 //        });
-        // export finished, increase export counter by 1 within the limitation
-        if (canExportXlsxFile < MAX_CONCURRENT_EXPORT_CLIENT) {
-            canExportXlsxFile++;
-        }
     });
+    */
 });
 
 /* export data page. */
