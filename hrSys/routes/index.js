@@ -927,6 +927,21 @@ router.get('/export', function(req, res) {
     var exportProcess = childProcess.fork(__dirname +
         '/../bin/exportProcess.js', {silent: true});
 
+    // encounter error status
+    var resSent = false;
+
+    exportProcess.on('error', function() {
+        if (resSent) {
+            return;
+        }
+        res.send('<h3>暂时未能成功导出，请稍后重试</h3>');
+        resSent = true;
+        // increase export counter by 1 within the limitation
+        if (canExportXlsxFile < MAX_CONCURRENT_EXPORT_CLIENT) {
+            canExportXlsxFile++;
+        }
+        exportProcess.kill('SIGKILL');
+    });
 
     exportProcess.stdout.once('readable', function() {
         var tmp;
@@ -936,18 +951,20 @@ router.get('/export', function(req, res) {
         exportProcess.send({districtId: districtId});
     });
 
-    // download file and save as microsoft excel file (.xlsx)
-    var filename = createFilename('xlsx');
-    res.setHeader('Content-disposition',
-            'attachment; filename=' + filename);
-    var mimetype = 'application/vnd.openxmlformats-' +
-        'officedocument.spreadsheetml.sheet';
-    res.setHeader('Content-type', mimetype);
-
     var xlsxHexData = '';
     exportProcess.on('message', function(m) {
+        if (resSent) {
+            return;
+        }
         if (m.hasOwnProperty('error')) {
             res.send(m.error);
+            resSent = true;
+            // increase export counter by 1 within the limitation
+            if (canExportXlsxFile < MAX_CONCURRENT_EXPORT_CLIENT) {
+                canExportXlsxFile++;
+                debug('process export');
+                exportProcess.send({exit: true});
+            }
         } else if (m.hasOwnProperty('processing')) {
             debug('in processing');
             exportProcess.stdout.on('readable', function() {
@@ -957,12 +974,25 @@ router.get('/export', function(req, res) {
                     //debug('xlsx file data: ' + hexData);
                     xlsxHexData += hexData;
                 }
+                if (resSent) {
+                    return;
+                }
+                // download file and save as microsoft excel file (.xlsx)
+                var filename = createFilename('xlsx');
+                res.setHeader('Content-disposition',
+                        'attachment; filename=' + filename);
+                var mimetype = 'application/vnd.openxmlformats-' +
+                    'officedocument.spreadsheetml.sheet';
+                res.setHeader('Content-type', mimetype);
                 res.send(new Buffer(xlsxHexData, 'hex'));
+                resSent = true;
                 // increase export counter by 1 within the limitation
                 if (canExportXlsxFile < MAX_CONCURRENT_EXPORT_CLIENT) {
                     canExportXlsxFile++;
                     debug('process export');
-                    exportProcess.send({exit: true});
+                    if (exportProcess.connected) {
+                        exportProcess.send({exit: true});
+                    }
                 }
             });
         }

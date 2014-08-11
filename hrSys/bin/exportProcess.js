@@ -14,7 +14,7 @@ process.on('message', function(data) {
             msg = '^' + msg;
             exportXlsx({districtId: new RegExp(msg)});
         } else if (msg.length == 10) {
-            exportXlsx({districtId: new RegExp(msg)});
+            exportXlsx({districtId: msg});
         } else {
             process.send({error: 'parameter error'});
         }
@@ -36,3 +36,7 @@ function exportXlsx(bound) {
         //console.log(xlsx.toString('hex'));
     });
 }
+
+process.on('disconnect', function() {
+    process.exit(0);
+});

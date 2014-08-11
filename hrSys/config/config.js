@@ -1,4 +1,4 @@
-/*
+﻿/*
 至少请修改三个参数：
 1. web服务端口号httpPort
 2. 静态数据目录（为对应区县拼音）county
@@ -45,7 +45,7 @@ var dbParameters = {
 };
 
 // 对查询数据库结果数目作出限制，以保证系统性能，避免假死
-var queryLimit = 90000;
+var queryLimit = 500000;
 
 module.exports = {
     port: httpPort,
