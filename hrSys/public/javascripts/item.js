@@ -306,6 +306,9 @@ $(function() {
         }
     });
 
+    // 默认学历为初中
+    $('select[name=education]').val('初中');
+
     // 校验联系电话
     $('input[name=phone]').blur(function(e) {
         var value = $.trim(e.target.value);
