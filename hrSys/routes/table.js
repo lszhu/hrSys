@@ -519,7 +519,12 @@ function addXlsxRow(recorder, sheet, lineNo) {
         tmp = info.jobType;
         sheet['Y' + lineNo] = {v: cnJobTypeName[tmp[0]][tmp], t: 's'};
         sheet['Z' + lineNo] = {v: info.industry, t: 's'};
-        sheet['AA' + lineNo] = {v: info.startWorkDate, t: 's'};
+        // 修正输入日期错误如2014.321或2014.230或201405.8等
+        tmp = info.startWorkDate.replace('.', '0');
+        if (tmp.slice(4, 6) == 2 && tmp.slice(6) > 28) {
+            tmp = tmp.slice(0, 4) + '0301';
+        }
+        sheet['AA' + lineNo] = {v: tmp, t: 's'};
         // change '外省' to '省外'
         tmp = (info.workplace == '外省' ? '省外' : info.workplace);
         sheet['AB' + lineNo] = {v: tmp, t: 's'};
@@ -543,7 +548,12 @@ function addXlsxRow(recorder, sheet, lineNo) {
         // 如果'人员身份'为空，则设为'其他'
         tmp = (info.humanCategory ? info.humanCategory : '其他');
         sheet['AF' + lineNo] = {v: tmp, t: 's'};
-        sheet['AG' + lineNo] = {v: info.unemployedDate, t: 's'};
+        // 修正输入日期错误如2014.321或2014.230或201405.8等
+        tmp = info.unemployedDate.replace('.', '0');
+        if (tmp.slice(4, 6) == 2 && tmp.slice(6) > 28) {
+            tmp = tmp.slice(0, 4) + '0301';
+        }
+        sheet['AG' + lineNo] = {v: tmp, t: 's'};
         sheet['AH' + lineNo] = {v: info.unemploymentCause, t: 's'};
         sheet['AI' + lineNo] = {v: info.familyType, t: 's'};
 

@@ -67,8 +67,11 @@ function validDate(d) {
     if (!d) {
         return true;
     }
-    return d.length == 8 && !isNaN(d) && d.slice(0, 4) < 2100 &&
-        d.slice(4, 6) < 13 && d.slice(6) < 32;
+    if (d.slice(4, 6) == 2 && d.slice(6) > 28) {
+        return false;
+    }
+    return d.length == 8 && !isNaN(d) && 19000000 < d &&
+        d.slice(0, 4) < 2100 && d.slice(4, 6) < 13 && d.slice(6) < 32;
 }
 
 // 检查收入数目的合法性
