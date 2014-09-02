@@ -882,6 +882,8 @@ router.get('/export', function(req, res) {
     var bound = {};
     if (districtId == undefined) {  // area.length >= 10
         bound.districtId = area;
+        districtId = area;
+        debug('export village data with undefined districtId.');
     } else if (area == 0) {        // super user
         if (districtId.length == 10) {
             bound.districtId = districtId;
@@ -899,6 +901,7 @@ router.get('/export', function(req, res) {
         }
     } else if (area.length == 10 && area == districtId) {   // village user
         bound.districtId = districtId;
+        debug('export village data with defined districtId.')
     } else {
         res.send('districtIdError');
         return;
