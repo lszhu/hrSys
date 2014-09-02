@@ -191,7 +191,7 @@ function createSearchTable(n, data) {
         }
     }
     html += '</tbody></table>';
-    return html;
+    return {html: html, count: data.length};
 }
 
 // 生成以tab为栏目分隔符的，换行符为记录分隔符的数据，用于导出到excel

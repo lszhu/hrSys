@@ -14,7 +14,8 @@ $('button.query').click(function() {
         condition[sel[i]] = $(tmp).val();
     }
     $.post('/search', {condition: condition}, function(data) {
-        $('#searchResult').html(data);
+        $('#searchResult').html(data.html);
+        $('#count').html('（检索到' + data.count + '条记录）');
     });
 });
 
