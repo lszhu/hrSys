@@ -7,6 +7,161 @@ var f1 = './data.lanShan/国有单位.txt';
 
 var fBase = './base.txt';
 
+var fCopId = './data.lanShan/corporationId.txt';
+var fCopType = './data.lanShan/corporationType.txt';
+var fOut = './data.lanShan/typeOut.txt';
+
+function addTypeCol() {
+    var copId = getDataWin(fCopId);
+    var copType = getDataWin(fCopType);
+    var row, tmp;
+    for (var i = 0; i < copId.length; i++) {
+        row = searchId(copId[i], copType);
+        if (row) {
+            tmp = copAndEcoType(row[3], row[2]);
+            copId[i][1] = tmp.cop;
+            copId[i][2] = tmp.eco;
+            tmp = businessAndIndustry(row[1]);
+            copId[i][3] = tmp.b;
+            copId[i][4] = tmp.i;
+        } else {
+            copId[i][1] = '';
+            copId[i][2] = '';
+            copId[i][3] = '';
+            copId[i][4] = '';
+        }
+    }
+    console.log(copId.length);
+    for (i = 0; i < copId.length; i++) {
+        copId[i] = copId[i].join('\t');
+    }
+    fs.writeFileSync(fOut, copId.join('\r\n'));
+}
+
+addTypeCol();
+
+function searchId(cId, dic) {
+    for (var i = 0; i < dic.length; i++) {
+        if (dic[i][0] == cId) {
+            return dic[i];
+        }
+    }
+    return false;
+}
+
+function copAndEcoType(cop, eco) {
+    var copType = {
+            '10': '企业',
+            '30': '机关',
+            '20': '事业单位',
+            '40': '社会团体',
+            '50': '其他',
+            '52': '其他',
+            '53': '其他',
+            '54': '其他',
+            '90': '其他'
+        };
+    var ecoType = {
+            '110': '国有全资',
+            '120': '集体全资',
+            '130': '股份合作',
+            '140': '其他',
+            '141': '国有全资',
+            '142': '集体全资',
+            '143': '国有全资',
+            '149': '其他',
+            '150': '股份合作',
+            '151': '国有全资',
+            '159': '股份合作',
+            '160': '股份合作',
+            '170': '私营企业',
+            '171': '私营企业',
+            '172': '私营企业',
+            '173': '私营企业',
+            '174': '私营企业',
+            '175': '个体工商',
+            '190': '其他',
+            '210': '港、澳、台',
+            '220': '港、澳、台',
+            '230': '港、澳、台',
+            '240': '港、澳、台',
+            '310': '中外合资',
+            '320': '中外合资',
+            '330': '中外合资',
+            '340': '中外合资'
+        };
+    var ct = copType[cop];
+    ct = ct ? ct : '其他';
+    var et = ecoType[eco];
+    et = et ? et : '其他';
+    return {cop: ct, eco: et};
+}
+
+function businessAndIndustry(copId) {
+    var cId = copId.slice(0, 2);
+    if (cId <= 5) {
+        return {b: '农林牧渔', i: '第一产业'};
+    }
+    if (6 <= cId && cId <= 12) {
+        return {b: '采掘', i: '第二产业'};
+    }
+    if (13 <= cId && cId <= 43) {
+        return {b: '制造', i: '第二产业'};
+    }
+    if (44 <= cId && cId <= 46) {
+        return {b: '电力、煤气及水', i: '第二产业'};
+    }
+    if (47 <= cId && cId <= 50) {
+        return {b: '建筑', i: '第二产业'};
+    }
+    if (53 <= cId && cId <= 60) {
+        return {b: '交通运输仓储邮电通信', i: '第三产业'};
+    }
+    if (63 <= cId && cId <= 65) {
+        return {b: '信息、计算机', i: '第三产业'};
+    }
+    if (51 <= cId && cId <= 52) {
+        return {b: '批发零售', i: '第三产业'};
+    }
+    if (61 <= cId && cId <= 62) {
+        return {b: '住宿餐饮', i: '第三产业'};
+    }
+    if (66 <= cId && cId <= 69) {
+        return {b: '金融', i: '第三产业'};
+    }
+    if (cId == 70) {
+        return {b: '房地产', i: '第三产业'};
+    }
+    if (71 <= cId && cId <= 72) {
+        return {b: '租赁商务服务', i: '第三产业'};
+    }
+    if (73 <= cId && cId <= 75) {
+        return {b: '科学技术地质勘查', i: '第三产业'};
+    }
+    if (76 <= cId && cId <= 78) {
+        return {b: '水利环境公共设施管理', i: '第三产业'};
+    }
+    if (79 <= cId && cId <= 81) {
+        return {b: '居民服务其它服务业', i: '第三产业'};
+    }
+    if (cId == 82) {
+        return {b: '教育', i: '第三产业'};
+    }
+    if (cId == 83) {
+        return {b: '卫生社会保障公共设施管理', i: '第三产业'};
+    }
+    if (85 <= cId && cId <= 89) {
+        return {b: '文化体育娱乐', i: '第三产业'};
+    }
+    if (90 <= cId && cId <= 95) {
+        return {b: '公共管理社会组织', i: '第三产业'};
+    }
+    if (cId == 96) {
+        return {b: '国际组织', i: '第三产业'};
+    }
+    return {b: '其他', i: '其它'};
+}
+
 function getData(file) {
     var f = fs.readFileSync(file);
     f = f.toString().split('\n');
@@ -176,7 +331,7 @@ function fill35Less(data) {
     return data;
 }
 
-fillAddress('base.txt');
+//fillAddress('base.txt');
 
 function fillAddress(path) {
     var file = fill35Less(getDataWin(path));
