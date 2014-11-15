@@ -6,7 +6,9 @@ var staticData = require('./staticData');
 
 var district = require(rootPath + 'config/dataParse').districtName;
 var jobTypeList = require(rootPath + 'config/dataParse').jobType.local;
-var db = require(rootPath + 'routes/db');
+//var db = require(rootPath + 'routes/db');
+// 导入xlsx文件分析库
+var xlsx = require('xlsx');
 
 
 
@@ -106,3 +108,41 @@ function validDate(d) {
 function validSalary(salary) {
     return !isNaN(salary);
 }
+
+// 读取excel（xlsx）文件，分析返回数组，元素为人员信息条目
+function parseExcel(filename, firstLine) {
+    var start = firstLine ? firstLine : 7;
+    var workbook = xlsx.readFile(filename);
+    if (workbook.SheetNames.length > 1 || workbook.SheetNames.length == 0) {
+        console.log(filename + '工作表有异常！');
+        return;
+    }
+    var sheetName = workbook.SheetNames[0];
+    console.log(filename + '有工作表：' + sheetName);
+    var sheet = workbook.Sheets[sheetName];
+    var range = sheet['!ref'].split(':')[1];
+    if (range.slice(0, 2) != 'AX' || isNaN(range.slice(2))) {
+        console.log(filename + '工作表有异常！');
+        return;
+    }
+    var end = range.slice(2);
+    var itemList = [];
+    var item, j, tmp;
+    var index = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    for (var i = start; i < end; i++) {
+        item = [];
+        for (j = 0; j < 26; j++) {
+            tmp = sheet[index[j] + i];
+            item[j] = tmp ? tmp.v : '';
+        }
+        for (j = 26; j < 50; j++) {
+            tmp = sheet['A' + index[j - 26] + i];
+            item[j] = tmp ? tmp.v : '';
+        }
+        itemList.push(item);
+    }
+    return itemList;
+}
+
+// 测试语句
+console.log(parseExcel('excel/test.xlsx'));
