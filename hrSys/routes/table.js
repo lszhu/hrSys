@@ -564,7 +564,7 @@ function addXlsxRow(recorder, sheet, lineNo) {
                 jobs += cnJobTypeName[tmp[0][0]][tmp[0]];
             }
             if (tmp[1] && tmp[0] != tmp[1]) {
-                jobs += cnJobTypeName[tmp[1][0]][tmp[1]];
+                jobs += ', ' + cnJobTypeName[tmp[1][0]][tmp[1]];
             }
         }
         //tmp = info.preferredJobType[1];
