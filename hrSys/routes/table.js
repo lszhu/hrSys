@@ -517,7 +517,15 @@ function addXlsxRow(recorder, sheet, lineNo) {
         info = recorder.employmentInfo;
         sheet['X' + lineNo] = {v: info.employer, t: 's'};
         tmp = info.jobType;
-        sheet['Y' + lineNo] = {v: cnJobTypeName[tmp[0]][tmp], t: 's'};
+        if (tmp && ( tmp[0] == 'A' || tmp[0] == 'B' ||
+            tmp[0] == 'C' || tmp[0] == 'D')) {
+            tmp = cnJobTypeName[tmp[0]][tmp];
+            tmp = tmp ? tmp : '';
+        } else {
+            tmp = '';
+        }
+        sheet['Y' + lineNo] = {v: tmp, t: 's'};
+        //sheet['Y' + lineNo] = {v: cnJobTypeName[tmp[0]][tmp], t: 's'};
         sheet['Z' + lineNo] = {v: info.industry, t: 's'};
         // 修正输入日期错误如2014.321或2014.230或201405.8等
         tmp = info.startWorkDate.replace('.', '0');

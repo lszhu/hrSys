@@ -149,7 +149,8 @@ function preprocessUserMsg(userMsg) {
 }
 
 function count(districtId, callback) {
-    PersonMsg.count({districtId: districtId}, function(e, c) {
+    var re = new RegExp('^' + districtId);
+    PersonMsg.count({districtId: re}, function(e, c) {
         if (e) {
             console.log('DataBase access error.');
             callback(districtId, 0);
