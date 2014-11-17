@@ -3,12 +3,23 @@ var rootPath = '../hrSys/';
 var staticData = require(rootPath + 'config/dataParse');
 var district = staticData.districtName;
 
-//var db = require(rootPath + 'routes/db');
+var db = require(rootPath + 'routes/db');
 // 导入xlsx文件分析库
-var xlsx = require('../hrSys/node_modules/xlsx');
+var xlsx = require(rootPath + 'node_modules/xlsx');
 
+var fs = require('fs');
 
-
+function importFile(filename) {
+    var data = parseExcel(filename);
+    var len = data.length;
+    //console.log(data[0]);
+    for (var i = 0; i < len; i++) {
+        db.save(formatData(data[i]));
+    }
+    console.log('从文件%s导入%d条信息。', filename, len);
+}
+// 测试
+importFile('excel/test.xlsx');
 
 ///////////////////////////////////////////////////
 // 工具函数
@@ -196,6 +207,127 @@ function setPostService(d) {
     d.postService = service;
 }
 
+// 设置服务需求，传入参数为个人信息条目
+function setPreferredService(o) {
+    if (!o) {
+        return;
+    }
+    var service = [];
+    var s = o.preferredService;
+    //console.log(s);
+    if (!s || !s.trim()) {
+        return;
+    }
+
+    for (var i = 1; i < 8; i++) {
+        if (s.search(i) != -1) {
+            service.push(i);
+        }
+    }
+    o.preferredService = service;
+    // 去除数字、空格及逗号（英文及中文模式）
+    s = s.replace(/[\d\s,，]/g, '');
+    if (s) {
+        o.extraPreferredService = s;
+    }
+    //console.log(o);
+}
+// 测试
+//var obj = {preferredService: '2,3钳工'};
+//setPreferredService(obj);
+//console.log(obj);
+
+// 由工种名称查询编号
+function lookupJobIdFromName(job) {
+    if (!job) {
+        return [];
+    }
+    if (job == '其它') {
+        return  ['D01'];
+    }
+    var i, j, tmp;
+    var jobId = [];
+    for (i = 0; i < 4; i++) {
+        //console.log(staticData.jobType);
+        tmp = staticData.jobType.local['ABCD'[i]];
+        //console.log(tmp);
+        for (j in tmp) {
+            if (!tmp.hasOwnProperty(j)) {
+                continue;
+            }
+            if (job.search(tmp[j]) != -1) {
+                jobId.push(j);
+            }
+        }
+    }
+    return jobId;
+}
+// 测试例子
+//console.log('分析工种：' + lookupJobIdFromName('组合机床操作工, 磨./工'));
+
+// 设置工作类型，必须用编码替代名称，传入参数为个人信息条目
+function setJobType(o) {
+    var d;
+    if (o && o.employmentInfo) {
+        d = o.employmentInfo.jobType;
+        d = lookupJobIdFromName(d)[0];
+        o.employmentInfo.jobType = d ? d : '';
+    }
+    if (o && o.unemploymentInfo) {
+        d = o.unemploymentInfo.preferredJobType;
+        o.unemploymentInfo.preferredJobType = lookupJobIdFromName(d);
+    }
+}
+
+// 设置参加保险情况，必须用序号替代名称，传入参数为个人信息条目
+function setInsurance(o) {
+    if (!o) {
+        return;
+    }
+    var insure = o.insurance;
+    insure = insure ? insure : [];
+    if (o.censusRegisterType == '农业户口') {
+        insure[2] = '参保';
+        insure[7] = '参保';
+        insure[1] = '';
+        insure[4] = '';
+    } else if (o.censusRegisterType == '非农业户口') {
+        insure[1] = '参保';
+        insure[4] = '参保';
+        insure[2] = '';
+        insure[7] = '';
+    }
+
+    var idNumber = o.idNumber;
+    if (staticData.workInjuryInsurance.hasOwnProperty(idNumber)) {
+        insure[6] = '参保';
+    }
+    if (staticData.unemployedInsurance.hasOwnProperty(idNumber)) {
+        insure[5] = '参保';
+    }
+    if (staticData.orgMedicalInsurance.hasOwnProperty(idNumber)) {
+        insure[3] = '参保';
+    }
+    if (staticData.orgRetireInsurance.hasOwnProperty(idNumber)) {
+        insure[0] = '参保';
+    }
+
+    var insurance = [];
+    for (var i = 0; i < insure.length; i++) {
+        if (insure[i] == '参保') {
+            insurance.push(i);
+        }
+    }
+}
+//测试
+//var obj = {
+//    idNumber: '432902197201110050',
+//    censusRegisterType: '非农业户口',
+//    insurance: ['参保', '', '参保', '', '', '', '', '']
+//};
+//setInsurance(obj);
+//console.log(obj);
+
 // 补足部分在册数据，修复部分填入错误的数据，传入参数为个人信息条目
 function formatData(d) {
     if (!d) {
@@ -234,13 +366,13 @@ function formatData(d) {
         postTraining: d[19],
         technicalGrade: d[21],
         //postService: [String],
-        extraPostService: '',
+        //extraPostService: '',
         // employment/unemployment switch
         //employment: String,
         // employment info
         employmentInfo: {
             employer: d[23],
-            jobType: d[24],
+            jobType: d[24],////
             industry: d[25],
             startWorkDate: d[26],
             workplace: d[27],
@@ -254,18 +386,18 @@ function formatData(d) {
             unemployedDate: d[32],
             unemploymentCause: d[33],
             familyType: d[34],
-            preferredJobType: [String],
+            preferredJobType: d[35], ////
             //extraPreferredJobType: String,
             preferredSalary: d[37],
             preferredIndustry: d[36],
             preferredWorkplace: d[38],
             preferredJobForm: d[39],
-            preferredService: [String],
-            extraPreferredService: String,
+            preferredService: d[40], /////
+            //extraPreferredService: String,
             preferredTraining: d[41]
         },
         // insurance info
-        insurance: [String],
+        insurance: d.slice(42, 50), ////
         // editor info
         editor: '电脑操作员',
         modifiedDate: new Date()
@@ -283,11 +415,13 @@ function formatData(d) {
         town: district[county][town],
         village: district[town][village]
     };
+    // 校正出生日期
+    o.birthday = o.idNumber.toString().slice(6, 14);
     // 校验就业/失业时间，并进行一定纠正
     setDate(o);
     // 判断是否已经就业，如果未填写任何已就业信息，则表示未就业
-    if (!o[23] && !o[24] && !o[25] && !o[26] &&
-        !o[27] && !o[28] && !o[29] && !o[30]) {
+    if (!d[23] && !d[24] && !d[25] && !d[26] &&
+        !d[27] && !d[28] && !d[29] && !d[30]) {
         o.employment = '暂未就业';
         o.employmentInfo = undefined;
     } else {
@@ -301,6 +435,9 @@ function formatData(d) {
     setWorkRegisterId(o);
     setPostService(o);
     setSalary(o);
+    setPreferredService(o);
+    setJobType(o);
+    setInsurance(o);
 
     return o;
 }
@@ -341,4 +478,7 @@ function parseExcel(filename, firstLine) {
 }
 
 // 测试语句
-//console.log(parseExcel('excel/test.xlsx'));
+//var data = parseExcel('excel/test.xlsx');
+//for (var i = 0; i < 10; i++) {
+//    console.log(formatData(data[i]));
+//}
