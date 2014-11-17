@@ -59,14 +59,19 @@ function validIdNumber(idNumber) {
         sum < 10 && sum == idNumber.charAt(17);
 }
 
-// 由身份证号得到年龄
-function getAge(idNumber) {
-    if (!validIdNumber(idNumber)) {
-        return '';
+// 由出生日期得到年龄
+function getAge(birthday) {
+    var birth = birthday.toString();
+    var now = new Date();
+    var age = now.getFullYear() - birth.slice(0, 4);
+    if (now.getMonth() >= +birth.slice(4, 6)) {
+        return age;
+    } else if (now.getMonth() < birth.slice(4, 6) - 1) {
+        age--;
+    } else if (now.getDate() < birth.slice(6, 8)) {
+        age--;
     }
-    var now = (new Date()).getFullYear();
-    var year = idNumber.slice(6, 10);
-    return now - year;
+    return age;
 }
 
 // 由身份证号得到性别
@@ -318,6 +323,7 @@ function setInsurance(o) {
             insurance.push(i);
         }
     }
+    o.insurance = insurance;
 }
 //测试
 //var obj = {
@@ -344,9 +350,9 @@ function formatData(d) {
         idNumber: d[6],
         nation: d[11],
         // readonly basic info
-        age: d[9],
-        birthday: d[10],
-        gender: d[8],
+        age: getAge(d[6].slice(6, 14)),
+        birthday: d[6].slice(6, 14),
+        gender: getGender(d[6]),
         workRegisterId: d[7],
         //address: {
         //    county: String,

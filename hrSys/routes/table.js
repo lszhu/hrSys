@@ -419,6 +419,7 @@ function createXlsx(data, callback) {
     var workbook = xlsx.readFile(__dirname + '/../config/template.xlsx');
     var sheet = workbook.Sheets[workbook.SheetNames[0]];
     for (var i = 0, len = data.length; i < len; i++) {
+        initXlsxData(data[i]);
         addXlsxRow(data[i], sheet, i + 2);
     }
     // 指定xlsx文件的表格范围，左上到右下。
@@ -432,6 +433,138 @@ function createXlsx(data, callback) {
     var content = fs.readFileSync(__dirname + '/../temp/' + xlsxName);
     callback(content);*/
 }
+
+// 对用于生成excel的数据进行预处理，传入参数为采集到的一个条目
+function initXlsxData(d) {
+    if (!d || !d.idNumber) {
+        return;
+    }
+    if (!d.username || !d.username.trim()) {
+        d.username = '某某';
+    }
+    if (!d.nation || !d.nation.trim()) {
+        d.nation = '汉族';
+    }
+    if (!d.workRegisterId || !d.workRegisterId.trim()) {
+        d.workRegisterId = '';
+    }
+    if (!d.education || !d.education.trim()) {
+        d.education = '';
+    }
+    if (!d.phone || !d.phone.trim()) {
+        d.phone = '';
+    }
+    if (!d.censusRegisterType || !d.censusRegisterType.trim()) {
+        d.censusRegisterType = '';
+    }
+    if (!d.politicalOutlook || !d.politicalOutlook.trim()) {
+        d.politicalOutlook = '';
+    }
+    if (!d.marriage || !d.marriage.trim()) {
+        d.marriage = '';
+    }
+    if (!d.trainingType || !d.trainingType.trim()) {
+        d.trainingType = '';
+    }
+    if (!d.postTraining || !d.postTraining.trim()) {
+        d.postTraining = '';
+    }
+    if (!d.technicalGrade || !d.technicalGrade.trim()) {
+        d.technicalGrade = '';
+    }
+    if (!d.postService) {
+        d.postService = [];
+    }
+    if (!d.extraPostService || !d.extraPostService.trim()) {
+        d.extraPostService = '';
+    }
+    if (d.employmentInfo) {
+        if (!d.employmentInfo.employer || !d.employmentInfo.employer.trim()) {
+            d.employmentInfo.employer = '';
+        }
+        if (!d.employmentInfo.jobType || !d.employmentInfo.jobType.trim()) {
+            d.employmentInfo.jobType = '';
+        }
+        if (!d.employmentInfo.industry || !d.employmentInfo.industry.trim()) {
+            d.employmentInfo.industry = '';
+        }
+        if (!d.employmentInfo.startWorkDate ||
+            !d.employmentInfo.startWorkDate.trim()) {
+            d.employmentInfo.startWorkDate = '';
+        }
+        if (!d.employmentInfo.workplace ||
+            !d.employmentInfo.workplace.trim()) {
+            d.employmentInfo.workplace = '';
+        }
+        if (!d.employmentInfo.workProvince ||
+            !d.employmentInfo.workProvince.trim()) {
+            d.employmentInfo.workProvince = '';
+        }
+        if (!d.employmentInfo.salary ||
+            !d.employmentInfo.salary.toString().trim()) {
+            d.employmentInfo.salary = '';
+        }
+        if (!d.employmentInfo.jobForm || !d.employmentInfo.jobForm.trim()) {
+            d.employmentInfo.jobForm = '';
+        }
+    }
+    if (d.unemploymentInfo) {
+        if (!d.unemploymentInfo.humanCategory ||
+            !d.unemploymentInfo.humanCategory.trim()) {
+            d.unemploymentInfo.humanCategory = '';
+        }
+        if (!d.unemploymentInfo.unemployedDate ||
+            !d.unemploymentInfo.unemployedDate.trim()) {
+            d.unemploymentInfo.unemployedDate = '';
+        }
+        if (!d.unemploymentInfo.unemploymentCause ||
+            !d.unemploymentInfo.unemploymentCause.trim()) {
+            d.unemploymentInfo.unemploymentCause = '';
+        }
+        if (!d.unemploymentInfo.familyType ||
+            !d.unemploymentInfo.familyType.trim()) {
+            d.unemploymentInfo.familyType = '';
+        }
+        if (!d.unemploymentInfo.preferredJobType) {
+            d.unemploymentInfo.preferredJobType = [];
+        }
+        if (!d.unemploymentInfo.preferredSalary ||
+            !d.unemploymentInfo.preferredSalary.toString().trim()) {
+            d.unemploymentInfo.preferredSalary = '';
+        }
+        if (!d.unemploymentInfo.preferredIndustry ||
+            !d.unemploymentInfo.preferredIndustry.trim()) {
+            d.unemploymentInfo.preferredIndustry = '';
+        }
+        if (!d.unemploymentInfo.preferredWorkplace ||
+            !d.unemploymentInfo.preferredWorkplace.trim()) {
+            d.unemploymentInfo.preferredWorkplace = '';
+        }
+        if (!d.unemploymentInfo.preferredJobForm ||
+            !d.unemploymentInfo.preferredJobForm.trim()) {
+            d.unemploymentInfo.preferredJobForm = '';
+        }
+        if (!d.unemploymentInfo.preferredService) {
+            d.unemploymentInfo.preferredService = [];
+        }
+        if (!d.unemploymentInfo.extraPreferredService ||
+            !d.unemploymentInfo.extraPreferredService.trim()) {
+            d.unemploymentInfo.extraPreferredService = '';
+        }
+        if (!d.unemploymentInfo.preferredTraining ||
+            !d.unemploymentInfo.preferredTraining.trim()) {
+            d.unemploymentInfo.preferredTraining = '';
+        }
+    }
+}
+// 测试个人信息初始化函数
+//var obj = {
+//    idNumber: '431103198011221234',
+//    districtId: '4311030405',
+//    unemploymentInfo: {preferredJobType: 'temp'}
+//};
+//initXlsxData(obj);
+//console.log(obj);
 
 // 将生成excel的批量密集运算分散到多个事件循环，以提升程序的响应能力
 function asyncCreateXlsx(data, callback) {
