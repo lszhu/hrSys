@@ -419,7 +419,7 @@ function createXlsx(data, callback) {
     var workbook = xlsx.readFile(__dirname + '/../config/template.xlsx');
     var sheet = workbook.Sheets[workbook.SheetNames[0]];
     for (var i = 0, len = data.length; i < len; i++) {
-        initXlsxData(data[i]);
+        //initXlsxData(data[i]);
         addXlsxRow(data[i], sheet, i + 2);
     }
     // 指定xlsx文件的表格范围，左上到右下。
@@ -434,7 +434,7 @@ function createXlsx(data, callback) {
     callback(content);*/
 }
 
-// 对用于生成excel的数据进行预处理，传入参数为采集到的一个条目
+// 对用于生成excel时，对空的或无效数据进行初始化，传入参数为一个信息条目
 function initXlsxData(d) {
     if (!d || !d.idNumber) {
         return;

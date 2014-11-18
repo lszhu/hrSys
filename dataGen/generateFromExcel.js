@@ -8,21 +8,116 @@ var db = require(rootPath + 'routes/db');
 var xlsx = require(rootPath + 'node_modules/xlsx');
 
 var fs = require('fs');
+var path = require('path');
 
+/////////////////////////////////////////////////
+
+// 主程序，调用批量导入函数，文件所在目录（相对当前文件所在位置）
+batchImportFile('excel/part4');
+
+//////////////////////////////////////////////////
+
+// 批量导入excel文件内容到数据库，传入指定文件目录
+function batchImportFile(dir) {
+    var files = fs.readdirSync(dir);
+    //console.log(files);
+    files = files.filter(function(e) {return e && e.slice(-5) == '.xlsx'});
+    for (var i = 0; i < files.length; i++) {
+        setTimeout(function(index) {
+            return function() {
+                importFile(path.join(dir, files[index]));
+            };
+        }(i), i * 5000);
+        //importFile(path.join(dir, files[i]));
+    }
+}
+
+// 导入excel文件内容到数据库
 function importFile(filename) {
     var data = parseExcel(filename);
-    var len = data.length;
-    //console.log(data[0]);
-    for (var i = 0; i < len; i++) {
-        db.save(formatData(data[i]));
+    if (!data) {
+        return;
     }
-    console.log('从文件%s导入%d条信息。', filename, len);
+    var len = data.length;
+    var sum = len;
+    //console.log(data[0]);
+    var item;
+    for (var i = 0; i < len; i++) {
+        item = formatData(data[i]);
+        if (item) {
+            db.save(item);
+        } else {
+            //console.log('出现非法数据：', data[i]);
+            sum--;
+        }
+
+    }
+    console.log('从文件%s导入%d条信息。', filename, sum);
 }
 // 测试
-importFile('excel/test.xlsx');
+//importFile('excel/part1/1601-2500.xlsx');
 
 ///////////////////////////////////////////////////
 // 工具函数
+
+// 从地址信息分析得到并返回行政区划代码，无法得到结果则返回空值
+function parseDistrictIdFromName(address) {
+    var town = address.town;
+    town = town ? town.trim() : '';
+    var village = address.village;
+    village = village ? village.trim() : '';
+    if (!town && !village) {
+        return '';
+    }
+    var county = getCountyId();
+    var villages;
+    var towns = district[county];
+    if (town) {     // 至少提供了乡镇名称的情况
+        for (var t in towns) {
+            if (!towns.hasOwnProperty(t)) {
+                continue;
+            }
+            // 找到乡镇
+            if (towns[t].search(town) != -1) {
+                // 如果没有提供村/社区名，则返回01编号的村/社区
+                if (!village) {
+                    return t + '01';
+                }
+                villages = district[t];
+                // 继续找村/社区
+                for (var v in villages) {
+                    if (!villages.hasOwnProperty(v)) {
+                        continue;
+                    }
+                    // 找到村/社区
+                    if (villages[v].search(village) != -1) {
+                        return v;
+                    }
+                }
+                // 没找到村/社区，则返回01编号的村/社区
+                return t + '01';
+            }
+        }
+    } else if (village) {   // 只提供村/社区名的情况
+        // 在整个区县范围内匹配村/社区名称
+        for (var i in towns) {
+            if (!towns.hasOwnProperty(i)) {
+                continue;
+            }
+            villages = towns[i];
+            for (var j in villages) {
+                if (!villages.hasOwnProperty(j)) {
+                    continue;
+                }
+                // 找到匹配的村/社区名称
+                if (villages[j].search(village) != -1) {
+                    return j;
+                }
+            }
+        }
+    }
+    return '';
+}
 
 // get county Id from imported district Id
 function getCountyId() {
@@ -37,7 +132,12 @@ function getCountyId() {
 }
 
 // 验证身份证号的合法性
-function validIdNumber(idNumber) {
+function validIdNumber(idNum) {
+    var idNumber = idNum;
+    if (!idNumber) {
+        return false;
+    }
+    idNumber = idNumber.trim();
     if (idNumber.length != 18 || 12 < idNumber.slice(10, 12) ||
         idNumber.slice(6, 8) < 19 || 20 < idNumber.slice(6, 8)) {
         return false;
@@ -101,8 +201,9 @@ function validYear(year) {
 
 // 检查电话的合法性
 function validPhone(phone) {
-    return !phone ||
-        !isNaN(phone) && 6 < phone.length && phone.length < 13;
+    return !phone || phone.toString().trim().length > 5;
+    //return !phone ||
+    //    !isNaN(phone) && 6 < phone.length && phone.length < 13;
 }
 
 // 检查年月日的合法性，格式为：YYYYMMDD
@@ -186,15 +287,24 @@ function setPostService(d) {
     if (staticData.vocationalTraining.hasOwnProperty(idNumber) ||
         staticData.startupTraining.hasOwnProperty(idNumber)) {
         service.push(1);
+        // 设置培训信息
         if (staticData.vocationalTraining.hasOwnProperty(idNumber)) {
             d.trainingType = '职业培训';
+            d.postTraining = staticData.vocationalTraining[idNumber];
         } else {
             d.trainingType = '创业培训';
+            d.postTraining = staticData.startupTraining[idNumber];
         }
+    } else {
+        // 如果培训名称为空，则培训类型为无
+        if (!d.postTraining || !d.postTraining.trim())
+        d.trainingType = '无';
     }
     if (staticData.technicalGrade.hasOwnProperty(idNumber)) {
         d.technicalGrade = staticData.technicalGrade[idNumber];
         service.push(2);
+    } else {
+        d.technicalGrade = '无';
     }
     if (staticData.socialSubsidy.hasOwnProperty(idNumber)) {
         service.push(3);
@@ -336,12 +446,13 @@ function setInsurance(o) {
 
 // 补足部分在册数据，修复部分填入错误的数据，传入参数为个人信息条目
 function formatData(d) {
-    if (!d) {
+    if (!d || !d[1]) {
         console.log('从excel文件读取的用户信息有误！');
         return;
     }
+    d[6] = d[6].toString();
     if (!validIdNumber(d[6])) {
-        console.log('身份证号有误！');
+        console.log('身份证号有误：' + d[6]);
         return;
     }
 
@@ -354,11 +465,11 @@ function formatData(d) {
         birthday: d[6].slice(6, 14),
         gender: getGender(d[6]),
         workRegisterId: d[7],
-        //address: {
-        //    county: String,
-        //    town: String,
-        //    village: String
-        //},
+        address: {
+            county: d[2],
+            town: d[3],
+            village: d[4]
+        },
         districtId: d[1],
         // still basic info
         education: d[13],
@@ -415,6 +526,20 @@ function formatData(d) {
     }
     var town = o.districtId.slice(0, 8);
     var village = o.districtId.slice(0, 10);
+    //var townName = '';
+    //var villageName = '';
+    if (!district[county].hasOwnProperty(town) ||
+        !district[town].hasOwnProperty(village)) {
+        console.log('行政区划代码超出范围：' + o.districtId);
+        console.log('试图通过分析地名更正行政区划代码！');
+        var newId = parseDistrictIdFromName(o.address);
+        if (!newId) {
+            console.log('无法更正行政区划代码异常***');
+            return;
+        }
+        town = newId.slice(0, 8);
+        village = newId.slice(0, 10);
+    }
     // 填写地址信息
     o.address = {
         county: district['4311'][county],
@@ -423,6 +548,7 @@ function formatData(d) {
     };
     // 校正出生日期
     o.birthday = o.idNumber.toString().slice(6, 14);
+
     // 校验就业/失业时间，并进行一定纠正
     setDate(o);
     // 判断是否已经就业，如果未填写任何已就业信息，则表示未就业
@@ -435,8 +561,8 @@ function formatData(d) {
         o.unemploymentInfo = undefined;
     }
     if (!validPhone(o.phone)) {
-        console.log('电话号码有误！将被清空');
-        o.phone = undefined;
+        console.log('电话号码有误！将被清空。原填入号码为：' + o.phone);
+        o.phone = '';
     }
     setWorkRegisterId(o);
     setPostService(o);
@@ -451,7 +577,14 @@ function formatData(d) {
 // 读取excel（xlsx）文件，分析返回数组，元素为人员信息条目
 function parseExcel(filename, firstLine) {
     var start = firstLine ? firstLine : 7;
-    var workbook = xlsx.readFile(filename);
+    try {
+        var workbook = xlsx.readFile(filename);
+    } catch (e) {
+        console.log('读取文件错误，文件名：' + filename);
+        console.log('读取文件错误：' + e);
+        return;
+    }
+
     if (workbook.SheetNames.length > 1 || workbook.SheetNames.length == 0) {
         console.log(filename + '工作表有异常！');
         return;
@@ -459,8 +592,11 @@ function parseExcel(filename, firstLine) {
     var sheetName = workbook.SheetNames[0];
     console.log(filename + '有工作表：' + sheetName);
     var sheet = workbook.Sheets[sheetName];
+    if (!sheet['!ref']) {   // 空文件的情况
+        return;
+    }
     var range = sheet['!ref'].split(':')[1];
-    if (range.slice(0, 2) != 'AX' || isNaN(range.slice(2))) {
+    if (isNaN(range.slice(2))) {
         console.log(filename + '工作表有异常！');
         return;
     }
@@ -468,7 +604,7 @@ function parseExcel(filename, firstLine) {
     var itemList = [];
     var item, j, tmp;
     var index = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    for (var i = start; i < end; i++) {
+    for (var i = start; i <= end; i++) {
         item = [];
         for (j = 0; j < 26; j++) {
             tmp = sheet[index[j] + i];
