@@ -932,10 +932,16 @@ function msgTranslate(personalMsg) {
     var item, temp;
     if (personalMsg.employment == '已就业') {
         item = personalMsg.employmentInfo.jobType;
+        if (!item) {
+            return;
+        }
         personalMsg.employmentInfo.jobType = cnJobTypeName[item[0]][item];
 
     } else {
         item = personalMsg.unemploymentInfo.preferredJobType;
+        if (!item) {
+            return;
+        }
         temp = [];
         for (var i = 0; i < item.length; i++) {
             temp.push(cnJobTypeName[item[i][0]][item[i]]);
