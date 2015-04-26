@@ -69,6 +69,7 @@ $(function() {
             $.get('/data/address',
                 {districtId: $.trim(districtId.val())},
                 function (data) {
+                    $('input[name=districtStatus]').val('');
                     if (data == 'districtIdError' || data == 'permissionError') {
                         //$('input[name=address]').val('不在管辖范围内');
                         if (confirm('行政区划代码输入有误！')) {
@@ -77,7 +78,7 @@ $(function() {
                             }, 10);
                         }
                     } else if (data == 'emptyDistrictId') {
-                        $('input[name=address]').val('');
+                        $('input[name=districtStatus]').val('');
                         if (confirm('请输入行政区划代码！')) {
                             setTimeout(function () {
                                 $('input[name=districtId]').focus();
