@@ -228,7 +228,7 @@ var accountSchema = new Schema({
     type: String
 });
 
-var Account = mongoose.model('account', accountSchema);
+var Account = mongoose.model('operator', accountSchema);
 
 // save account information
 function saveAccount(acc) {
