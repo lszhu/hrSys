@@ -167,6 +167,10 @@ function update(condition, value, callback) {
     PersonMsg.update(condition, value, {multi: true}, callback);
 }
 
+function removeOrg(condition, callback) {
+    organizationMsg.remove(condition, callback);
+}
+
 function remove(condition, callback) {
     PersonMsg.remove(condition, callback);
 }
@@ -380,6 +384,7 @@ function batchChangeStatus(status, callback) {
 
 module.exports = {
     saveOrg: saveOrg,
+    removeOrg: removeOrg,
     save: save,
     query: query,
     remove: remove,

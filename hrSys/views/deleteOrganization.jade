@@ -1,0 +1,55 @@
+extends layout
+block content
+  //link(rel="stylesheet" href="/stylesheets/signin.css")
+  //link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
+  //h1= title
+  include nav.jade
+  .container.col-sm-10.col-sm-offset-1
+    .panel.panel-info(action='/queryPerson', method="POST")
+      .panel-heading
+        //.container
+        h1.text-center= title
+      .panel-body
+        .col-sm-8.col-sm-offset-2
+          .input-group
+            span.input-group-addon &nbsp;&nbsp;单&nbsp;位&nbsp;名&nbsp;称&nbsp;&nbsp;
+            input.form-control(type="text", name="orgName", required="required")
+          .input-group
+            span.input-group-addon 组织机构代码
+            input.form-control(type="text", name="orgCode", required="required")
+          .input-group.hidden
+            span.input-group-addon operation
+            input.form-control(type="text", name="operation", value="operation")
+        .col-sm-6.col-sm-offset-3
+          br
+          button.btn.btn-block.btn-lg.btn-default.btn-primary 确 定
+          br
+        #message.col-sm-6.col-sm-offset-3.text-center
+  script.
+    $('button').click(function () {
+      var name = $.trim($('input[name=orgName]').val());
+      var code = $.trim($('input[name=orgCode]').val());
+      if (!name || !code) {
+        alert('单位名称和对应组织机构代码必须填写');
+        return;
+      }
+      if (!confirm('确认要删除该单位信息？')) {
+        return;
+      }
+      $.post('/deleteOrganization', {
+                condition: {
+                  name: name,
+                  code: code
+                }
+              },
+              function (data) {
+                if (data == 'ok') {
+                  $('#message').text('成功删除辖区内该单位信息！');
+                } else if (data == 'permissionDenied') {
+                  $('#message').text('您无权删除单位信息！');
+                }
+              });
+    });
+    $('input').focus(function () {
+      $('#message').text('');
+    });

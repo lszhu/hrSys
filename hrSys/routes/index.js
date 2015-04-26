@@ -833,6 +833,43 @@ router.post('/update', function(req, res) {
 });
 */
 
+/* delete organization info page. */
+router.get('/deleteOrganization', function(req, res) {
+    if (req.session.user.permission == '只读') {
+        console.error('permission denied');
+        return res.send('permission denied');
+    }
+    res.render(
+        'deleteOrganization',
+        {
+            title: '删除企业或单位',
+            adminArea: getAdminAreaName(req.session.user.area),
+            permission: req.session.user.permission
+        }
+    );
+});
+
+/* delete organization info page. */
+router.post('/deleteOrganization', function(req, res) {
+    if (req.session.user.permission == '只读') {
+        console.error('permission denied');
+        return res.send('permissionDenied');
+    }
+    var area = req.session.user.area;
+    var bound = req.body.condition;
+    if (area != '0') {
+        bound.districtId = new RegExp('^' + area);
+    }
+    debug('db.remove bound is: ' + JSON.stringify(bound));
+    db.removeOrg(bound, function(err) {
+        if (err) {
+            res.send('dbError');
+            return;
+        }
+        res.send('ok');
+    });
+});
+
 /* delete person info page. */
 router.get('/delete', function(req, res) {
     if (req.session.user.permission == '只读') {
