@@ -8,7 +8,7 @@
 //var httpPort = 88;         // 蓝山所用端口号
 //var httpPort = 13188;      // 宁远所用端口号
 // var httpPort = 13288;     // 新田所用端口号
-var httpPort = 13388;      // 冷水滩所用端口号
+var httpPort = 8888;      // 冷水滩所用端口号
 
 // 此处设置web服务使用环境，可以是开发环境或生产环境
 //var runningEnvironment = 'development';
@@ -26,7 +26,7 @@ var county = 'lengShuiTan';
 // 此处修改内置管理员账号的名称和密码等信息
 var builtinAccount = {
     username: 'admin',            // 管理员名称
-    password: 'admin',            // 管理员密码
+    password: 'lstJiuYe',            // 管理员密码
     area: '0',
     permission: '管理员',
     type: 'independent'
@@ -39,13 +39,13 @@ var dbServer = {
 //    dbName: 'hrsys'           // 蓝山县数据库名称
 //    dbName: 'ningyuan'        // 宁远县数据库名称
 //    dbName: 'xintian'         // 新田县数据库名称
-    dbName: 'lengshuitan'     // 冷水滩数据库名称
+    dbName: 'messagepost' // 'lengshuitan'     // 冷水滩数据库名称
 };
 
 // 此处设定连接mongodb数据库的参数
 var dbParameters = {
-    user: 'hrsys',           // 数据库连接用户名称
-    pass: 'letmein',         // 数据库连接用户密码
+    user: 'website', // 'hrsys',           // 数据库连接用户名称
+    pass: 'messagePostSys', // 'letmein',         // 数据库连接用户密码
     server: {socketOptions: {keepAlive: 1}}
 };
 

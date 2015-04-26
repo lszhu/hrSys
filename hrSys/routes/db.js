@@ -124,7 +124,7 @@ var organizationMsg = mongoose.model('organization', organizationSchema);
 
 function saveOrg(orgMsg) {
     organizationMsg.update(
-        {idNumber: orgMsg.code},
+        {code: orgMsg.code},
         orgMsg,
         {upsert: true},
         function(err) {
