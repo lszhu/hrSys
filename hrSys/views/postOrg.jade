@@ -1,0 +1,18 @@
+extends layout
+block content
+  //link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
+  //h1= title
+  include nav.jade
+  .container
+    h1.text-center 成功添加信息到系统
+    br
+    .col-sm-4.col-sm-offset-4
+      a.btn.btn-lg.btn-block.btn-primary(href="/organization") 继续添加数据
+    .col-sm-4.col-sm-offset-4.text-center
+      br
+      p 本页面3秒钟后会自动跳到
+      p 企事业单位登记表页面
+  script.
+    setTimeout(function () {
+      location.pathname = '/organization';
+    }, 3000);

@@ -1,0 +1,143 @@
+extends layout
+block content
+  //link(rel="stylesheet" href="/stylesheets/signin.css")
+  //link(rel="stylesheet" href="/stylesheets/navbar-fixed-top.css")
+  //h1= title
+  include nav.jade
+  .container
+    form.panel.panel-info(role="form", action="/organization", method="POST")
+      .panel-heading
+        //.container
+        h1.text-center 单位信息登记表
+      .panel-body
+        .col-sm-10.col-sm-offset-1
+          div(style="float: left;")
+            .input-group
+              span.input-group-addon 单位名称
+              input.form-control(type="text", name="orgName", autofocus="autofocus", placeholder="输入单位名称", required="required")
+          div(style="float: left;")
+            .input-group
+              span.input-group-addon 组织机构代码
+              input.form-control(type="text", name="orgCode", placeholder="输入9位代码", required="required")
+          if districtId.length == 10
+            div(style="float: left;")
+              .input-group
+                span.input-group-addon 行政区划代码
+                input.form-control(type="text", name="districtId", readonly="readonly", value=districtId, tabindex="-1")
+          else
+            div(style="float: left;")
+              .input-group
+                span.input-group-addon 行政区划代码
+                input.form-control(type="text", name="districtId", placeholder="输入10位代码")
+          div(style="float: left;").hidden
+            .input-group
+              span.input-group-addon 行政区划代码状态
+              input.form-control(type="text", name="districtStatus")
+          div(style="float: left;")
+            .input-group
+              span.input-group-addon 法人代表
+              input.form-control(type="text", name="legalPerson", placeholder="输入法人代表")
+          div(style="float: left;")
+            .input-group
+              span.input-group-addon &nbsp&nbsp;联系人&nbsp;
+              input.form-control(type="text", name="contact", placeholder="输入联系人")
+          div(style="float: left;")
+            .input-group
+              span.input-group-addon 联系电话
+              input.form-control(type="text", name="phone", placeholder="输入联系电话")
+          div(style="float: left;")
+            .input-group
+              span.input-group-addon 联系地址
+              input.form-control(type="text", name="address", placeholder="输入联系地址")
+          div(style="float: left;")
+            .input-group
+              span.input-group-addon 单位类型
+              select.form-control(name="orgType")
+                option 企业
+                option 机关
+                option 事业单位
+                option 社会团体
+                option 个体工商户
+                option 其他
+          div(style="float: left;")
+            .input-group
+              span.input-group-addon 经济类型
+              select.form-control(name="economicType")
+                option 国有全资
+                option 集体全资
+                option 股份合作
+                option 个体工商
+                option 港、澳、台
+                option 中外合资
+                option 其他
+          div(style="float: left;")
+            .input-group
+              span.input-group-addon 所属行业
+              select.form-control(name="jobForm")
+                option 农林牧渔
+                option 采掘
+                option 制造
+                option 电力
+                option 电力、煤气及水
+                option 建筑
+                option 交通运输仓储邮电通信
+                option 信息、计算机
+                option 批发零售
+                option 住宿餐饮
+                option 金融
+                option 房地产
+                option 租赁商务服务
+                option 科学技术地质勘查
+                option 水利环境公共设施管理
+                option 居民服务其它服务业
+                option 教育
+                option 卫生社会保障公共设施管理
+                option 文化体育娱乐
+                option 公共管理社会组织
+                option 国际组织
+                option 其他
+          div(style="float: left;")
+            .input-group
+              span.input-group-addon 产业类型
+              select.form-control(name="industry")
+                option 第一产业
+                option 第二产业
+                option 第三产业
+                option 其他
+          div(style="float: left;").hidden
+            .input-group
+              span.input-group-addon 自主创业情况
+              select.form-control(name="marriage")
+                option 失业人员自主创业
+                option 大学生自主创业
+                option 农民工返乡创业
+                option 其他
+          div(style="float: left;")
+            .input-group
+              span.input-group-addon 就业总人数
+              input.form-control(type="text", name="staffs", placeholder="输入就业总人数")
+          div(style="float: left;").hidden
+            .input-group
+              span.input-group-addon 需求人数
+              input.form-control(type="text", name="taffsNeeded", placeholder="输入需求人数")
+
+      .panel-footer
+        .container
+          .col-sm-4.col-sm-offset-1
+            .input-group
+              span.input-group-addon 填报人
+              input.form-control(type="text", name="editor", required="required", placeholder="姓名")
+          .col-sm-1
+          .col-sm-5
+            .input-group
+              span.input-group-addon 填报日期
+              input.form-control(type="text", name="registerDate", disabled="disabled", tabindex="-1", placeholder="填报日期")
+          .col-sm-10
+            br
+          .col-sm-7.col-sm-offset-2
+            button.btn.btn-lg.btn-block.btn-primary(type="submit", role="button") 保存登记表
+          .col-sm-12.text-center
+            br
+          .col-sm-11.text-center#errorMessage(style="color: red;")
+            p
+  script(src="/javascripts/organization.js")

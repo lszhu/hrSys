@@ -535,6 +535,70 @@ router.get('/data/address', function(req, res) {
     }
 });
 
+/* add/modify organization page. */
+router.get('/organization', function(req, res) {
+    if (req.session.user.permission == '只读') {
+        console.error('permission denied');
+        return res.send('permission denied');
+    }
+    debug('req.session.user.area: ' + JSON.stringify(req.session.user.area));
+    //debug('jobType' + JSON.stringify(jobType));
+    res.render('organization', {
+        title: '添加企事业单位信息',
+        adminArea: getAdminAreaName(req.session.user.area),
+        permission: req.session.user.permission,
+        //nations: nations,
+        //insurance: table.cnInsurance,
+        //province: provinces,
+        //jobType: jobType,
+        //builtinService: table.cnService,
+        districtId: req.session.user.area,
+        //editor: req.session.user.username,
+        address: districtName['4311'][countyId] + ' ' +
+            getAdminAreaName(req.session.user.area)
+    });
+});
+
+/* save organization info */
+router.post('/organization', function(req, res) {
+    if (req.session.user.permission == '只读') {
+        console.error('permission denied');
+        return res.send('permission denied');
+    }
+
+    var orgMessage = {
+        // basic info
+        name: req.body.orgName,
+        code: req.body.orgCode,
+        address: req.body.address,
+        districtId: req.body.districtId,
+        phone: req.body.phone,
+        legalPerson: req.body.legalPerson,
+        contact: req.body.contact,
+        type: req.body.orgType,
+        economicType: req.body.economicType,
+        jobForm: req.body.jobForm,
+        industry: req.body.industry,
+        staffs: req.body.staffs,
+        // editor info
+        editor: req.body.editor,
+        modifiedDate: new Date()
+    };
+    // if username or idNumber is empty, skip saving operation
+    if (orgMessage.name.trim() == '' ||
+        orgMessage.code.trim() == '') {
+        res.send('illegal user message, ignored!');
+        return;
+    }
+    debug('save organization info now');
+    db.saveOrg(orgMessage);
+    res.render('postOrg', {
+        title: '添加企事业单位信息',
+        adminArea: getAdminAreaName(req.session.user.area),
+        permission: req.session.user.permission
+    });
+});
+
 /* add/modify item page. */
 router.get('/item', function(req, res) {
     if (req.session.user.permission == '只读') {

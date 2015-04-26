@@ -14,22 +14,20 @@ nav.navbar.navbar-default.navbar-static-top(role="navigation")
       ul.nav.navbar-nav
         //li.active
           a(href="/") 首页
-        if permission != '只读'
+        //if permission != '只读'
           li
             a(href="/item") 新增/修改人员信息
           li
             a(href="/delete") 删除人员信息
-        else
+        //else
           li
             a(href="#") 新增/修改人员信息
           li
             a(href="#") 删除人员信息
-        li
+        //li
           a(href="/export") 导出数据到文件
-        li
-          a(href="/search") 检索
-        //li.dropdown.hidden
-          a.dropdown-toggle(href="#", data-toggle="dropdown") 信息维护
+        li.dropdown
+          a.dropdown-toggle(href="#", data-toggle="dropdown") 人员信息维护
             b.caret
           ul.dropdown-menu
             if permission != '只读'
@@ -39,10 +37,45 @@ nav.navbar.navbar-default.navbar-static-top(role="navigation")
                 a(href="/update") 修改人员信息
               li
                 a(href="/delete") 删除人员信息
-            li.divider
-            li
-              a(href="/export") 导出数据到文件
-
+              li.divider
+              li
+                a(href="/export") 导出人员数据到文件
+            else
+              li
+                a(href="").disabled 新增/修改人员信息
+              li.hidden
+                a(href="").disabled 修改人员信息
+              li
+                a(href="").disabled 删除人员信息
+              li.divider
+              li
+                a(href="/export") 导出数据到文件
+        li.dropdown
+          a.dropdown-toggle(href="#", data-toggle="dropdown") 单位信息维护
+            b.caret
+          ul.dropdown-menu
+            if permission != '只读'
+              li
+                a(href="/organization") 新增/修改单位信息
+              li.hidden
+                a(href="/updateOrg") 修改单位信息
+              li
+                a(href="/deleteOrg") 删除单位信息
+              li.divider
+              li
+                a(href="/export") 导出单位数据到文件
+            else
+              li
+                a(href="").disabled 新增/修改单位信息
+              li.hidden
+                a(href="").disabled 修改单位信息
+              li
+                a(href="").disabled 删除单位信息
+              li.divider
+              li
+                a(href="/export") 导出单位数据到文件
+        li
+          a(href="/search") 人员信息检索
         //li.dropdown
           a.dropdown-toggle(href="#", data-toggle="dropdown") 台账
             b.caret

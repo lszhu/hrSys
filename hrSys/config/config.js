@@ -8,7 +8,7 @@
 //var httpPort = 88;         // 蓝山所用端口号
 //var httpPort = 13188;      // 宁远所用端口号
 // var httpPort = 13288;     // 新田所用端口号
- var httpPort = 13388;     // 冷水滩所用端口号
+var httpPort = 13388;      // 冷水滩所用端口号
 
 // 此处设置web服务使用环境，可以是开发环境或生产环境
 //var runningEnvironment = 'development';

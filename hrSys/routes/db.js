@@ -100,7 +100,39 @@ var personSchema = new Schema({
     modifiedDate: Date
 });
 
+var organizationSchema = new Schema({
+    name: String,
+    code: String,
+    districtId: String,
+    legalPerson: String,
+    contact: String,
+    phone: String,
+    address: String,
+    type: String,
+    economicType: String,
+    jobForm: String,
+    industry: String,
+    staffs: Number,
+    introductionId: String,
+    // editor info
+    editor: String,
+    modifiedDate: Date
+});
+
 var PersonMsg = mongoose.model('hrmsg', personSchema);
+var organizationMsg = mongoose.model('organization', organizationSchema);
+
+function saveOrg(orgMsg) {
+    organizationMsg.update(
+        {idNumber: orgMsg.code},
+        orgMsg,
+        {upsert: true},
+        function(err) {
+            if (err) {
+                console.error('save error: \n%o', err);
+            }
+        });
+}
 
 function save(hrMsg) {
     PersonMsg.update(
@@ -347,6 +379,7 @@ function batchChangeStatus(status, callback) {
 }
 
 module.exports = {
+    saveOrg: saveOrg,
     save: save,
     query: query,
     remove: remove,
